@@ -3,36 +3,33 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\DTO\PostInput;
+use App\DTO\PostOutput;
 use App\Repository\PostRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 
-#[ApiResource(normalizationContext: ['groups' => ['post']])]
+#[ApiResource(input: PostInput::class, output: PostOutput::class)]
 #[ORM\Entity(repositoryClass: PostRepository::class)]
 class Post
 {
     #[ORM\Id]
-    #[Groups("post")]
     #[ORM\Column(type: 'string', unique: true)]
     #[ORM\GeneratedValue(strategy: "CUSTOM")]
     #[ORM\CustomIdGenerator(class: "doctrine.uuid_generator")]
-    private string $id;
+    private $id;
 
-    #[Groups("post")]
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'posts')]
     #[ORM\JoinColumn(nullable: false)]
     private User $author;
 
-    #[Groups("post")]
     #[ORM\Column(type: 'string', length: 255)]
     private string $title;
 
-    #[Groups("post")]
     #[ORM\Column(type: 'string', length: 255)]
     private string $slug;
 
-    #[Groups("post")]
     #[ORM\Column(type: 'text')]
     private string $body;
 
@@ -41,11 +38,9 @@ class Post
     #[ORM\Column(type: 'datetime_immutable')]
     private \DateTimeImmutable $createdAt;
 
-    #[Groups("post")]
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private ?\DateTimeImmutable $updatedAt;
 
-    #[Groups("post")]
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private ?\DateTimeImmutable $deletedAt;
 
@@ -56,7 +51,7 @@ class Post
         $this->updatedAt = null;
     }
 
-    public function getId(): string
+    public function getId()
     {
         return $this->id;
     }

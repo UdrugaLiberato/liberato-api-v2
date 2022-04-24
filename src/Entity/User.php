@@ -2,8 +2,10 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -41,6 +43,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
 
     #[Groups(["read", "write", "post"])]
+    #[ApiFilter(SearchFilter::class, strategy: 'ipartial')]
     #[ORM\Column(type: 'string', length: 255)]
     private string $username;
 

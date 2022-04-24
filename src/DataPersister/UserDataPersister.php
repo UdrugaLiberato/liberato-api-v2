@@ -32,7 +32,9 @@ class UserDataPersister implements DataPersisterInterface
 
     public function remove($data): void
     {
-        $this->entityManager->remove($data);
+
+        $data = $data->setDeletedAt(new \DateTimeImmutable("now"));
+        $this->entityManager->persist($data);
         $this->entityManager->flush();
     }
 }
