@@ -1,21 +1,19 @@
 <?php
 
-namespace App\DataTransformer;
+namespace App\DataTransformer\User;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
-use App\DTO\PostInput;
-use App\Entity\Post;
 
-class PostInputDataTransformer implements DataTransformerInterface
+class UserOutputDataTransformer implements DataTransformerInterface
 {
-
+    
     public function transform($object, string $to, array $context = [])
     {
-        return new PostInput();
+        // TODO: Implement transform() method.
     }
-
+    
     public function supportsTransformation($data, string $to, array $context = []): bool
     {
-        return PostInput::class === $to && $data instanceof Post;
+        // TODO: Implement supportsTransformation() method.
     }
 }

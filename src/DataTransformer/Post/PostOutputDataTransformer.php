@@ -1,9 +1,9 @@
 <?php
 
-namespace App\DataTransformer;
+namespace App\DataTransformer\Post;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
-use App\DTO\PostOutput;
+use App\DTO\Post\PostOutput;
 use App\Entity\Post;
 
 class PostOutputDataTransformer implements DataTransformerInterface
