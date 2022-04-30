@@ -10,7 +10,7 @@ class UserOutputDataTransformer implements DataTransformerInterface
 {
     public function transform($object, string $to, array $context = []): object
     {
-        return UserOutput(
+        return new UserOutput(
           $object->getId(),
           $object->getUsername(),
           $object->getEmail(),

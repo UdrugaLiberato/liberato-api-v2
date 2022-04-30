@@ -30,3 +30,11 @@ services:
     'App\DataTransformer\Post\PostInputDataTransformer': ~
     'App\DataTransformer\User\UserInputDataTransformer': ~
     'App\DataTransformer\User\UserOutputDataTransformer': ~
+
+
+
+    App\EventListener\CreatePostEventListener:
+        tags:
+            - name: 'doctrine.event_listener'
+              event: 'prePersist'
+              priority: 500

@@ -29,9 +29,6 @@ class Post
     #[ORM\Column(type: 'string', length: 255)]
     private string $title;
     
-    #[ORM\Column(type: 'string', length: 255)]
-    private string $slug;
-    
     #[ORM\Column(type: 'text')]
     private string $body;
     
@@ -78,18 +75,6 @@ class Post
     public function setTitle(string $title): self
     {
         $this->title = $title;
-        
-        return $this;
-    }
-    
-    public function getSlug(): ?string
-    {
-        return $this->slug;
-    }
-    
-    public function setSlug(string $slug): self
-    {
-        $this->slug = $slug;
         
         return $this;
     }

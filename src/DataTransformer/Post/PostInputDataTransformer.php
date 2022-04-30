@@ -9,9 +9,12 @@ use App\Entity\Post;
 class PostInputDataTransformer implements DataTransformerInterface
 {
 
-    public function transform($object, string $to, array $context = [])
+    public function transform($object, string $to, array $context = []): object
     {
-        return new PostInput();
+        $post = new Post();
+        $post->setTitle($object->title);
+        $post->setBody($object->body);
+        return $post;
     }
 
     public function supportsTransformation($data, string $to, array $context = []): bool
