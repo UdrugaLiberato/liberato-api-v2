@@ -14,6 +14,7 @@ class UserOutputDataTransformer implements DataTransformerInterface
           $object->getId(),
           $object->getUsername(),
           $object->getEmail(),
+          $object->getPhone(),
           $object->getCreatedAt()->format('Y-m-d H:i:s'),
           $object->getUpdatedAt()?->format("Y-m-d H:i:s"),
           $object->getDeletedAt()?->format("Y-m-d H:i:s")

@@ -8,7 +8,8 @@ class UserOutput
       public string $id,
       public string $username,
       public string $email,
-      public string $createdAt,
+      public string $phone,
+    public string $createdAt,
       public ?string $updatedAt,
       public ?string $deletedAt
     ) {

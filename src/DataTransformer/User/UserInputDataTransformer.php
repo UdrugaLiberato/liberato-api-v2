@@ -14,7 +14,7 @@ class UserInputDataTransformer implements DataTransformerInterface
         $user->setUsername($object->username);
         $user->setPassword($object->password);
         $user->setEmail($object->email);
-        
+        $user->setPhone($object->phone);
         return $user;
     }
     

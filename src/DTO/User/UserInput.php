@@ -7,4 +7,5 @@ class UserInput
     public string $username;
     public string $email;
     public string $password;
+    public string $phone;
 }
