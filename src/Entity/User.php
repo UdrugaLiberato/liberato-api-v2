@@ -15,8 +15,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
-
 
 /**
  * @Vich\Uploadable
@@ -34,53 +34,50 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     public const ROLE_ADMIN = "ROLE_ADMIN";
     public const ROLE_USER = "ROLE_USER";
-    #[
-      ORM\Id,
-      ORM\Column(type: 'string', unique: true),
-      ORM\GeneratedValue(strategy: "CUSTOM"),
-      ORM\CustomIdGenerator(class: "doctrine.uuid_generator")
-    ]
-    private string $id;
-
-    #[ORM\Column(type: 'string', length: 180, unique: true)]
-    private string $email;
-
-    #[ORM\Column(type: 'string', length: 180, nullable: true)]
-    private ?string $phone;
-    
-    #[ORM\Column(type: 'json')]
-    private array $roles;
-    
-    #[ORM\Column(type: 'string')]
-    private string $password;
-
     #[ApiProperty(iri: 'http://schema.org/contentUrl')]
     public ?string $contentUrl = null;
-
     /**
      * @Vich\UploadableField(mapping="media_object", fileNameProperty="filePath")
      */
     public ?File $file = null;
-
     #[ORM\Column(nullable: true)]
     public ?string $filePath = null;
-
-    #[ApiFilter(SearchFilter::class, strategy: 'ipartial')]
-    #[ORM\Column(type: 'string', length: 255)]
+    #[
+        ORM\Id,
+        ORM\Column(type: 'string', unique: true),
+        ORM\GeneratedValue(strategy: "CUSTOM"),
+        ORM\CustomIdGenerator(class: "doctrine.uuid_generator")
+    ]
+    private string $id;
+    #[Assert\Email]
+    #[ORM\Column(type: 'string', length: 180, unique: true)]
+    private string $email;
+    #[ORM\Column(type: 'string', length: 180, nullable: true)]
+    private ?string $phone;
+    #[ORM\Column(type: 'json')]
+    private array $roles;
+    #[Assert\Length(min: 6, max: 15)]
+    #[ORM\Column(type: 'string')]
+    private string $password;
+    #[
+        Assert\Length(min: 4, max: 20),
+        ApiFilter(SearchFilter::class, strategy: 'ipartial'),
+        ORM\Column(type: 'string', length: 255)
+    ]
     private string $username;
-    
+
     #[ORM\Column(type: 'datetime_immutable')]
     private \DateTimeImmutable $createdAt;
-    
+
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private ?\DateTimeImmutable $updatedAt;
-    
+
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private ?\DateTimeImmutable $deletedAt;
-    
+
     #[ORM\OneToMany(mappedBy: 'author', targetEntity: Post::class)]
     private $posts;
-    
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable("now");
@@ -90,21 +87,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->posts = new ArrayCollection();
         $this->phone = null;
     }
-    
+
     public function getId(): string
     {
         return $this->id;
     }
-    
+
     public function getEmail(): ?string
     {
         return $this->email;
     }
-    
+
     public function setEmail(string $email): self
     {
         $this->email = $email;
-        
+
         return $this;
     }
 
@@ -122,79 +119,79 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return (string)$this->email;
     }
-    
+
     public function getRoles(): array
     {
         return $this->roles;
     }
-    
+
     public function setRoles(string $role): self
     {
         $this->roles[] = $role;
-        
+
         return $this;
     }
-    
+
     public function getPassword(): string
     {
         return $this->password;
     }
-    
+
     public function setPassword(string $password): self
     {
         $this->password = $password;
-        
+
         return $this;
     }
-    
-    
+
+
     public function getUsername(): ?string
     {
         return $this->username;
     }
-    
+
     public function setUsername(string $username): self
     {
         $this->username = $username;
-        
+
         return $this;
     }
-    
+
     public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->createdAt;
     }
-    
+
     public function getUpdatedAt(): ?\DateTimeImmutable
     {
         return $this->updatedAt;
     }
-    
+
     public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
-        
+
         return $this;
     }
-    
+
     public function getDeletedAt(): ?\DateTimeImmutable
     {
         return $this->deletedAt;
     }
-    
+
     public function setDeletedAt(?\DateTimeImmutable $deletedAt): self
     {
         $this->deletedAt = $deletedAt;
-        
+
         return $this;
     }
-    
+
     public function eraseCredentials()
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
     }
-    
+
     /**
      * @return Collection<int, Post>
      */
@@ -202,17 +199,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->posts;
     }
-    
+
     public function addPost(Post $post): self
     {
         if (!$this->posts->contains($post)) {
             $this->posts[] = $post;
             $post->setAuthor($this);
         }
-        
+
         return $this;
     }
-    
+
     public function removePost(Post $post): self
     {
         if ($this->posts->removeElement($post)) {
@@ -221,7 +218,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $post->setAuthor(null);
             }
         }
-        
+
         return $this;
     }
 
@@ -230,17 +227,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->filePath;
     }
 
-    public function setFile(?File $file): void
-    {
-        $this->file = $file;
-    }
-
     /**
      * @return File|null
      */
     public function getFile(): ?File
     {
         return $this->file;
+    }
+
+    public function setFile(?File $file): void
+    {
+        $this->file = $file;
     }
 
 }
