@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\DTO\User\UserInput;
@@ -11,12 +12,24 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 
+/**
+ * @Vich\Uploadable
+ */
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ApiResource(input: UserInput::class, output: UserOutput::class)]
+#[ApiResource(collectionOperations: [
+    'get',
+    'post' => [
+        'input_formats' => [
+            'multipart' => ['multipart/form-data'],
+        ],
+    ],
+], input: UserInput::class, output: UserOutput::class,)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     public const ROLE_ADMIN = "ROLE_ADMIN";
@@ -28,20 +41,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
       ORM\CustomIdGenerator(class: "doctrine.uuid_generator")
     ]
     private string $id;
-    
+
     #[ORM\Column(type: 'string', length: 180, unique: true)]
     private string $email;
 
     #[ORM\Column(type: 'string', length: 180, nullable: true)]
-    private ?string $phone = null;
+    private ?string $phone;
     
     #[ORM\Column(type: 'json')]
     private array $roles;
     
     #[ORM\Column(type: 'string')]
     private string $password;
-    
-    
+
+    #[ApiProperty(iri: 'http://schema.org/contentUrl')]
+    public ?string $contentUrl = null;
+
+    /**
+     * @Vich\UploadableField(mapping="media_object", fileNameProperty="filePath")
+     */
+    public ?File $file = null;
+
+    #[ORM\Column(nullable: true)]
+    public ?string $filePath = null;
+
     #[ApiFilter(SearchFilter::class, strategy: 'ipartial')]
     #[ORM\Column(type: 'string', length: 255)]
     private string $username;
@@ -65,6 +88,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->deletedAt = null;
         $this->roles[] = $this::ROLE_USER;
         $this->posts = new ArrayCollection();
+        $this->phone = null;
     }
     
     public function getId(): string
@@ -200,4 +224,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         
         return $this;
     }
+
+    public function getFilePath(): ?string
+    {
+        return $this->filePath;
+    }
+
+    public function setFile(?File $file): void
+    {
+        $this->file = $file;
+    }
+
+    /**
+     * @return File|null
+     */
+    public function getFile(): ?File
+    {
+        return $this->file;
+    }
+
 }

@@ -3,7 +3,6 @@
 namespace App\DataTransformer\User;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
-use App\DTO\User\UserInput;
 use App\Entity\User;
 
 class UserInputDataTransformer implements DataTransformerInterface
@@ -14,16 +13,18 @@ class UserInputDataTransformer implements DataTransformerInterface
         $user->setUsername($object->username);
         $user->setPassword($object->password);
         $user->setEmail($object->email);
+            $user->setPhone($object->phone);
         $user->setPhone($object->phone);
+        $user->setFile($object->file);
         return $user;
     }
-    
+
     public function supportsTransformation($data, string $to, array $context = []): bool
     {
         if ($data instanceof User) {
             return false;
         }
-    
+
         return User::class === $to && null !== ($context['input']['class'] ?? null);
     }
 }
