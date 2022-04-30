@@ -17,6 +17,7 @@ class PostOutputDataTransformer implements DataTransformerInterface
             $object->getTitle(),
             $object->getBody(),
             $this->slugify($object->getTitle()),
+            $object->getTags(),
             $object->getCreatedAt()->format('Y-m-d H:i:s'),
             $object->getUpdatedAt()?->format("Y-m-d H:i:s"),
             $object->getDeletedAt()?->format("Y-m-d H:i:s")

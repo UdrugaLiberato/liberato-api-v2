@@ -14,6 +14,8 @@ class PostInputDataTransformer implements DataTransformerInterface
         $post = new Post();
         $post->setTitle($object->title);
         $post->setBody($object->body);
+        $post->setTags($object->tags);
+
         return $post;
     }
 

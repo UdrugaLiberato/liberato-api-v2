@@ -32,8 +32,9 @@ class Post
     #[ORM\Column(type: 'text')]
     private string $body;
     
-    
-    #[Groups(["read", "post"])]
+    #[ORM\Column(type: 'string')]
+    private string $tags;
+
     #[ORM\Column(type: 'datetime_immutable')]
     private \DateTimeImmutable $createdAt;
     
@@ -118,5 +119,15 @@ class Post
         $this->deletedAt = $deletedAt;
         
         return $this;
+    }
+
+    public function getTags(): string
+    {
+        return $this->tags;
+    }
+
+    public function setTags(string $tags): void
+    {
+        $this->tags = $tags;
     }
 }
