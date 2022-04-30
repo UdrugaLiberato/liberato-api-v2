@@ -34,14 +34,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     public const ROLE_ADMIN = "ROLE_ADMIN";
     public const ROLE_USER = "ROLE_USER";
+
     #[ApiProperty(iri: 'http://schema.org/contentUrl')]
     public ?string $contentUrl = null;
+
     /**
-     * @Vich\UploadableField(mapping="media_object", fileNameProperty="filePath")
+     * @Vich\UploadableField(mapping="avatar", fileNameProperty="filePath")
      */
     public ?File $file = null;
+
     #[ORM\Column(nullable: true)]
     public ?string $filePath = null;
+
     #[
         ORM\Id,
         ORM\Column(type: 'string', unique: true),
@@ -49,16 +53,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         ORM\CustomIdGenerator(class: "doctrine.uuid_generator")
     ]
     private string $id;
-    #[Assert\Email]
-    #[ORM\Column(type: 'string', length: 180, unique: true)]
+
+    #[
+        Assert\Email,
+        ORM\Column(type: 'string', length: 180, unique: true)
+    ]
     private string $email;
+
     #[ORM\Column(type: 'string', length: 180, nullable: true)]
     private ?string $phone;
+
     #[ORM\Column(type: 'json')]
     private array $roles;
-    #[Assert\Length(min: 6, max: 15)]
-    #[ORM\Column(type: 'string')]
+
+    #[
+        Assert\Length(min: 6, max: 15),
+        ORM\Column(type: 'string')
+    ]
     private string $password;
+
     #[
         Assert\Length(min: 4, max: 20),
         ApiFilter(SearchFilter::class, strategy: 'ipartial'),
