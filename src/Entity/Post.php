@@ -3,14 +3,24 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use App\DTO\Post\PostInput;
 use App\DTO\Post\PostOutput;
 use App\Repository\PostRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 
-#[ApiResource(input: PostInput::class, output: PostOutput::class)]
+#[ApiResource(collectionOperations: [
+    'get',
+    'post' => [
+        'input_formats' => [
+            'multipart' => ['multipart/form-data'],
+        ],
+    ],
+], input: PostInput::class, output: PostOutput::class)]
 #[ORM\Entity(repositoryClass: PostRepository::class)]
 class Post
 {
@@ -23,31 +33,33 @@ class Post
     private $id;
 
     #[
-        Assert\NotNull,
         ORM\ManyToOne(targetEntity: User::class, inversedBy: 'posts'),
         ORM\JoinColumn(nullable: false)
     ]
     private User $author;
 
     #[
-        Assert\NotBlank,
-        Assert\Length(min: 5),
         ORM\Column(type: 'string', length: 255)
     ]
     private string $title;
 
     #[
-        Assert\NotBlank,
-        Assert\Length(min: 125),
         ORM\Column(type: 'text')
     ]
     private string $body;
 
     #[
-        Assert\NotBlank,
         ORM\Column(type: 'string')
     ]
     private string $tags;
+
+    #[
+        ORM\ManyToMany(targetEntity: MediaObject::class),
+        ORM\JoinTable(),
+        Groups(['media_object:create'])
+    ]
+    private $images;
+
 
     #[ORM\Column(type: 'datetime_immutable')]
     private \DateTimeImmutable $createdAt;
@@ -60,6 +72,8 @@ class Post
 
     public function __construct()
     {
+
+        $this->images = new ArrayCollection();
         $this->createdAt = new \DateTimeImmutable("now");
         $this->deletedAt = null;
         $this->updatedAt = null;
@@ -143,5 +157,21 @@ class Post
     public function setTags(string $tags): void
     {
         $this->tags = $tags;
+    }
+
+
+    public function getImages(): Collection
+    {
+        return $this->images;
+    }
+
+    public function addImage(MediaObject $image)
+    {
+        $this->images->add($image);
+    }
+
+    public function removeImage(MediaObject $image)
+    {
+        $this->images->removeElement($image);
     }
 }

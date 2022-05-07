@@ -25,6 +25,7 @@ services:
     'App\DataTransformer\Post\PostInputDataTransformer': ~
     'App\DataTransformer\User\UserInputDataTransformer': ~
     'App\DataTransformer\User\UserOutputDataTransformer': ~
+    'App\DataTransformer\Media\MediaOutputDataTransformer': ~
 
 
 

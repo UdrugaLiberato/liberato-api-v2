@@ -2,7 +2,7 @@
 
 namespace App\DataTransformer\Post;
 
-use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
+    use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\DTO\Post\PostOutput;
 use App\Entity\Post;
 
@@ -18,6 +18,7 @@ class PostOutputDataTransformer implements DataTransformerInterface
             $object->getBody(),
             $this->slugify($object->getTitle()),
             $object->getTags(),
+            $object->getImages(),
             $object->getCreatedAt()->format('Y-m-d H:i:s'),
             $object->getUpdatedAt()?->format("Y-m-d H:i:s"),
             $object->getDeletedAt()?->format("Y-m-d H:i:s")
