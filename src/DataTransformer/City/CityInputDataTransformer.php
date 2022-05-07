@@ -3,7 +3,6 @@
 namespace App\DataTransformer\City;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
-use App\DTO\City\CityInput;
 use App\Entity\City;
 
 class CityInputDataTransformer implements DataTransformerInterface
@@ -21,6 +20,10 @@ class CityInputDataTransformer implements DataTransformerInterface
 
     public function supportsTransformation($data, string $to, array $context = []): bool
     {
-        return CityInput::class === $to && $data instanceof City;
+        if ($data instanceof City) {
+            return false;
+        }
+
+        return City::class === $to && null !== ($context['input']['class'] ?? null);
     }
 }

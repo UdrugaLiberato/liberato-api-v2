@@ -28,6 +28,8 @@ services:
     'App\DataTransformer\Media\MediaOutputDataTransformer': ~
     'App\DataTransformer\City\CityInputDataTransformer': ~
     'App\DataTransformer\City\CityOutputDataTransformer': ~
+    'App\DataTransformer\Category\CategoryInputDataTransformer': ~
+    'App\DataTransformer\Category\CategoryOutputDataTransformer': ~
 
 
     App\EventListener\CreatePostEventListener:

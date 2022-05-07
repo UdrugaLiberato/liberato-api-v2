@@ -3,7 +3,6 @@
 namespace App\DataTransformer\Post;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
-use App\DTO\Post\PostInput;
 use App\Entity\Post;
 
 class PostInputDataTransformer implements DataTransformerInterface
@@ -21,6 +20,10 @@ class PostInputDataTransformer implements DataTransformerInterface
 
     public function supportsTransformation($data, string $to, array $context = []): bool
     {
-        return PostInput::class === $to && $data instanceof Post;
+        if ($data instanceof Post) {
+            return false;
+        }
+
+        return Post::class === $to && null !== ($context['input']['class'] ?? null);
     }
 }
