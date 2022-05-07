@@ -26,7 +26,8 @@ services:
     'App\DataTransformer\User\UserInputDataTransformer': ~
     'App\DataTransformer\User\UserOutputDataTransformer': ~
     'App\DataTransformer\Media\MediaOutputDataTransformer': ~
-
+    'App\DataTransformer\City\CityInputDataTransformer': ~
+    'App\DataTransformer\City\CityOutputDataTransformer': ~
 
 
     App\EventListener\CreatePostEventListener:
