@@ -1,4 +1,5 @@
 parameters:
+    post_images: '%kernel.project_dir%/public/posts/images'
 
 services:
     # default configuration for services in *this* file
@@ -22,7 +23,6 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
     'App\DataTransformer\Post\PostOutputDataTransformer': ~
-    'App\DataTransformer\Post\PostInputDataTransformer': ~
     'App\DataTransformer\User\UserInputDataTransformer': ~
     'App\DataTransformer\User\UserOutputDataTransformer': ~
     'App\DataTransformer\Media\MediaOutputDataTransformer': ~
