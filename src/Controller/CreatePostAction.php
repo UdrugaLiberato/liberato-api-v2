@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Post;
-use Symfony\Bridge\Doctrine\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsController;
@@ -32,12 +32,16 @@ class CreatePostAction extends AbstractController
         $uploadedFiles = $request->files->get('images');
         if (!empty($uploadedFiles)) {
             foreach ($uploadedFiles as $key => $file) {
-                $originalFilename = pathinfo($file->getClientOriginalName(),
-                                             PATHINFO_FILENAME);
+                $originalFilename = pathinfo(
+                  $file->getClientOriginalName(),
+                  PATHINFO_FILENAME
+                );
                 // this is needed to safely include the file name as part of the URL
                 $safeFilename = $this->slugify($originalFilename);
                 $newFilename = date('Y-m-d') . "_" . $safeFilename . md5
-                  (microtime()) . '.'
+                  (
+                    microtime()
+                  ) . '.'
                   . $file->guessExtension();
                 $file->move(
                   $uploadDir,
