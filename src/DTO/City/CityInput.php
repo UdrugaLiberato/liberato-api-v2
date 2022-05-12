@@ -4,7 +4,7 @@ namespace App\DTO\City;
 
 class CityInput
 {
-    private string $name;
-    private float $latitude;
-    private float $longitude;
+    public string $name;
+    public float $latitude;
+    public float $longitude;
 }

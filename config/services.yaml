@@ -30,6 +30,8 @@ services:
     'App\DataTransformer\City\CityOutputDataTransformer': ~
     'App\DataTransformer\Category\CategoryInputDataTransformer': ~
     'App\DataTransformer\Category\CategoryOutputDataTransformer': ~
+    'App\DataTransformer\Question\QuestionInputDataTransformer': ~
+    'App\DataTransformer\Question\QuestionOutputDataTransformer': ~
 
 
     App\EventListener\CreatePostEventListener:

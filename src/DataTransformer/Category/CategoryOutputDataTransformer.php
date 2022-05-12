@@ -13,7 +13,7 @@ class CategoryOutputDataTransformer implements DataTransformerInterface
     {
         return new CategoryOutput(
             $object->getName(),
-            $object->getIcon(),
+            '/media/category/' . $object->getIcon(),
             null === $object->getDescription() ? null : $object->getDescription,
             null === $object->getDeletedAt() ? null : $object->getDeletedAt()->format('Y-m-d H:i:s"'),
         );

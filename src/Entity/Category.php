@@ -6,10 +6,15 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\DTO\Category\CategoryInput;
 use App\DTO\Category\CategoryOutput;
 use App\Repository\CategoryRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
+/**
+ * @Vich\Uploadable
+ */
 #[ORM\Entity(repositoryClass: CategoryRepository::class),
     ApiResource(collectionOperations: [
         'get',
@@ -47,10 +52,19 @@ class Category
     private \DateTimeImmutable $createdAt;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    private ?\DateTimeImmutable $updatedAt;
+    private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    private ?\DateTimeImmutable $deletedAt;
+    private ?\DateTimeImmutable $deletedAt = null;
+
+    #[ORM\OneToMany(mappedBy: 'Category', targetEntity: Question::class)]
+    private Collection $questions;
+
+    public function __construct()
+    {
+        $this->createdAt = new \DateTimeImmutable("now");
+        $this->questions = new ArrayCollection();
+    }
 
     public function getId(): string
     {
@@ -108,11 +122,6 @@ class Category
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): void
-    {
-        $this->createdAt = $createdAt;
-    }
-
     public function getUpdatedAt(): ?\DateTimeImmutable
     {
         return $this->updatedAt;
@@ -131,5 +140,35 @@ class Category
     public function setDeletedAt(?\DateTimeImmutable $deletedAt): void
     {
         $this->deletedAt = $deletedAt;
+    }
+
+    /**
+     * @return Collection<int, Question>
+     */
+    public function getQuestions(): Collection
+    {
+        return $this->questions;
+    }
+
+    public function addQuestion(Question $question): self
+    {
+        if (!$this->questions->contains($question)) {
+            $this->questions[] = $question;
+            $question->setCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function removeQuestion(Question $question): self
+    {
+        if ($this->questions->removeElement($question)) {
+            // set the owning side to null (unless already changed)
+            if ($question->getCategory() === $this) {
+                $question->setCategory(null);
+            }
+        }
+
+        return $this;
     }
 }

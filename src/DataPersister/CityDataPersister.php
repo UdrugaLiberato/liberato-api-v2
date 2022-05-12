@@ -19,7 +19,6 @@ class CityDataPersister implements DataPersisterInterface
 
     public function persist($data)
     {
-        $data = $data->setCreatedAt(new \DateTimeImmutable("now"));
         $this->entityManager->persist($data);
         $this->entityManager->flush();
     }

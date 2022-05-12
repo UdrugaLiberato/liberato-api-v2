@@ -3,10 +3,10 @@
 namespace App\DataPersister;
 
 use ApiPlatform\Core\DataPersister\DataPersisterInterface;
-use App\Entity\Category;
+use App\Entity\Answer;
 use Doctrine\ORM\EntityManagerInterface;
 
-class CategoryDataPersister implements DataPersisterInterface
+class AnswerDataPersister implements DataPersisterInterface
 {
     public function __construct(private EntityManagerInterface $entityManager)
     {
@@ -14,7 +14,7 @@ class CategoryDataPersister implements DataPersisterInterface
 
     public function supports($data): bool
     {
-        return $data instanceof Category;
+        return $data instanceof Answer;
     }
 
     public function persist($data)

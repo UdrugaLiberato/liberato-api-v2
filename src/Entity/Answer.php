@@ -3,14 +3,12 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\DTO\City\CityInput;
-use App\DTO\City\CityOutput;
-use App\Repository\CityRepository;
+use App\Repository\AnswerRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: CityRepository::class),
-    ApiResource(input: CityInput::class, output: CityOutput::class)]
-class City
+#[ORM\Entity(repositoryClass: AnswerRepository::class)]
+#[ApiResource]
+class Answer
 {
     #[
         ORM\Id,
@@ -20,14 +18,12 @@ class City
     ]
     private $id;
 
+    #[ORM\ManyToOne(targetEntity: Question::class, inversedBy: 'answeers')]
+    #[ORM\JoinColumn(nullable: false)]
+    private Question $question;
+
     #[ORM\Column(type: 'string', length: 255)]
-    private string $name;
-
-    #[ORM\Column(type: 'float')]
-    private float $latitude;
-
-    #[ORM\Column(type: 'float')]
-    private float $longitude;
+    private string $answer;
 
     #[ORM\Column(type: 'datetime_immutable')]
     private \DateTimeImmutable $createdAt;
@@ -48,38 +44,26 @@ class City
         return $this->id;
     }
 
-    public function getName(): string
+    public function getQuestion(): ?Question
     {
-        return $this->name;
+        return $this->question;
     }
 
-    public function setName(string $name): self
+    public function setQuestion(?Question $Question): self
     {
-        $this->name = $name;
+        $this->question = $Question;
 
         return $this;
     }
 
-    public function getLatitude(): float
+    public function getAnswer(): ?string
     {
-        return $this->latitude;
+        return $this->answer;
     }
 
-    public function setLatitude(float $latitude): self
+    public function setAnswer(string $answer): self
     {
-        $this->latitude = $latitude;
-
-        return $this;
-    }
-
-    public function getLongitude(): float
-    {
-        return $this->longitude;
-    }
-
-    public function setLongitude(float $longitude): self
-    {
-        $this->longitude = $longitude;
+        $this->answer = $answer;
 
         return $this;
     }
@@ -87,11 +71,6 @@ class City
     public function getCreatedAt(): \DateTimeImmutable
     {
         return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $createdAt): void
-    {
-        $this->createdAt = $createdAt;
     }
 
     public function getUpdatedAt(): ?\DateTimeImmutable
