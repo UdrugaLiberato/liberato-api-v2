@@ -12,7 +12,7 @@ class UserOutputDataTransformer implements DataTransformerInterface
     {
         return new UserOutput(
           $object->getId(),
-          $object->getUsername(),
+          $object->getName(),
           $object->getEmail(),
           null === $object->getPhone() ? null : $object->getPhone(),
           null === $object->getFilePath() ? null : '/media/avatar' . $object->getFilePath(),
