@@ -8,6 +8,7 @@ class UserOutput
         public string  $id,
         public string  $username,
         public string  $email,
+        public string $role,
         public ?string  $phone,
         public ?string  $imageURL,
         public string  $createdAt,

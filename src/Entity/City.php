@@ -20,13 +20,16 @@ class City
     ]
     private $id;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[
+        Assert\NotBlank(),
+        ORM\Column(type: 'string', length: 255, unique: true, nullable: false)
+    ]
     private string $name;
 
-    #[ORM\Column(type: 'float')]
+    #[ORM\Column(type: 'float', nullable: false)]
     private float $latitude;
 
-    #[ORM\Column(type: 'float')]
+    #[ORM\Column(type: 'float', nullable: false)]
     private float $longitude;
 
     #[ORM\Column(type: 'datetime_immutable')]
