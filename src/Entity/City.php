@@ -7,9 +7,14 @@ use App\DTO\City\CityInput;
 use App\DTO\City\CityOutput;
 use App\Repository\CityRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CityRepository::class),
-    ApiResource(input: CityInput::class, output: CityOutput::class)]
+    ApiResource(collectionOperations: [
+        "post" => [
+            "security" => "is_granted('ROLE_ADMIN')",
+            "security_message" => "Only admins can add posts.",
+        ]], input: CityInput::class, output: CityOutput::class)]
 class City
 {
     #[
@@ -21,15 +26,32 @@ class City
     private $id;
 
     #[
-        Assert\NotBlank(),
-        ORM\Column(type: 'string', length: 255, unique: true, nullable: false)
+        ORM\Column(type: 'string', length: 255, unique: true, nullable: false),
+        Assert\Length(
+            min: 3,
+            minMessage: "Name field must be at {{ limit }} characters long!"
+        )
     ]
     private string $name;
 
-    #[ORM\Column(type: 'float', nullable: false)]
+    #[
+        ORM\Column(type: 'float', nullable: false),
+        Assert\Range(
+            notInRangeMessage: "Your latitude must be between {{ min }} and {{ max }} deg.",
+            min: -90,
+            max: 90,
+        )
+    ]
     private float $latitude;
 
-    #[ORM\Column(type: 'float', nullable: false)]
+    #[
+        ORM\Column(type: 'float', nullable: false),
+        Assert\Range(
+            notInRangeMessage: "Your longitude must be between {{ min }} and {{ max }} deg.",
+            min: -180,
+            max: 180,
+        )
+    ]
     private float $longitude;
 
     #[ORM\Column(type: 'datetime_immutable')]
