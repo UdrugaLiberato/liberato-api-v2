@@ -11,6 +11,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @Vich\Uploadable
@@ -19,6 +20,8 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
     ApiResource(collectionOperations: [
         'get',
         'post' => [
+            "security" => "is_granted('ROLE_ADMIN')",
+            "security_message" => "Only admins can add posts.",
             'input_formats' => [
                 'multipart' => ['multipart/form-data'],
             ],
@@ -34,7 +37,10 @@ class Category
     ]
     private $id;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[
+        ORM\Column(type: 'string', length: 255),
+        Assert\Length(min: 3, minMessage: "Name must be at least {{ limit }} characters long!")
+    ]
     private string $name;
 
     /**

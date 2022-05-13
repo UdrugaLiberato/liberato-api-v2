@@ -3,16 +3,22 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
-
 use App\DTO\Question\QuestionInput;
 use App\DTO\Question\QuestionOutput;
 use App\Repository\QuestionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: QuestionRepository::class),
-    ApiResource(input: QuestionInput::class,
+    ApiResource(collectionOperations: [
+        'get',
+        'post' => [
+            "security" => "is_granted('ROLE_ADMIN')",
+            "security_message" => "Only admins can add posts.",
+        ],
+    ], input: QuestionInput::class,
         output: QuestionOutput::class)]
 class Question
 {
@@ -24,11 +30,17 @@ class Question
     ]
     private $id;
 
-    #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'questions')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[
+        ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'questions'),
+        ORM\JoinColumn(nullable: false),
+        Assert\NotNull
+    ]
     private Category $category;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[
+        ORM\Column(type: 'string', length: 255),
+        Assert\Length(min: 5, minMessage: "Question must be at least {{ limit }} characters long!")
+    ]
     private string $question;
 
     #[ORM\OneToMany(mappedBy: 'question', targetEntity: Answer::class)]
