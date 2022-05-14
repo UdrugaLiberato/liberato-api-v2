@@ -32,6 +32,7 @@ services:
     'App\DataTransformer\Category\CategoryOutputDataTransformer': ~
     'App\DataTransformer\Question\QuestionInputDataTransformer': ~
     'App\DataTransformer\Question\QuestionOutputDataTransformer': ~
+    'App\DataTransformer\Location\LocationOutputDataTransformer': ~
 
 
     App\EventListener\CreatePostEventListener:
