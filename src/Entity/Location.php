@@ -3,14 +3,26 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\DTO\Location\LocationOutput;
 use App\Repository\LocationRepository;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\Entity(repositoryClass: LocationRepository::class)]
-#[ApiResource]
+#[ORM\Entity(repositoryClass: LocationRepository::class),
+    ApiResource(
+        collectionOperations: [
+            'get',
+            'post' => [
+                'deserialize' => false,
+                'input_formats' => [
+                    'multipart' => ['multipart/form-data'],
+                ],
+            ]
+        ], output: LocationOutput::class
+    )]
 class Location
 {
     #[
@@ -21,8 +33,11 @@ class Location
     ]
     private $id;
 
-    #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'locations')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[
+        ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'locations'),
+        ORM\JoinColumn(nullable: false),
+        Assert\NotNull
+    ]
     private Category $category;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'locations')]
@@ -31,23 +46,41 @@ class Location
     #[ORM\OneToMany(mappedBy: 'location', targetEntity: Answer::class)]
     private Collection $answers;
 
-    #[ORM\ManyToOne(targetEntity: City::class, inversedBy: 'locations')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\ManyToOne(targetEntity: City::class, inversedBy: 'locations'),
+        ORM\JoinColumn(nullable: false),
+        Assert\NotNull
+    ]
     private City $city;
 
-    #[ORM\Column(type: 'array')]
+    #[
+        ORM\Column(type: 'array'),
+        Assert\NotBlank(message: 'You need at least 1 image to create Location!')
+    ]
     private array $images = [];
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[
+        ORM\Column(type: 'string', length: 255),
+        Assert\Length(
+            min: 3, max: 32,
+            minMessage: "Name must be at least {{ limit }} characters long!",
+            maxMessage: "Name must be at most {{ limit }} characters long!",
+        )
+    ]
     private string $name;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[
+        ORM\Column(type: 'string', length: 255),
+        Assert\NotBlank(message: 'Street address must be provided!')
+    ]
     private string $street;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $phone;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[
+        ORM\Column(type: 'string', length: 255, nullable: true),
+        Assert\Email
+    ]
     private ?string $email;
 
     #[ORM\Column(type: 'boolean')]
@@ -56,7 +89,10 @@ class Location
     #[ORM\Column(type: 'boolean')]
     private bool $featured = false;
 
-    #[ORM\Column(type: 'text', nullable: true)]
+    #[
+        ORM\Column(type: 'text', nullable: true),
+        Assert\Length(max: 255, maxMessage: "About field must be at most {{ limit }} characters long!")
+    ]
     private ?string $about;
 
     #[ORM\Column(type: 'datetime_immutable')]
