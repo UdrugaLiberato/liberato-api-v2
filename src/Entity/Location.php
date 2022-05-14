@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\Controller\CreateLocationAction;
 use App\DTO\Location\LocationOutput;
 use App\Repository\LocationRepository;
 use DateTimeImmutable;
@@ -16,6 +17,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         collectionOperations: [
             'get',
             'post' => [
+                'controller' => CreateLocationAction::class,
                 'deserialize' => false,
                 'input_formats' => [
                     'multipart' => ['multipart/form-data'],

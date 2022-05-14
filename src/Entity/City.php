@@ -13,6 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CityRepository::class),
     ApiResource(collectionOperations: [
+        "get",
         "post" => [
             "security" => "is_granted('ROLE_ADMIN')",
             "security_message" => "Only admins can add posts.",

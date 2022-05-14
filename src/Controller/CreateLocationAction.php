@@ -1,11 +1,11 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Controller;
 
 use ApiPlatform\Core\Validator\Exception\ValidationException;
-use App\Entity\Post;
+use App\Entity\Location;
+use App\Repository\CategoryRepository;
+use App\Repository\CityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,29 +14,41 @@ use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[AsController]
-class CreatePostAction extends AbstractController
+class CreateLocationAction extends AbstractController
 {
+    public function __construct(
+        private CityRepository $cityRepository,
+        private CategoryRepository $categoryRepository
+    )
+    {
+    }
+
     public function __invoke(
         Request            $request,
         ManagerRegistry    $doctrine,
         ValidatorInterface $validator
-    ): Post
+    ): Location
     {
         $entityManager = $doctrine->getManager();
+        $uploadDir = $this->getParameter('location_images');
+        $location = new Location();
+        $city = $this->cityRepository->findOneBy(["name" => $request->get("city")]);
+        $category = $this->categoryRepository->findOneBy(["name" => $request->get("category")]);
 
-        $uploadDir = $this->getParameter('post_images');
+        $location->setName($request->get("name"));
+        $location->setStreet($request->get("street"));
+        $location->setPhone($request->get("phone"));
+        $location->setEmail($request->get("email"));
+        $location->setAbout($request->get("about"));
+        $location->setCity($city);
+        $location->setCategory($category);
+
+        $entityManager->persist($location);
+
+        $images = $request->files->get("images");
         $fileNames = [];
-
-        $post = new Post();
-
-        $post->setTitle($request->get("title"));
-        $post->setBody($request->get("body"));
-        $post->setTags($request->get("tags"));
-        $entityManager->persist($post);
-
-        $uploadedFiles = $request->files->get('images');
-        if (!empty($uploadedFiles)) {
-            foreach ($uploadedFiles as $key => $file) {
+        if (!empty($images)) {
+            foreach ($images as $key => $file) {
                 $errors = $validator->validate($file, new Image());
                 if (count($errors) > 0) {
                     throw new ValidationException("Only images can be uploaded!");
@@ -58,12 +70,12 @@ class CreatePostAction extends AbstractController
                 );
                 $fileNames[$key] = $newFilename;
             }
-            $post->setImages($fileNames);
-            $entityManager->persist($post);
+            $location->setImages($fileNames);
+            $entityManager->persist($location);
         }
-        $entityManager->flush();
 
-        return $post;
+        $entityManager->flush();
+        return $location;
     }
 
     private function slugify(string $title): string

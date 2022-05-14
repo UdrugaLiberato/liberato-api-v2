@@ -1,5 +1,6 @@
 parameters:
     post_images: '%kernel.project_dir%/public/posts/images'
+    location_images: '%kernel.project_dir%/public/location/images'
 
 services:
     # default configuration for services in *this* file
