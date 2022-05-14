@@ -70,10 +70,14 @@ class Category
     #[ORM\OneToMany(mappedBy: 'Category', targetEntity: Question::class)]
     private Collection $questions;
 
+    #[ORM\OneToMany(mappedBy: 'category', targetEntity: Location::class)]
+    private $locations;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable("now");
         $this->questions = new ArrayCollection();
+        $this->locations = new ArrayCollection();
     }
 
     public function getId(): string
@@ -176,6 +180,36 @@ class Category
             // set the owning side to null (unless already changed)
             if ($question->getCategory() === $this) {
                 $question->setCategory(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Location>
+     */
+    public function getLocations(): Collection
+    {
+        return $this->locations;
+    }
+
+    public function addLocation(Location $location): self
+    {
+        if (!$this->locations->contains($location)) {
+            $this->locations[] = $location;
+            $location->setCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLocation(Location $location): self
+    {
+        if ($this->locations->removeElement($location)) {
+            // set the owning side to null (unless already changed)
+            if ($location->getCategory() === $this) {
+                $location->setCategory(null);
             }
         }
 

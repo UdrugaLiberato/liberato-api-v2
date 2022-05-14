@@ -38,6 +38,9 @@ class Answer
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private ?\DateTimeImmutable $deletedAt = null;
 
+    #[ORM\ManyToOne(targetEntity: Location::class, inversedBy: 'answers')]
+    private $location;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable("now");
@@ -95,5 +98,17 @@ class Answer
     public function setDeletedAt(?\DateTimeImmutable $deletedAt): void
     {
         $this->deletedAt = $deletedAt;
+    }
+
+    public function getLocation(): ?Location
+    {
+        return $this->location;
+    }
+
+    public function setLocation(?Location $location): self
+    {
+        $this->location = $location;
+
+        return $this;
     }
 }

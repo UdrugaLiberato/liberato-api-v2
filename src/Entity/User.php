@@ -100,6 +100,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'author', targetEntity: Post::class)]
     private $posts;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Location::class)]
+    private $locations;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable("now");
@@ -108,6 +111,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->roles[] = $this::ROLE_USER;
         $this->posts = new ArrayCollection();
         $this->phone = null;
+        $this->locations = new ArrayCollection();
     }
 
     public function getId(): string
@@ -265,6 +269,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setFile(?File $file): void
     {
         $this->file = $file;
+    }
+
+    /**
+     * @return Collection<int, Location>
+     */
+    public function getLocations(): Collection
+    {
+        return $this->locations;
+    }
+
+    public function addLocation(Location $location): self
+    {
+        if (!$this->locations->contains($location)) {
+            $this->locations[] = $location;
+            $location->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLocation(Location $location): self
+    {
+        if ($this->locations->removeElement($location)) {
+            // set the owning side to null (unless already changed)
+            if ($location->getUser() === $this) {
+                $location->setUser(null);
+            }
+        }
+
+        return $this;
     }
 
 }
