@@ -10,8 +10,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
-use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @Vich\Uploadable
@@ -30,6 +30,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Category
 {
     #[
+        Vich\UploadableField(mapping: "category", fileNameProperty: "icon"),
+        Assert\Image
+    ]
+    public ?File $file = null;
+
+    #[
         ORM\Id,
         ORM\Column(type: 'string', unique: true),
         ORM\GeneratedValue(strategy: "CUSTOM"),
@@ -43,15 +49,13 @@ class Category
     ]
     private string $name;
 
-    /**
-     * @Vich\UploadableField(mapping="category", fileNameProperty="icon")
-     */
-    public ?File $file = null;
-
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $icon;
 
-    #[ORM\Column(type: 'text', nullable: true)]
+    #[
+        ORM\Column(type: 'text', nullable: true),
+        Assert\Length(min: 5, minMessage: "Description must be at least {{ limit }} characters long!")
+    ]
     private ?string $description;
 
     #[ORM\Column(type: 'datetime_immutable')]
