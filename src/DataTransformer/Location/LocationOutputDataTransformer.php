@@ -16,15 +16,15 @@ class LocationOutputDataTransformer implements DataTransformerInterface
             $object->getStreet(),
             $object->getPhone(),
             $object->getEmail(),
-            $object->isPublished(),
-            $object->isFeatured(),
+            $object->getPublished(),
+            $object->getFeatured(),
             $object->getCategory(),
             $object->getCity(),
             $object->getCreatedAt()->format('Y-m-d H:i:s'),
             $object->getUser(),
             $object->getAbout(),
-            $object->getUpdatedAt()->format('Y-m-d H:i:s'),
-            $object->getDeletedAt()->format('Y-m-d H:i:s')
+            $object->getUpdatedAt()?->format('Y-m-d H:i:s'),
+            $object->getDeletedAt()?->format('Y-m-d H:i:s')
         );
     }
 

@@ -32,8 +32,11 @@ class CreateLocationAction extends AbstractController
         $entityManager = $doctrine->getManager();
         $uploadDir = $this->getParameter('location_images');
         $location = new Location();
-        $city = $this->cityRepository->findOneBy(["name" => $request->get("city")]);
-        $category = $this->categoryRepository->findOneBy(["name" => $request->get("category")]);
+        $cityId = explode("/",$request->get("city"));
+        $categoryId = explode("/",$request->get("category"));
+
+        $city = $this->cityRepository->findOneBy(["id" => $cityId]);
+        $category = $this->categoryRepository->findOneBy(["id" => $categoryId]);
 
         $location->setName($request->get("name"));
         $location->setStreet($request->get("street"));

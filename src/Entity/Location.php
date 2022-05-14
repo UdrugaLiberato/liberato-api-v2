@@ -2,7 +2,9 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Controller\CreateLocationAction;
 use App\DTO\Location\LocationOutput;
 use App\Repository\LocationRepository;
@@ -48,19 +50,21 @@ class Location
     #[ORM\OneToMany(mappedBy: 'location', targetEntity: Answer::class)]
     private Collection $answers;
 
-    #[ORM\ManyToOne(targetEntity: City::class, inversedBy: 'locations'),
+    #[
+        ApiFilter(SearchFilter::class, strategy: 'ipartial'),
+        ORM\ManyToOne(targetEntity: City::class, inversedBy: 'locations'),
         ORM\JoinColumn(nullable: false),
         Assert\NotNull
     ]
     private City $city;
 
     #[
-        ORM\Column(type: 'array'),
-        Assert\NotBlank(message: 'You need at least 1 image to create Location!')
+        ORM\Column(type: 'array')
     ]
     private array $images = [];
 
     #[
+        ApiFilter(SearchFilter::class, strategy: 'ipartial'),
         ORM\Column(type: 'string', length: 255),
         Assert\Length(
             min: 3, max: 32,
