@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\AnswerRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: AnswerRepository::class)]
 #[ApiResource]
@@ -22,7 +23,10 @@ class Answer
     #[ORM\JoinColumn(nullable: false)]
     private Question $question;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[
+        ORM\Column(type: 'string', length: 255),
+        Assert\Length(min:1, minMessage: "Answer must be at least {{ limit }} characters long!")
+    ]
     private string $answer;
 
     #[ORM\Column(type: 'datetime_immutable')]

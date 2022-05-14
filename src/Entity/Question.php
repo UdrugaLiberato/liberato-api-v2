@@ -16,7 +16,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         'get',
         'post' => [
             "security" => "is_granted('ROLE_ADMIN')",
-            "security_message" => "Only admins can add posts.",
+            "security_message" => "Only admins can add questions.",
         ],
     ], input: QuestionInput::class,
         output: QuestionOutput::class)]

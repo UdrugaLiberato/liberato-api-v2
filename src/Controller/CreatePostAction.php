@@ -4,18 +4,22 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use ApiPlatform\Core\Validator\Exception\ValidationException;
 use App\Entity\Post;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsController;
+use Symfony\Component\Validator\Constraints\Image;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[AsController]
 class CreatePostAction extends AbstractController
 {
     public function __invoke(
       Request $request,
-      ManagerRegistry $doctrine
+      ManagerRegistry $doctrine,
+        ValidatorInterface $validator
     ): Post {
         $entityManager = $doctrine->getManager();
         
@@ -32,6 +36,10 @@ class CreatePostAction extends AbstractController
         $uploadedFiles = $request->files->get('images');
         if (!empty($uploadedFiles)) {
             foreach ($uploadedFiles as $key => $file) {
+                $errors  = $validator->validate($file, new Image());
+                if(count($errors) > 0) {
+                    throw new ValidationException("Only images can be uploaded!");
+                }
                 $originalFilename = pathinfo(
                   $file->getClientOriginalName(),
                   PATHINFO_FILENAME
