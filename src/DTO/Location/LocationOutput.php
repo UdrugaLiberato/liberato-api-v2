@@ -21,7 +21,8 @@ class LocationOutput
         public ?User    $user,
         public ?string   $about,
         public ?string  $updatedAt,
-        public ?string  $deletedAt
+        public ?string  $deletedAt,
+        public array $images
     )
     {
     }

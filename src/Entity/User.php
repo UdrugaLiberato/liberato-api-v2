@@ -17,10 +17,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
-/**
- * @Vich\Uploadable
- */
-#[ORM\Entity(repositoryClass: UserRepository::class),
+#[Vich\Uploadable,
+    ORM\Entity(repositoryClass: UserRepository::class),
     ApiResource(collectionOperations: [
         'get' => [
             'security' => "is_granted('ROLE_ADMIN')",

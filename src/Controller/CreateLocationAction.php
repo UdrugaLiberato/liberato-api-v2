@@ -8,6 +8,8 @@ use App\Repository\CategoryRepository;
 use App\Repository\CityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Validator\Constraints\Image;
@@ -17,7 +19,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class CreateLocationAction extends AbstractController
 {
     public function __construct(
-        private CityRepository $cityRepository,
+        private CityRepository     $cityRepository,
         private CategoryRepository $categoryRepository
     )
     {
@@ -32,8 +34,8 @@ class CreateLocationAction extends AbstractController
         $entityManager = $doctrine->getManager();
         $uploadDir = $this->getParameter('location_images');
         $location = new Location();
-        $cityId = explode("/",$request->get("city"));
-        $categoryId = explode("/",$request->get("category"));
+        $cityId = explode("/", $request->get("city"));
+        $categoryId = explode("/", $request->get("category"));
 
         $city = $this->cityRepository->findOneBy(["id" => $cityId]);
         $category = $this->categoryRepository->findOneBy(["id" => $categoryId]);
@@ -45,33 +47,23 @@ class CreateLocationAction extends AbstractController
         $location->setAbout($request->get("about"));
         $location->setCity($city);
         $location->setCategory($category);
-
         $entityManager->persist($location);
 
-        $images = $request->files->get("images");
+
+        $uploadedFiles = $request->get('images');
+
+        $decodeFiles = json_decode($uploadedFiles, true);
         $fileNames = [];
-        if (!empty($images)) {
-            foreach ($images as $key => $file) {
-                $errors = $validator->validate($file, new Image());
+
+        if (!empty($decodeFiles)) {
+            foreach ($decodeFiles as $key => $file) {
+                $newFile = $this->convert($file, $uploadDir);
+                $errors = $validator->validate($newFile, new Image());
                 if (count($errors) > 0) {
                     throw new ValidationException("Only images can be uploaded!");
                 }
-                $originalFilename = pathinfo(
-                    $file->getClientOriginalName(),
-                    PATHINFO_FILENAME
-                );
-                // this is needed to safely include the file name as part of the URL
-                $safeFilename = $this->slugify($originalFilename);
-                $newFilename = date('Y-m-d') . "_" . $safeFilename . md5
-                    (
-                        microtime()
-                    ) . '.'
-                    . $file->guessExtension();
-                $file->move(
-                    $uploadDir,
-                    $newFilename
-                );
-                $fileNames[$key] = $newFilename;
+
+                $fileNames[] = 'public/location/images/' . $newFile->getFilename();
             }
             $location->setImages($fileNames);
             $entityManager->persist($location);
@@ -90,5 +82,30 @@ class CreateLocationAction extends AbstractController
         $title = preg_replace('~-+~', '-', $title);
 
         return strtolower($title);
+    }
+
+    public function convert($file, string $targetDirectory): File
+    {
+        $originalFilename = pathinfo(
+            $file["title"],
+            PATHINFO_FILENAME
+        );
+        $safeFilename = $this->slugify($originalFilename);
+        $newFilename = date('Y-m-d') . "_" . $safeFilename . md5
+            (
+                microtime()
+            );
+
+        $base64Image = $file["src"];
+        $base64Exploded = explode(',', $base64Image);
+        $img = $base64Exploded[1];
+        $ext = explode('/', explode(':', explode(';', $base64Exploded[0])[0])[1])[1];
+
+        $filesystem = new Filesystem();
+        $content = base64_decode($img);
+
+        $filesystem->dumpFile($targetDirectory . $newFilename . '.' . $ext, $content);
+
+        return new File($targetDirectory . $newFilename . '.' . $ext);
     }
 }

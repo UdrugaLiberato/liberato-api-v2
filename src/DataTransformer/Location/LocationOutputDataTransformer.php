@@ -24,7 +24,8 @@ class LocationOutputDataTransformer implements DataTransformerInterface
             $object->getUser(),
             $object->getAbout(),
             $object->getUpdatedAt()?->format('Y-m-d H:i:s'),
-            $object->getDeletedAt()?->format('Y-m-d H:i:s')
+            $object->getDeletedAt()?->format('Y-m-d H:i:s'),
+            $object->getImages()
         );
     }
 
