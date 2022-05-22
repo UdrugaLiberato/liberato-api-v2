@@ -10,7 +10,7 @@ class UserOutput
         public string  $email,
         public string $role,
         public ?string  $phone,
-        public ?string  $imageURL,
+        public ?string  $avatar,
         public string  $createdAt,
         public ?string $updatedAt,
         public ?string $deletedAt

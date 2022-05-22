@@ -16,7 +16,7 @@ class UserOutputDataTransformer implements DataTransformerInterface
           $object->getEmail(),
           $object->getRoles()[0],
           null === $object->getPhone() ? null : $object->getPhone(),
-          null === $object->getFilePath() ? null : '/media/avatar' . $object->getFilePath(),
+          null === $object->getFilePath() ? null : $object->getFilePath(),
           $object->getCreatedAt()->format('Y-m-d H:i:s'),
           $object->getUpdatedAt()?->format("Y-m-d H:i:s"),
           $object->getDeletedAt()?->format("Y-m-d H:i:s")

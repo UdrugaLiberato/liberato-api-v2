@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\DTO\User\UserInput;
@@ -17,7 +18,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
-#[Vich\Uploadable,
+#[
+    Vich\Uploadable,
     ORM\Entity(repositoryClass: UserRepository::class),
     ApiResource(collectionOperations: [
         'get' => [
@@ -35,17 +37,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public const ROLE_ADMIN = "ROLE_ADMIN";
     public const ROLE_USER = "ROLE_USER";
 
-    #[Vich\UploadableField(mapping: "avatar", fileNameProperty: "filePath"),
-        Assert\File(
-            mimeTypes: ["image/*"]
-        )
-    ]
+
+    #[ApiProperty(iri: 'http://schema.org/contentUrl')]
+    public ?string $contentUrl = null;
+
+    /**
+     * @Vich\UploadableField(mapping="avatar", fileNameProperty="filePath")
+     */
     public ?File $file = null;
 
-    #[
-        ORM\Column(nullable: true),
-    ]
+    #[ORM\Column(nullable: true)]
     public ?string $filePath = null;
+
 
     #[
         ORM\Id,
@@ -297,6 +300,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $this;
+    }
+
+    public function setFilePath(?string $filePath): void
+    {
+        $this->filePath = $filePath;
     }
 
 }
