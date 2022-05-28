@@ -109,7 +109,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->createdAt = new \DateTimeImmutable("now");
         $this->updatedAt = null;
         $this->deletedAt = null;
-        $this->roles[] = $this::ROLE_USER;
         $this->posts = new ArrayCollection();
         $this->phone = null;
         $this->locations = new ArrayCollection();

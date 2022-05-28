@@ -36,6 +36,11 @@ class UserInputDataTransformer implements DataTransformerInterface
         $user->setPhone($object->phone);
         $user->setFile($object->file);
         $user->setFilePath('/media/avatar/' . $newFilename);
+        if($object->role){
+            $user->setRoles($object->role);
+        } else {
+            $user->setRoles(User::ROLE_USER);
+        }
         return $user;
     }
 
