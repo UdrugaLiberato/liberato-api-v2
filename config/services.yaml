@@ -35,7 +35,9 @@ services:
     'App\DataTransformer\Question\QuestionOutputDataTransformer': ~
     'App\DataTransformer\Location\LocationOutputDataTransformer': ~
     'App\DataTransformer\Event\EventInputDataTransformer': ~
-    'App\DataTransformer\Event\EventOututDataTransformer': ~
+    'App\DataTransformer\Event\EventOutputDataTransformer': ~
+    'App\DataTransformer\DonationGiver\DonationGiverInputDataTransformer': ~
+    'App\DataTransformer\DonationGiver\DonationGiverOutputDataTransformer': ~
 
     App\EventListener\CreatePostEventListener:
         tags:

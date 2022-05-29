@@ -5,7 +5,6 @@ namespace App\DataTransformer\Event;
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\DTO\Event\EventOutput;
 use App\Entity\Calendar;
-use Symfony\Component\HttpFoundation\JsonResponse;
 
 class EventOutputDataTransformer implements DataTransformerInterface
 {

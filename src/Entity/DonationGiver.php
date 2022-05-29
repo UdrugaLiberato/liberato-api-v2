@@ -3,13 +3,15 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\DTO\DonationGiver\DonationGiverInput;
+use App\DTO\DonationGiver\DonationGiverOutput;
 use App\Repository\DonationGiverRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: DonationGiverRepository::class)]
-#[ApiResource]
+#[ApiResource(input: DonationGiverInput::class, output: DonationGiverOutput::class)]
 class DonationGiver
 {
     #[
@@ -19,6 +21,9 @@ class DonationGiver
         ORM\CustomIdGenerator(class: "doctrine.uuid_generator")
     ]
     private $id;
+
+    #[ORM\Column(type: 'string')]
+    private string $name;
 
     #[ORM\Column(type: 'datetime_immutable')]
     private \DateTimeImmutable $dateOfApplication;
@@ -42,13 +47,16 @@ class DonationGiver
     private \DateTimeImmutable $createdAt;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    private \DateTimeImmutable  $updatedAt;
+    private ?\DateTimeImmutable $updatedAt;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    private \DateTimeImmutable $deletedAt;
+    private ?\DateTimeImmutable $deletedAt;
 
     public function __construct()
     {
+        $this->createdAt = new \DateTimeImmutable("now");
+        $this->updatedAt = null;
+        $this->deletedAt = null;
         $this->projects = new ArrayCollection();
     }
 
@@ -125,7 +133,7 @@ class DonationGiver
         return $this->projects;
     }
 
-    public function addProject(Project $project):f
+    public function addProject(Project $project): f
     {
         if (!$this->rojects->contains($project)) {
             $this->rojects[] = $project;
@@ -175,5 +183,15 @@ class DonationGiver
         $this->deletedAt = $deletedAt;
 
         return $this;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): void
+    {
+        $this->name = $name;
     }
 }
