@@ -12,7 +12,9 @@ class ProjectOutputDataTransformer implements DataTransformerInterface
     public function transform($object, string $to, array $context = [])
     {
         $files = $object->getInvoices()->map(function ($invoice) {
-            return $invoice->getFiles();
+            foreach ($invoice->getFiles() as $file) {
+                return $file;
+            }
         });
         return new ProjectOutput(
             $object->getName(),

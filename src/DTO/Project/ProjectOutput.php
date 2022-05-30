@@ -15,7 +15,7 @@ class ProjectOutput
         public ?string $updatedAt,
         public ?string $deletedAt,
         public $donationGivers,
-        public $invoices
+        public $files
     )
     {
     }

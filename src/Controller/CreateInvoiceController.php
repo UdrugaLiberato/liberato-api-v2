@@ -7,19 +7,26 @@ use App\Image\ImageUploader;
 use App\Repository\ProjectRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsController;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[AsController]
 class CreateInvoiceController extends AbstractController
 {
+    private $publicPath;
     public function __construct(
         private ProjectRepository $projectRepository,
-        private ImageUploader     $imageUploader
+        private ImageUploader     $imageUploader,
+        private MailerInterface   $mailer,
+        protected ParameterBagInterface $parameterBag
     )
     {
+        $this->publicPath = $this->parameterBag->get('kernel.project_dir');
     }
 
     public function __invoke(
@@ -52,7 +59,7 @@ class CreateInvoiceController extends AbstractController
                 $this->getParameter('invoices_directory'),
                 $newFilename
             );
-            $files[] = ["filename" => $uploadedFile["title"], "path" => '/public/media/invoices/' .
+            $files[] = ["filename" => $uploadedFile["title"], "path" => '/media/invoices/' .
                 $newFilename];
         }
         $invoice->setFiles($files);
@@ -60,6 +67,30 @@ class CreateInvoiceController extends AbstractController
         $entityManager->persist($invoice);
         $entityManager->flush();
 
+        $this->sendMail($invoice);
         return $invoice;
+    }
+
+    private function sendMail(Invoice $invoice)
+    {
+
+        $email = (new Email())
+            ->from('hello@example.com')
+            ->to('you@example.com')
+            //->cc('cc@example.com')
+            //->bcc('bcc@example.com')
+            //->replyTo('fabien@example.com')
+            //->priority(Email::PRIORITY_HIGH)
+            ->subject('Udruga Liberato Racun!')
+            ->text('Racuni u prilogu!')
+            ->html('<p>Racuni u prilogu!</p>');
+
+
+        foreach ($invoice->getFiles() as $file) {
+//            dd($this->publicPath . '/public' . $file["path"]);
+            $email->attachFromPath($this->publicPath . '/public' . $file["path"], $file["filename"]);
+        }
+        $this->mailer->send($email);
+
     }
 }
