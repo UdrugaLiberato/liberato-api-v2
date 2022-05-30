@@ -8,6 +8,6 @@ class DonationGiverInput
     public bool $approved;
     public float $moneyRequested;
     public float $moneyGiven;
-    public \DateTime $dateOfApplication;
-    public ?\DateTime $dateOfApproval;
+    public $dateOfApplication;
+    public  $dateOfApproval;
 }

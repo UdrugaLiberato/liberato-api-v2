@@ -16,7 +16,7 @@ class DonationGiverOutputDataTransformer implements DataTransformerInterface
             $object->getApproved(),
             $object->getMoneyRequested(),
             $object->getMoneyGiven(),
-            $object->getDateOfApplication(),
+            $object->getDateOfApplication()->format("Y-m-d H:i:s"),
             $object->getDateOfApproval()?->format("Y-m-d H:i:s"),
             $object->getCreatedAt()->format('Y-m-d H:i:s'),
             $object->getUpdatedAt()?->format("Y-m-d H:i:s"),

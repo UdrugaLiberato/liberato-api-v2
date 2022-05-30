@@ -2,14 +2,20 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use App\DTO\Project\ProjectOutput;
 use App\Repository\ProjectRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
-#[ORM\Entity(repositoryClass: ProjectRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    denormalizationContext: ['groups' => ['write']],
+output: ProjectOutput::class),
+    ORM\Entity(repositoryClass: ProjectRepository::class)]
 class Project
 {
     #[
@@ -20,41 +26,78 @@ class Project
     ]
     private $id;
 
-    #[ORM\Column(type: 'text')]
+    #[
+        ORM\Column(type: 'string', length: 255),
+        ApiFilter(SearchFilter::class, strategy: 'ipartial'),
+        Groups(["write"])
+    ]
+    private string $name;
+
+    #[
+        ORM\Column(type: 'text'),
+        Groups(["write"])
+    ]
     private string $description;
 
-    #[ORM\Column(type: 'date')]
+    #[
+        ORM\Column(type: 'date'),
+        Groups(["write"])
+    ]
     private \DateTime $start;
 
-    #[ORM\Column(type: 'date')]
+    #[
+        ORM\Column(type: 'date'),
+        Groups(["write"])
+    ]
     private \DateTime $end;
 
-    #[ORM\Column(type: 'float')]
+    #[
+        ORM\Column(type: 'float'),
+        Groups(["write"])
+    ]
     private float $moneyNeeded;
 
-    #[ORM\Column(type: 'float')]
+    #[
+        ORM\Column(type: 'float'),
+        Groups(["write"])
+    ]
     private float $moneyGathered;
 
-    #[ORM\Column(type: 'datetime_immutable')]
+    #[
+        ORM\Column(type: 'datetime_immutable'),
+    ]
     private \DateTimeImmutable $createdAt;
 
-    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    private \DateTimeImmutable $updatedAt;
+    #[
+        ORM\Column(type: 'datetime_immutable', nullable: true),
+    ]
+    private ?\DateTimeImmutable $updatedAt;
 
-    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    private \DateTimeImmutable $deletedAt;
+    #[
+        ORM\Column(type: 'datetime_immutable', nullable: true),
+    ]
+    private ?\DateTimeImmutable $deletedAt;
 
-    #[ORM\ManyToMany(targetEntity: DonationGiver::class, mappedBy: 'projects')]
+    #[
+        ORM\ManyToMany(targetEntity: DonationGiver::class, mappedBy: 'projects'),
+        Groups(["write"])
+    ]
     private $donationGivers;
 
-    #[ORM\OneToOne(mappedBy: 'project', targetEntity: Invoice::class, cascade: ['persist', 'remove'])]
-    private $invoice;
+    #[
+        ORM\OneToMany(mappedBy: 'project', targetEntity: Invoice::class, cascade: ["persist"]),
+        Groups(["write"])
+    ]
+    private $invoices;
 
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable("now");
         $this->moneyGathered = 0.00;
+        $this->updatedAt = null;
+        $this->deletedAt = null;
         $this->donationGivers = new ArrayCollection();
+        $this->invoices = new ArrayCollection();
     }
 
     public function getId(): string
@@ -79,7 +122,7 @@ class Project
         return $this->start;
     }
 
-    public function setStart(\DateTimeInterface $start): self
+    public function setStart(\DateTime $start): self
     {
         $this->start = $start;
 
@@ -91,7 +134,7 @@ class Project
         return $this->end;
     }
 
-    public function setEnd(\DateTimeInterface $end): self
+    public function setEnd(\DateTime $end): self
     {
         $this->end = $end;
 
@@ -170,7 +213,7 @@ class Project
     {
         if (!$this->donationGivers->contains($donationGiver)) {
             $this->donationGivers[] = $donationGiver;
-            $donationGiver->addRoject($this);
+            $donationGiver->addProject($this);
         }
 
         return $this;
@@ -179,30 +222,49 @@ class Project
     public function removeDonationGiver(DonationGiver $donationGiver): self
     {
         if ($this->donationGivers->removeElement($donationGiver)) {
-            $donationGiver->removeRoject($this);
+            $donationGiver->removeProject($this);
         }
 
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return Collection<int, Invoice>
      */
-    public function getInvoice(): Invoice
+    public function getInvoices(): Collection
     {
-        return $this->invoice;
+        return $this->invoices;
     }
 
-
-    public function setInvoice(Invoice $invoice): self
+    public function addInvoice(Invoice $invoice): self
     {
-        // set the owning side of the relation if necessary
-        if ($invoice->getProject() !== $this) {
+        if (!$this->invoices->contains($invoice)) {
+            $this->invoices[] = $invoice;
             $invoice->setProject($this);
         }
 
-        $this->invoice = $invoice;
+        return $this;
+    }
+
+    public function removeInvoice(Invoice $invoice): self
+    {
+        if ($this->invoices->removeElement($invoice)) {
+            // set the owning side to null (unless already changed)
+            if ($invoice->getProject() === $this) {
+                $invoice->setProject(null);
+            }
+        }
 
         return $this;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): void
+    {
+        $this->name = $name;
     }
 }

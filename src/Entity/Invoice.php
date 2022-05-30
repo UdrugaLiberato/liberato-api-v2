@@ -3,11 +3,24 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\Controller\CreateInvoiceController;
+use App\DTO\Invoice\InvoiceOutput;
 use App\Repository\InvoiceRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: InvoiceRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    collectionOperations: [
+        'get',
+        'post' => [
+            'controller' => CreateInvoiceController::class,
+            'deserialize' => false,
+            'input_formats' => [
+                'multipart' => ['multipart/form-data'],
+            ],
+        ]
+    ], output: InvoiceOutput::class
+)]
 class Invoice
 {
     #[
@@ -20,10 +33,6 @@ class Invoice
 
     #[ORM\Column(type: 'text', nullable: true)]
     private string $description;
-
-    #[ORM\OneToOne(inversedBy: 'amount', targetEntity: Project::class, cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: false)]
-    private Project $project;
 
     #[ORM\Column(type: 'float')]
     private float $amount;
@@ -43,12 +52,15 @@ class Invoice
     #[ORM\Column(type: 'array')]
     private array $files = [];
 
+    #[ORM\ManyToOne(targetEntity: Project::class, cascade: ["persist"], inversedBy: 'invoices')]
+    private $project;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable("now");
     }
 
-    public function getId(): ?int
+    public function getId(): string
     {
         return $this->id;
     }
@@ -61,18 +73,6 @@ class Invoice
     public function setDescription(?string $description): self
     {
         $this->description = $description;
-
-        return $this;
-    }
-
-    public function getProject(): ?Project
-    {
-        return $this->project;
-    }
-
-    public function setProject(Project $project): self
-    {
-        $this->project = $project;
 
         return $this;
     }
@@ -145,6 +145,18 @@ class Invoice
     public function setFiles(array $files): self
     {
         $this->files = $files;
+
+        return $this;
+    }
+
+    public function getProject(): ?Project
+    {
+        return $this->project;
+    }
+
+    public function setProject(?Project $project): self
+    {
+        $this->project = $project;
 
         return $this;
     }

@@ -15,7 +15,7 @@ class DonationGiverInputDataTransformer implements DataTransformerInterface
         $donationGiver->setApproved($object->approved);
         $donationGiver->setMoneyRequested($object->moneyRequested);
         $donationGiver->setMoneyGiven($object->moneyGiven);
-        $donationGiver->setDateOfApplication($object->dateOfApplication);
+        $donationGiver->setDateOfApplication(new \DateTime($object->dateOfApplication));
         $donationGiver->setDateOfApproval($object->dateOfApproval);
 
         return $donationGiver;

@@ -1,6 +1,7 @@
 parameters:
     post_images: '%kernel.project_dir%/public/media/posts/'
     location_images: '%kernel.project_dir%/public/media/locations/'
+    invoices_directory: '%kernel.project_dir%/public/media/invoices/'
 
 services:
     # default configuration for services in *this* file
@@ -38,6 +39,8 @@ services:
     'App\DataTransformer\Event\EventOutputDataTransformer': ~
     'App\DataTransformer\DonationGiver\DonationGiverInputDataTransformer': ~
     'App\DataTransformer\DonationGiver\DonationGiverOutputDataTransformer': ~
+    'App\DataTransformer\Project\ProjectOutputDataTransformer': ~
+    'App\DataTransformer\Invoice\InvoiceOutputDataTransformer': ~
 
     App\EventListener\CreatePostEventListener:
         tags:

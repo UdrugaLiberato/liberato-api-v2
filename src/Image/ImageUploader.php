@@ -33,8 +33,22 @@ class ImageUploader
         $filesystem = new Filesystem();
         $content = base64_decode($img);
 
-        $filesystem->dumpFile('%kernel.project_dir%/public/location/images' . 'file.' . $ext, $content);
+        $filesystem->dumpFile('media/location/images' . 'file.' . $ext, $content);
 
-        return new File('%kernel.project_dir%/public/location/images' . 'file.' . $ext);
+        return new File('media/location/images' . 'file.' . $ext);
+    }
+
+    public function convertFile(string $base64): File
+    {
+        $base64Exploded = explode(',', $base64);
+        $file = $base64Exploded[1];
+        $ext = explode('/', explode(':', explode(';', $base64Exploded[0])[0])[1])[1];
+
+        $filesystem = new Filesystem();
+        $content = base64_decode($file);
+
+        $filesystem->dumpFile('media/invoices/' . 'file.' . $ext, $content);
+
+        return new File('media/invoices/' . 'file.' . $ext);
     }
 }

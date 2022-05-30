@@ -2,7 +2,9 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\DTO\DonationGiver\DonationGiverInput;
 use App\DTO\DonationGiver\DonationGiverOutput;
 use App\Repository\DonationGiverRepository;
@@ -22,17 +24,20 @@ class DonationGiver
     ]
     private $id;
 
-    #[ORM\Column(type: 'string')]
+    #[
+        ORM\Column(type: 'string'),
+        ApiFilter(SearchFilter::class, strategy: 'ipartial')
+    ]
     private string $name;
 
-    #[ORM\Column(type: 'datetime_immutable')]
-    private \DateTimeImmutable $dateOfApplication;
+    #[ORM\Column(type: 'datetime')]
+    private \DateTime $dateOfApplication;
 
     #[ORM\Column(type: 'boolean')]
     private bool $approved;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    private \DateTimeImmutable $dateOfApproval;
+    private ?\DateTimeImmutable $dateOfApproval = null;
 
     #[ORM\Column(type: 'float')]
     private float $moneyRequested;
@@ -56,6 +61,7 @@ class DonationGiver
     {
         $this->createdAt = new \DateTimeImmutable("now");
         $this->updatedAt = null;
+        $this->dateOfApproval = null;
         $this->deletedAt = null;
         $this->projects = new ArrayCollection();
     }
@@ -65,12 +71,12 @@ class DonationGiver
         return $this->id;
     }
 
-    public function getDateOfApplication(): ?\DateTimeImmutable
+    public function getDateOfApplication(): ?\DateTime
     {
         return $this->dateOfApplication;
     }
 
-    public function setDateOfApplication(\DateTimeImmutable $dateOfApplication): self
+    public function setDateOfApplication(\DateTime $dateOfApplication): self
     {
         $this->dateOfApplication = $dateOfApplication;
 
@@ -133,10 +139,10 @@ class DonationGiver
         return $this->projects;
     }
 
-    public function addProject(Project $project): f
+    public function addProject(Project $project): self
     {
-        if (!$this->rojects->contains($project)) {
-            $this->rojects[] = $project;
+        if (!$this->projects->contains($project)) {
+            $this->projects[] = $project;
         }
 
         return $this;
@@ -144,7 +150,7 @@ class DonationGiver
 
     public function removeProject(Project $project): self
     {
-        $this->rojects->removeElement($project);
+        $this->projects->removeElement($project);
 
         return $this;
     }
