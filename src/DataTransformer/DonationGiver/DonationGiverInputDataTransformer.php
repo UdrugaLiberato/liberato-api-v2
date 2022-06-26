@@ -4,12 +4,22 @@ namespace App\DataTransformer\DonationGiver;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Entity\DonationGiver;
+use App\Repository\BankAccountRepository;
+use DateTimeImmutable;
 
 class DonationGiverInputDataTransformer implements DataTransformerInterface
 {
 
+    public function __construct(private BankAccountRepository $bankAccountRepository)
+    {
+    }
+
     public function transform($object, string $to, array $context = [])
     {
+        $account = $this->bankAccountRepository->findAll()[0];
+        $account->setAmount($object->moneyGiven);
+        $account->setUpdatedAt(new DateTimeImmutable("now"));
+        $this->bankAccountRepository->add($account);
         $donationGiver = new DonationGiver();
         $donationGiver->setName($object->name);
         $donationGiver->setApproved($object->approved);

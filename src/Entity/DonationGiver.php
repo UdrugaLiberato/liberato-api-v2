@@ -30,14 +30,14 @@ class DonationGiver
     ]
     private string $name;
 
-    #[ORM\Column(type: 'datetime')]
+    #[ORM\Column(type: 'date')]
     private \DateTime $dateOfApplication;
 
     #[ORM\Column(type: 'boolean')]
     private bool $approved;
 
-    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    private ?\DateTimeImmutable $dateOfApproval = null;
+    #[ORM\Column(type: 'date', nullable: true)]
+    private ?\DateTime $dateOfApproval = null;
 
     #[ORM\Column(type: 'float')]
     private float $moneyRequested;
@@ -95,12 +95,12 @@ class DonationGiver
         return $this;
     }
 
-    public function getDateOfApproval(): ?\DateTimeImmutable
+    public function getDateOfApproval(): ?\DateTime
     {
         return $this->dateOfApproval;
     }
 
-    public function setDateOfApproval(?\DateTimeImmutable $dateOfApproval): self
+    public function setDateOfApproval(?\DateTime $dateOfApproval): self
     {
         $this->dateOfApproval = $dateOfApproval;
 

@@ -41,6 +41,8 @@ services:
     'App\DataTransformer\DonationGiver\DonationGiverOutputDataTransformer': ~
     'App\DataTransformer\Project\ProjectOutputDataTransformer': ~
     'App\DataTransformer\Invoice\InvoiceOutputDataTransformer': ~
+    'App\DataTransformer\BankAccount\BankAccountInputDataTransformer': ~
+    'App\DataTransformer\BankAccount\BankAccountOutputDataTransformer': ~
 
     App\EventListener\CreatePostEventListener:
         tags:
