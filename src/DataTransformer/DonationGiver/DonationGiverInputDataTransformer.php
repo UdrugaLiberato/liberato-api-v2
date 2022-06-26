@@ -9,7 +9,6 @@ use DateTimeImmutable;
 
 class DonationGiverInputDataTransformer implements DataTransformerInterface
 {
-
     public function __construct(private BankAccountRepository $bankAccountRepository)
     {
     }
