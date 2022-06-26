@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Invoice;
 use App\Image\ImageUploader;
+use App\Repository\BankAccountRepository;
 use App\Repository\ProjectRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -19,10 +20,12 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class CreateInvoiceController extends AbstractController
 {
     private $publicPath;
+
     public function __construct(
-        private ProjectRepository $projectRepository,
-        private ImageUploader     $imageUploader,
-        private MailerInterface   $mailer,
+        private BankAccountRepository   $bankAccountRepository,
+        private ProjectRepository       $projectRepository,
+        private ImageUploader           $imageUploader,
+        private MailerInterface         $mailer,
         protected ParameterBagInterface $parameterBag
     )
     {
@@ -64,6 +67,11 @@ class CreateInvoiceController extends AbstractController
         }
         $invoice->setFiles($files);
         $project->addInvoice($invoice);
+
+        $account = $this->bankAccountRepository->findAll()[0];
+        $oldAmount = $account->getAmount();
+        $account->setAmount($oldAmount - $request->get("amount"));
+        $this->bankAccountRepository->add($account);
         $entityManager->persist($invoice);
         $entityManager->flush();
 
