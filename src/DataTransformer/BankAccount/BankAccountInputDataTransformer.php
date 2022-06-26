@@ -5,7 +5,6 @@ namespace App\DataTransformer\BankAccount;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Entity\BankAccount;
-use App\Repository\BankAccountRepository;
 
 class BankAccountInputDataTransformer implements DataTransformerInterface
 {

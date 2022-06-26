@@ -7,7 +7,7 @@ class DonationGiverInput
     public string $name;
     public bool $approved;
     public float $moneyRequested;
-    public float $moneyGiven;
+    public  $moneyGiven;
     public $dateOfApplication;
     public  $dateOfApproval;
 }

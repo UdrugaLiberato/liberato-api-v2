@@ -31,16 +31,16 @@ class BankAccount
     ]
     private string $id;
 
-    #[ORM\Column(type: 'string', unique: true)]
+    #[ORM\Column(type: 'string')]
     private string $iban;
 
     #[ORM\Column(type: 'float')]
     private float $amount;
 
-    #[ORM\Column(type: 'string', unique: true)]
+    #[ORM\Column(type: 'string')]
     private string $bankName;
 
-    #[ORM\Column(type: 'string', unique: true)]
+    #[ORM\Column(type: 'string')]
     private string $bankAccountHolderName;
 
     #[ORM\Column(type: 'datetime_immutable')]
