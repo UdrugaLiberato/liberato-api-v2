@@ -12,3 +12,8 @@ vich_uploader:
       upload_destination: '%kernel.project_dir%/public/media/category'
       # Will rename uploaded files using a uniqueid as a prefix.
       namer: Vich\UploaderBundle\Naming\UniqidNamer
+    news:
+      uri_prefix: /media/news
+      upload_destination: '%kernel.project_dir%/public/media/news'
+        # Will rename uploaded files using a uniqueid as a prefix.
+      namer: Vich\UploaderBundle\Naming\UniqidNamer

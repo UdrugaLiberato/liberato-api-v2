@@ -8,7 +8,8 @@ use App\Entity\BankAccount;
 
 class BankAccountInputDataTransformer implements DataTransformerInterface
 {
-     public function transform($object, string $to, array $context = [])
+
+    public function transform($object, string $to, array $context = [])
     {
         $account = new BankAccount();
         $account->setBankName($object->bankName);

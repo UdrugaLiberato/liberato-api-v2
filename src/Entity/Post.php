@@ -9,6 +9,7 @@ use App\DTO\Post\PostOutput;
 use App\Repository\PostRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
@@ -17,13 +18,11 @@ use Symfony\Component\Validator\Constraints as Assert;
     'post' => [
         "security" => "is_granted('ROLE_ADMIN')",
         "security_message" => "Only admins can add posts.",
-        'controller' => CreatePostAction::class,
-        'deserialize' => false,
         'input_formats' => [
             'multipart' => ['multipart/form-data'],
         ],
     ],
-], output: PostOutput::class)]
+], input: PostInput::class, output: PostOutput::class)]
 #[ORM\Entity(repositoryClass: PostRepository::class)]
 class Post
 {
@@ -55,10 +54,9 @@ class Post
     private string $body;
 
     #[
-        ORM\Column(type: 'string'),
-        Assert\NotBlank
+        ORM\Column(type: 'array'),
     ]
-    private string $tags;
+    private array $tags;
 
     #[ORM\Column(type: 'array')]
     private array $images;
@@ -93,7 +91,7 @@ class Post
         return $this->author;
     }
 
-    public function setAuthor(?User $author): self
+    public function setAuthor(User|UserInterface $author): self
     {
         $this->author = $author;
 
@@ -153,12 +151,12 @@ class Post
         return $this;
     }
 
-    public function getTags(): string
+    public function getTags(): array
     {
         return $this->tags;
     }
 
-    public function setTags(string $tags): void
+    public function setTags(array $tags): void
     {
         $this->tags = $tags;
     }

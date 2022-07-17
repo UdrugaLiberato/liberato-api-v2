@@ -12,7 +12,7 @@ final class PostOutput
       public string $title,
       public string $body,
       public string $slug,
-      public string $tags,
+      public array $tags,
       public  $images,
       public string $createdAt,
       public ?string $updatedAt,
