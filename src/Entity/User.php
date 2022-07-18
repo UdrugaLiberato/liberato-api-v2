@@ -31,7 +31,11 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
                 'multipart' => ['multipart/form-data'],
             ],
         ],
-    ], itemOperations: ["get"], input: UserInput::class, output: UserOutput::class)]
+    ], itemOperations: ["get", "put" => [
+        'input_formats' => [
+            'multipart' => ['multipart/form-data'],
+        ],
+    ]], input: UserInput::class, output: UserOutput::class)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     public const ROLE_ADMIN = "ROLE_ADMIN";
