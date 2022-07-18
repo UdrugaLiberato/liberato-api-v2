@@ -2,7 +2,7 @@
 
 namespace App\DTO\User;
 
-use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 class UserOutput
 {
@@ -13,7 +13,7 @@ class UserOutput
         public string  $role,
         public ?string $phone,
         public ?string $avatar,
-        public Collection $posts,
+        public array|ArrayCollection $posts,
         public string  $createdAt,
         public ?string $updatedAt,
         public ?string $deletedAt
