@@ -17,6 +17,7 @@ class UserOutputDataTransformer implements DataTransformerInterface
           $object->getRoles()[0],
           null === $object->getPhone() ? null : $object->getPhone(),
           null === $object->getFilePath() ? null : $object->getFilePath(),
+          $object->getPosts(),
           $object->getCreatedAt()->format('Y-m-d H:i:s'),
           $object->getUpdatedAt()?->format("Y-m-d H:i:s"),
           $object->getDeletedAt()?->format("Y-m-d H:i:s")

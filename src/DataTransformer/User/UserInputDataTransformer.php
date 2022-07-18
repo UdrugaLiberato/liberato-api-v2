@@ -3,17 +3,25 @@
 namespace App\DataTransformer\User;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
+use ApiPlatform\Core\Validator\Exception\ValidationException;
 use App\Entity\User;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Validator\Constraints\Image;
 
 class UserInputDataTransformer implements DataTransformerInterface
 {
-    public function __construct(private KernelInterface $kernel)
+    public function __construct(private ValidatorInterface $validator, private KernelInterface
+    $kernel)
     {
     }
 
     public function transform($object, string $to, array $context = []): object
     {
+        $errors = $this->validator->validate($object->file, new Image());
+        if (count($errors) > 0) {
+            throw new ValidationException("Only images can be uploaded!");
+        }
 
         $originalFilename = pathinfo(
             $object->file->getClientOriginalName(),
@@ -38,8 +46,6 @@ class UserInputDataTransformer implements DataTransformerInterface
         $user->setFilePath('/media/avatar/' . $newFilename);
         if($object->role){
             $user->setRoles($object->role);
-        } else {
-            $user->setRoles(User::ROLE_USER);
         }
         return $user;
     }
