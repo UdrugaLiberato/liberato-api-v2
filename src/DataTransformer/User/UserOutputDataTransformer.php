@@ -42,7 +42,7 @@ class UserOutputDataTransformer implements DataTransformerInterface
                     "title" => $post->getTitle(),
                     "body" => $post->getBody(),
                     "tags" => $post->getTags(),
-                "image" => "./public/images/posts/". $post->getImages()[0],
+                "image" => "/public/images/posts/". $post->getImages()[0],
                     "created_at" => $post->getCreatedAt()->format('Y-m-d H:i:s')
                 ];
         });
