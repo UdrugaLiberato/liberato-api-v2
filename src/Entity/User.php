@@ -6,6 +6,7 @@ use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use App\Controller\UpdateUserController;
 use App\DTO\User\UserInput;
 use App\DTO\User\UserOutput;
 use App\Repository\UserRepository;
@@ -27,15 +28,17 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
             'security_message' => "Only admin users are allowed to list users.",
         ],
         'post' => [
+            "input" => UserInput::class,
             'input_formats' => [
                 'multipart' => ['multipart/form-data'],
             ],
         ],
     ], itemOperations: ["get", "put" => [
+        "controller" => UpdateUserController::class,
         'input_formats' => [
             'multipart' => ['multipart/form-data'],
         ],
-    ]], input: UserInput::class, output: UserOutput::class)]
+    ]], output: UserOutput::class)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     public const ROLE_ADMIN = "ROLE_ADMIN";
@@ -74,8 +77,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $phone;
 
     #[
-        ORM\Column(type: 'json'),
-        Assert\NotNull
+        ORM\Column(type: 'json')
     ]
     private array $roles;
 
@@ -157,6 +159,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function setRoles(string $role): self
     {
+        $this->roles = [];
         $this->roles[] = $role;
 
         return $this;
