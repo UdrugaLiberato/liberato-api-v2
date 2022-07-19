@@ -12,7 +12,7 @@ class PostOutputDataTransformer implements DataTransformerInterface
     public function transform($object, string $to, array $context = []): object
     {
         return new PostOutput(
-            $object->getAuthor(),
+            $object->getAuthor()->getName(),
             $object->getId(),
             $object->getTitle(),
             $object->getBody(),
