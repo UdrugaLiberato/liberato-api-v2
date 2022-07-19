@@ -83,8 +83,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[
         ORM\Column(type: 'string'),
-        Assert\Length(min: 8, max: 32, minMessage: "Password must be at least 8 characters long!",
-            maxMessage: "Password must be at most 32 characters")
+        Assert\Length(min: 8, minMessage: "Password must be at least 8 characters long!")
     ]
     private string $password;
 
