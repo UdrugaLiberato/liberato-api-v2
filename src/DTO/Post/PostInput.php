@@ -7,5 +7,5 @@ class PostInput
     public string $title;
     public string $body;
     public string $tags;
-    public array $images;
+    public $images;
 }
