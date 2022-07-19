@@ -9,7 +9,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -18,9 +17,8 @@ class UpdateUserController extends AbstractController
 {
     public function __construct(
         private UserRepository              $userRepository,
-        private UserPasswordHasherInterface $userPasswordEncoder,
         private ValidatorInterface          $validator,
-        private KernelInterface $kernel
+        private KernelInterface             $kernel
     )
     {
     }
@@ -33,7 +31,7 @@ class UpdateUserController extends AbstractController
             $errors = $this->validator->validate($avatar, new Image());
             if (count($errors) > 0) {
                 throw new ValidationException("Only images can be uploaded!");
-             }
+            }
 
             $originalFilename = pathinfo(
                 $avatar->getClientOriginalName(),
@@ -56,9 +54,8 @@ class UpdateUserController extends AbstractController
             $oldUser->setUsername($request->get("username"));
         }
 
-        if ($request->get("password") && $request->get("password") !== $oldUser->getPassword()) {
-            $password = $this->userPasswordEncoder->hashPassword($oldUser, $request->get("password"));
-            $oldUser->setPassword($password);
+        if ($request->get("password")) {
+            $oldUser->setPassword($request->get("password"));
         }
 
         if ($request->get("email") && $request->get("email") !== $oldUser->getEmail()) {
