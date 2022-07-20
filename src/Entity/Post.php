@@ -17,6 +17,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource(collectionOperations: [
     'get',
     'post' => [
+        "input" => PostInput::class,
         "security" => "is_granted('ROLE_ADMIN')",
         "security_message" => "Only admins can add posts.",
         'input_formats' => [
@@ -27,13 +28,14 @@ use Symfony\Component\Validator\Constraints as Assert;
     'get',
     'put' => [
         "controller" => UpdatePostController::class,
+        "deserialize" => false,
         "security" => "is_granted('ROLE_ADMIN')",
         "security_message" => "Only admins can add posts.",
         'input_formats' => [
             'multipart' => ['multipart/form-data'],
         ],
     ],
-], input: PostInput::class, output: PostOutput::class)]
+], output: PostOutput::class)]
 #[ORM\Entity(repositoryClass: PostRepository::class)]
 class Post
 {
