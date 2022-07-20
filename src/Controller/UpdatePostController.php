@@ -3,12 +3,14 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use ApiPlatform\Core\Validator\Exception\ValidationException;
 use App\Entity\Post;
 use App\Repository\PostRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[AsController]
@@ -27,7 +29,6 @@ class UpdatePostController extends AbstractController
 
     public function __invoke(string $id, Request $request): Post
     {
-        dd($request);
         $oldPost = $this->postRepository->find($id);
 
         if ($request->get("title") && $request->get("title") !== $oldPost->getTitle()) {
@@ -37,11 +38,53 @@ class UpdatePostController extends AbstractController
         if ($request->get("body") && $request->get("body") !== $oldPost->getBody()) {
             $oldPost->setBody($request->get("body"));
         }
+        $oldPost->setTags(explode(",", $request->get("tags")));;
+        $fileNames = $this->transformPictures($request->files->get("images"));
+        $oldPost->setImages([]);
+        $oldPost->setImages($fileNames);
 
         $oldPost->setUpdatedAt(new \DateTimeImmutable("now"));
         $this->postRepository->update($oldPost);
 
         return $oldPost;
+    }
+
+    private function transformPictures($uploadedFiles): array
+    {
+        $fileNames = [];
+        if (!empty($uploadedFiles)) {
+            foreach ($uploadedFiles as $file) {
+                $mime = $file->getMimeType();
+                $originalFilename = pathinfo(
+                    $file->getClientOriginalName(),
+                    PATHINFO_FILENAME
+                );
+                // this is needed to safely include the file name as part of the URL
+                $safeFilename = $this->slugify($originalFilename);
+                $newFilename = date('Y-m-d') . "_" . $safeFilename . md5
+                    (
+                        microtime()
+                    ) . '.'
+                    . $file->guessExtension();
+                $file->move(
+                    $this->uploadDir,
+                    $newFilename
+                );
+
+                $F = file_get_contents($this->uploadDir . $newFilename);
+                $base64 = base64_encode($F);
+                $blob = 'data:'.$mime.';base64,'.$base64;
+                $fileObj = [
+                    "path" => $newFilename,
+                    "title" => $file->getClientOriginalName(),
+                    "mime" => $mime,
+                    "src" => $blob,
+                ];
+                $fileNames[] = $fileObj;
+            }
+            return $fileNames;
+        }
+        return [];
     }
 
     private function slugify(string $title): string
