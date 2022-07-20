@@ -12,13 +12,15 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
+
 class PostInputDataTransformer implements DataTransformerInterface
 {
     public string $uploadDir;
     private ValidatorInterface $validator;
-    public function __construct(public KernelInterface $kernel,
-    public ValidatorInterface $validatorI,
-    public TokenStorageInterface $token
+
+    public function __construct(public KernelInterface       $kernel,
+                                public ValidatorInterface    $validatorI,
+                                public TokenStorageInterface $token
     )
     {
         $this->validator = $validatorI;
@@ -37,24 +39,16 @@ class PostInputDataTransformer implements DataTransformerInterface
         return $post;
     }
 
-    public function supportsTransformation($data, string $to, array $context = []): bool
-    {
-        if ($data instanceof Post) {
-            return false;
-        }
-
-        return Post::class === $to && null !== ($context['input']['class'] ?? null);
-    }
-
     private function transformPictures($uploadedFiles): array
     {
         $fileNames = [];
         if (!empty($uploadedFiles)) {
-            foreach ($uploadedFiles as $key => $file) {
+            foreach ($uploadedFiles as $file) {
                 $errors = $this->validator->validate($file, new Image());
                 if (count($errors) > 0) {
                     throw new ValidationException("Only images can be uploaded!");
                 }
+
                 $originalFilename = pathinfo(
                     $file->getClientOriginalName(),
                     PATHINFO_FILENAME
@@ -70,9 +64,14 @@ class PostInputDataTransformer implements DataTransformerInterface
                     $this->uploadDir,
                     $newFilename
                 );
-                $fileNames[$key] = $newFilename;
+                $fileObj = [
+                    "src" => $newFilename,
+                    "title" => $file->getClientOriginalName(),
+                    "extension" => $file->guessClientExtension()
+                ];
+                $fileNames[] = $fileObj;
             }
-        return $fileNames;
+            return $fileNames;
         }
         return [];
     }
@@ -86,5 +85,14 @@ class PostInputDataTransformer implements DataTransformerInterface
         $title = preg_replace('~-+~', '-', $title);
 
         return strtolower($title);
+    }
+
+    public function supportsTransformation($data, string $to, array $context = []): bool
+    {
+        if ($data instanceof Post) {
+            return false;
+        }
+
+        return Post::class === $to && null !== ($context['input']['class'] ?? null);
     }
 }
