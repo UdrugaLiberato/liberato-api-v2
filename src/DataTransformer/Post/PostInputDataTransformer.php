@@ -48,7 +48,7 @@ class PostInputDataTransformer implements DataTransformerInterface
                 if (count($errors) > 0) {
                     throw new ValidationException("Only images can be uploaded!");
                 }
-
+                $mime = $file->getMimeType();
                 $originalFilename = pathinfo(
                     $file->getClientOriginalName(),
                     PATHINFO_FILENAME
@@ -64,10 +64,15 @@ class PostInputDataTransformer implements DataTransformerInterface
                     $this->uploadDir,
                     $newFilename
                 );
+
+                $F = file_get_contents($this->uploadDir . $newFilename);
+                $base64 = base64_encode($F);
+                $blob = 'data:'.$mime.';base64,'.$base64;
                 $fileObj = [
-                    "src" => $newFilename,
+                    "path" => $newFilename,
                     "title" => $file->getClientOriginalName(),
-                    "extension" => $file->guessClientExtension()
+                    "mime" => $mime,
+                    "src" => $blob,
                 ];
                 $fileNames[] = $fileObj;
             }
