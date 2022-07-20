@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Controller\CreatePostAction;
+use App\Controller\UpdatePostController;
 use App\DTO\Post\PostInput;
 use App\DTO\Post\PostOutput;
 use App\Repository\PostRepository;
@@ -16,6 +17,16 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource(collectionOperations: [
     'get',
     'post' => [
+        "security" => "is_granted('ROLE_ADMIN')",
+        "security_message" => "Only admins can add posts.",
+        'input_formats' => [
+            'multipart' => ['multipart/form-data'],
+        ],
+    ],
+], itemOperations: [
+    'get',
+    'put' => [
+        "controller" => UpdatePostController::class,
         "security" => "is_granted('ROLE_ADMIN')",
         "security_message" => "Only admins can add posts.",
         'input_formats' => [
