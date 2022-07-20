@@ -27,6 +27,7 @@ class UpdatePostController extends AbstractController
 
     public function __invoke(string $id, Request $request): Post
     {
+        dd($request);
         $oldPost = $this->postRepository->find($id);
 
         if ($request->get("title") && $request->get("title") !== $oldPost->getTitle()) {
@@ -37,7 +38,6 @@ class UpdatePostController extends AbstractController
             $oldPost->setBody($request->get("body"));
         }
 
-        dd($request);
         $oldPost->setUpdatedAt(new \DateTimeImmutable("now"));
         $this->postRepository->update($oldPost);
 
