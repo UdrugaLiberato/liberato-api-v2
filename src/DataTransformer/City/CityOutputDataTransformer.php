@@ -14,7 +14,8 @@ class CityOutputDataTransformer implements DataTransformerInterface
         return new CityOutput(
             $object->getName(),
             $object->getLatitude(),
-            $object->getLongitude()
+            $object->getLongitude(),
+            $object->getCreatedAt()->format('Y-m-d H:i:s'),
         );
     }
 
