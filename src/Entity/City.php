@@ -66,7 +66,7 @@ class City
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private ?\DateTimeImmutable $deletedAt = null;
 
-    #[ORM\OneToMany(mappedBy: 'city', targetEntity: Location::class)]
+    #[ORM\OneToMany(mappedBy: 'city', targetEntity: Location::class, orphanRemoval: true)]
     private $locations;
 
     public function __construct()
