@@ -22,13 +22,13 @@ class CategoryInputDataTransformer implements DataTransformerInterface
 
     public function transform($object, string $to, array $context = []): object
     {
-        $errors = $this->validator->validate($file, new Image());
+        $errors = $this->validator->validate($object->file, new Image());
         if (count($errors) > 0) {
             throw new ValidationException("Only images can be uploaded!");
         }
-        $mime = $file->getMimeType();
+        $mime = $object->file->getMimeType();
         $originalFilename = pathinfo(
-            $file->getClientOriginalName(),
+            $object->file->getClientOriginalName(),
             PATHINFO_FILENAME
         );
         // this is needed to safely include the file name as part of the URL
@@ -37,8 +37,8 @@ class CategoryInputDataTransformer implements DataTransformerInterface
             (
                 microtime()
             ) . '.'
-            . $file->guessExtension();
-        $file->move(
+            . $object->file->guessExtension();
+        $object->file->move(
             $this->uploadDir,
             $newFilename
         );
@@ -48,7 +48,7 @@ class CategoryInputDataTransformer implements DataTransformerInterface
         $blob = 'data:' . $mime . ';base64,' . $base64;
         $fileObj = [
             "path" => $newFilename,
-            "title" => $file->getClientOriginalName(),
+            "title" => $object->file->getClientOriginalName(),
             "mime" => $mime,
             "src" => $blob,
         ];
