@@ -7,6 +7,6 @@ use Symfony\Component\HttpFoundation\File\File;
 class CategoryInput
 {
     public string $name;
-    public File $file;
+    public $file;
     public ?string $description = null;
 }

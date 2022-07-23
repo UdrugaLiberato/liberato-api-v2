@@ -11,11 +11,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
-use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
-/**
- * @Vich\Uploadable
- */
 #[ORM\Entity(repositoryClass: CategoryRepository::class),
     ApiResource(collectionOperations: [
         'get',
@@ -30,12 +26,6 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 class Category
 {
     #[
-        Vich\UploadableField(mapping: "category", fileNameProperty: "icon"),
-        Assert\Image
-    ]
-    public ?File $file = null;
-
-    #[
         ORM\Id,
         ORM\Column(type: 'string', unique: true),
         ORM\GeneratedValue(strategy: "CUSTOM"),
@@ -49,8 +39,8 @@ class Category
     ]
     private string $name;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private ?string $icon;
+    #[ORM\Column(type: 'array', length: 255, nullable: true)]
+    private ?array $icon;
 
     #[
         ORM\Column(type: 'text', nullable: true),
@@ -78,6 +68,7 @@ class Category
         $this->createdAt = new \DateTimeImmutable("now");
         $this->questions = new ArrayCollection();
         $this->locations = new ArrayCollection();
+        $this->icon = [];
     }
 
     public function getId(): string
@@ -97,12 +88,12 @@ class Category
         return $this;
     }
 
-    public function getIcon(): string
+    public function getIcon(): ?array
     {
         return $this->icon;
     }
 
-    public function setIcon(string $icon): self
+    public function setIcon(array $icon): self
     {
         $this->icon = $icon;
 
@@ -119,16 +110,6 @@ class Category
         $this->description = $description;
 
         return $this;
-    }
-
-    public function getFile(): ?File
-    {
-        return $this->file;
-    }
-
-    public function setFile(?File $file): void
-    {
-        $this->file = $file;
     }
 
     public function getCreatedAt(): \DateTimeImmutable
