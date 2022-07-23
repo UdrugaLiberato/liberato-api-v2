@@ -89,7 +89,6 @@ class Location
 
     #[
         ORM\Column(type: 'string', length: 255, nullable: true),
-        Assert\Email
     ]
     private ?string $email;
 
