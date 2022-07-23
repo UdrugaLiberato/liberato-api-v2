@@ -5,13 +5,14 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
-use App\Controller\CreateLocationAction;
+use App\DTO\Location\LocationInput;
 use App\DTO\Location\LocationOutput;
 use App\Repository\LocationRepository;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
@@ -21,8 +22,9 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
         collectionOperations: [
             'get',
             'post' => [
-                'controller' => CreateLocationAction::class,
-                'deserialize' => false,
+                "input" => LocationInput::class,
+                "security" => "is_granted('ROLE_ADMIN')",
+                "security_message" => "Only admins can add posts.",
                 'input_formats' => [
                     'multipart' => ['multipart/form-data'],
                 ],
@@ -103,6 +105,26 @@ class Location
     ]
     private ?string $about;
 
+    #[
+        ORM\Column(type: 'float', nullable: false),
+        Assert\Range(
+            notInRangeMessage: "Your latitude must be between {{ min }} and {{ max }} deg.",
+            min: -90,
+            max: 90,
+        )
+    ]
+    private float $latitude;
+
+    #[
+        ORM\Column(type: 'float', nullable: false),
+        Assert\Range(
+            notInRangeMessage: "Your longitude must be between {{ min }} and {{ max }} deg.",
+            min: -180,
+            max: 180,
+        )
+    ]
+    private float $longitude;
+
     #[ORM\Column(type: 'datetime_immutable')]
     private \DateTimeImmutable $createdAt;
 
@@ -142,7 +164,7 @@ class Location
         return $this->user;
     }
 
-    public function setUser(?User $user): self
+    public function setUser(User|UserInterface $user): self
     {
         $this->user = $user;
 
@@ -199,6 +221,27 @@ class Location
 
         return $this;
     }
+
+    public function getLatitude(): float
+    {
+        return $this->latitude;
+    }
+
+    public function setLatitude(float $latitude): void
+    {
+        $this->latitude = $latitude;
+    }
+
+    public function getLongitude(): float
+    {
+        return $this->longitude;
+    }
+
+    public function setLongitude(float $longitude): void
+    {
+        $this->longitude = $longitude;
+    }
+
 
     public function getStreet(): ?string
     {

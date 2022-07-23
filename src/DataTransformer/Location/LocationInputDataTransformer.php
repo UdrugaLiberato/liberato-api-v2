@@ -1,40 +1,69 @@
 <?php
-declare(strict_types=1);
 
-namespace App\DataTransformer\Post;
-
+namespace App\DataTransformer\Location;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use ApiPlatform\Core\Validator\Exception\ValidationException;
-use App\Entity\Post;
+use App\API\GoogleMapsInterface;
+use App\Entity\Location;
+use App\Repository\CategoryRepository;
+use App\Repository\CityRepository;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-
-class PostInputDataTransformer implements DataTransformerInterface
+class LocationInputDataTransformer implements DataTransformerInterface
 {
+
     public string $uploadDir;
 
+    /**
+     * @param KernelInterface $kernel
+     * @param ValidatorInterface $validator
+     * @param TokenStorageInterface $token
+     * @param GoogleMapsInterface $googleMapsInterface
+     * @param CityRepository $cityRepository
+     * @param CategoryRepository $categoryRepository
+     * @param TokenStorageInterface $token
+     */
     public function __construct(public KernelInterface       $kernel,
                                 public ValidatorInterface    $validator,
-                                public TokenStorageInterface $token
+                                public TokenStorageInterface $token,
+                                public GoogleMapsInterface   $googleMapsInterface,
+                                public CityRepository        $cityRepository,
+                                public CategoryRepository    $categoryRepository,
     )
     {
-        $this->uploadDir = $this->kernel->getProjectDir() . "/public/images/posts/";
+        $this->uploadDir = $this->kernel->getProjectDir() . "/public/images/locations/";
     }
 
-    public function transform($object, string $to, array $context = [])
+    public function transform($object, string $to, array $context = []): object
     {
-        $post = new Post();
-        $post->setTitle($object->title);
-        $post->setAuthor($this->token?->getToken()?->getUser());
-        $post->setBody($object->body);
-        $post->setTags(explode(",", $object->tags));
         $fileNames = $this->transformPictures($object->images);
-        $post->setImages($fileNames);
-        return $post;
+        $city = $this->cityRepository->find($object->city);
+        $category = $this->categoryRepository->find($object->category);
+        [$streetName, $streetNumber] = explode(" ", $object->street);
+        ["lat" => $lat, "lng" => $lng, "formatted_address" => $formatted_address] =
+            $this->googleMapsInterface->getCoordinateForStreet
+            ($streetNumber . " " . $streetName, $city->getName());
+
+        $location = new Location();
+        $location->setName($object->name);
+        $location->setCity($city);
+        $location->setUser($this->token?->getToken()?->getUser());
+        $location->setCategory($category);
+        $location->setStreet($formatted_address);
+        $location->setImages($fileNames);
+        $location->setPhone($object->phone);
+        $location->setEmail($object->email);
+        $location->setAbout($object->about);
+        $location->setPublished($object->published);
+        $location->setFeatured($object->featured);
+        $location->setLatitude($lat);
+        $location->setLongitude($lng);
+
+        return $location;
     }
 
     private function transformPictures($uploadedFiles): array
@@ -92,10 +121,10 @@ class PostInputDataTransformer implements DataTransformerInterface
 
     public function supportsTransformation($data, string $to, array $context = []): bool
     {
-        if ($data instanceof Post) {
+        if ($data instanceof Location) {
             return false;
         }
 
-        return Post::class === $to && null !== ($context['input']['class'] ?? null);
+        return Location::class === $to && null !== ($context['input']['class'] ?? null);
     }
 }
