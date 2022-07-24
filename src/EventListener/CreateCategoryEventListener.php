@@ -30,6 +30,7 @@ class CreateCategoryEventListener implements EventSubscriberInterface
 
     #[NoReturn] public function addQuestionsToCategory(ViewEvent $event): void
     {
+        dd($event->getControllerResult());
         if ($event->getRequest()->getMethod() === "POST") {
             $questions = explode(',', $event->getRequest()->get("questions"));
             $category = $this->categoryRepository->findOneBy(["name" => $event->getRequest()->get("name")]);
