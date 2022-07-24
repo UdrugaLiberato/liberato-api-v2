@@ -58,7 +58,7 @@ class Category
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private ?\DateTimeImmutable $deletedAt = null;
 
-    #[ORM\OneToMany(mappedBy: 'Category', targetEntity: Question::class, cascade: ["persist"])]
+    #[ORM\OneToMany(mappedBy: 'Category', targetEntity: Question::class)]
     private $questions;
 
     #[ORM\OneToMany(mappedBy: 'category', targetEntity: Location::class)]
