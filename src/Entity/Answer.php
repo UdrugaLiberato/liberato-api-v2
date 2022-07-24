@@ -5,7 +5,6 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\AnswerRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: AnswerRepository::class)]
 #[ApiResource]
@@ -19,15 +18,13 @@ class Answer
     ]
     private $id;
 
-    #[ORM\ManyToOne(targetEntity: Question::class, inversedBy: 'answeers')]
-    #[ORM\JoinColumn(nullable: false)]
-    private Question $question;
+    #[ORM\Column(type: 'string')]
+    private string $question;
 
     #[
-        ORM\Column(type: 'string', length: 255),
-        Assert\Length(min:1, minMessage: "Answer must be at least {{ limit }} characters long!")
+        ORM\Column(type: 'boolean', length: 255),
     ]
-    private string $answer;
+    private bool $answer;
 
     #[ORM\Column(type: 'datetime_immutable')]
     private \DateTimeImmutable $createdAt;
@@ -51,24 +48,12 @@ class Answer
         return $this->id;
     }
 
-    public function getQuestion(): ?Question
-    {
-        return $this->question;
-    }
-
-    public function setQuestion(?Question $Question): self
-    {
-        $this->question = $Question;
-
-        return $this;
-    }
-
-    public function getAnswer(): ?string
+    public function getAnswer(): ?bool
     {
         return $this->answer;
     }
 
-    public function setAnswer(string $answer): self
+    public function setAnswer(bool $answer): self
     {
         $this->answer = $answer;
 
@@ -110,5 +95,15 @@ class Answer
         $this->location = $location;
 
         return $this;
+    }
+
+    public function getQuestion(): string
+    {
+        return $this->question;
+    }
+
+    public function setQuestion(string $question): void
+    {
+        $this->question = $question;
     }
 }

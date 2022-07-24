@@ -5,6 +5,7 @@ namespace App\DataTransformer\Location;
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use ApiPlatform\Core\Validator\Exception\ValidationException;
 use App\API\GoogleMapsInterface;
+use App\Entity\Answer;
 use App\Entity\Location;
 use App\Repository\CategoryRepository;
 use App\Repository\CityRepository;
@@ -47,7 +48,6 @@ class LocationInputDataTransformer implements DataTransformerInterface
         ["lat" => $lat, "lng" => $lng, "formatted_address" => $formatted_address] =
             $this->googleMapsInterface->getCoordinateForStreet
             ($streetNumber . " " . $streetName, $city->getName());
-
         $location = new Location();
         $location->setName($object->name);
         $location->setCity($city);
@@ -62,7 +62,14 @@ class LocationInputDataTransformer implements DataTransformerInterface
         $location->setFeatured($object->featured);
         $location->setLatitude($lat);
         $location->setLongitude($lng);
-
+        $answerArr = explode(",", $object->answers);
+        foreach ($answerArr as $answer) {
+            [$question, $answer] = explode(":", $answer);
+            $Answer = new Answer();
+            $Answer->setQuestion($question);
+            $Answer->setAnswer($answer);
+            $location->addAnswer($Answer);
+        }
         return $location;
     }
 
