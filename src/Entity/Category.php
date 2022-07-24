@@ -17,8 +17,6 @@ use Symfony\Component\Validator\Constraints as Assert;
         'get',
         'post' => [
             "input" => CategoryInput::class,
-            "deserialize" => false,
-            "controller" => CreateCategoryController::class,
             "security" => "is_granted('ROLE_ADMIN')",
             "security_message" => "Only admins can add posts.",
             'input_formats' => [
@@ -37,7 +35,7 @@ class Category
     private $id;
 
     #[
-        ORM\Column(type: 'string', length: 255),
+        ORM\Column(type: 'string', length: 255, unique: true),
         Assert\Length(min: 3, minMessage: "Name must be at least {{ limit }} characters long!")
     ]
     private string $name;
@@ -60,8 +58,8 @@ class Category
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private ?\DateTimeImmutable $deletedAt = null;
 
-    #[ORM\OneToMany(mappedBy: 'Category', targetEntity: Question::class)]
-    private Collection $questions;
+    #[ORM\OneToMany(mappedBy: 'Category', targetEntity: Question::class, cascade: ["persist"])]
+    private $questions;
 
     #[ORM\OneToMany(mappedBy: 'category', targetEntity: Location::class)]
     private $locations;

@@ -12,6 +12,7 @@ class QuestionOutputDataTransformer implements DataTransformerInterface
 
     public function transform($object, string $to, array $context = [])
     {
+        dd($object);
         return new QuestionOutput(
             $object->getQuestion(),
             $object->getCategory(),
