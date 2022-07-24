@@ -29,7 +29,7 @@ class Question
     private $id;
 
     #[
-        ORM\ManyToOne(targetEntity: Category::class, cascade: ["persist", "remove"], inversedBy: 'questions'),
+        ORM\ManyToOne(targetEntity: Category::class, cascade: ["remove"], inversedBy: 'questions'),
         ORM\JoinColumn(nullable: false),
         Assert\NotNull
     ]
