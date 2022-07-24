@@ -20,7 +20,7 @@ class CategoryInputDataTransformer implements DataTransformerInterface
                                 public ValidatorInterface $validator,
     )
     {
-        $this->uploadDir = $this->kernel->getProjectDir() . "/public/images/posts/";
+        $this->uploadDir = $this->kernel->getProjectDir() . "/public/images/category/";
     }
 
     public function transform($object, string $to, array $context = []): object

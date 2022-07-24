@@ -170,5 +170,5 @@ fabric.properties
 /web/js/
 
 # End of https://www.toptal.com/developers/gitignore/api/phpstorm,symfony
-/public/media
+/public/images/
 .env
