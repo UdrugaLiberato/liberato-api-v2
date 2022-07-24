@@ -2,11 +2,10 @@
 
 namespace App\DTO\Category;
 
-use Symfony\Component\HttpFoundation\File\File;
-
 class CategoryInput
 {
     public string $name;
     public $file;
+    public array|string $questions;
     public ?string $description = null;
 }

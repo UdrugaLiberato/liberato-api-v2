@@ -9,7 +9,9 @@ final class MultipartDecoder implements DecoderInterface
 {
     public const FORMAT = 'multipart';
 
-    public function __construct(private RequestStack $requestStack) {}
+    public function __construct(private RequestStack $requestStack)
+    {
+    }
 
     /**
      * {@inheritdoc}
@@ -22,7 +24,7 @@ final class MultipartDecoder implements DecoderInterface
             return null;
         }
 
-        return array_map(static function (string $element) {
+        return array_map(static function ($element) {
                 // Multipart form values will be encoded in JSON.
                 $decoded = json_decode($element, true);
 

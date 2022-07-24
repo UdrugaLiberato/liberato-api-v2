@@ -9,6 +9,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
+
 class CategoryInputDataTransformer implements DataTransformerInterface
 {
     public string $uploadDir;
@@ -22,6 +23,7 @@ class CategoryInputDataTransformer implements DataTransformerInterface
 
     public function transform($object, string $to, array $context = []): object
     {
+        dd($object);
         $errors = $this->validator->validate($object->file, new Image());
         if (count($errors) > 0) {
             throw new ValidationException("Only images can be uploaded!");

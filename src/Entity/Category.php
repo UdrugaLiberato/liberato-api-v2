@@ -15,13 +15,14 @@ use Symfony\Component\Validator\Constraints as Assert;
     ApiResource(collectionOperations: [
         'get',
         'post' => [
+            "input" => CategoryInput::class,
             "security" => "is_granted('ROLE_ADMIN')",
             "security_message" => "Only admins can add posts.",
             'input_formats' => [
                 'multipart' => ['multipart/form-data'],
             ],
         ],
-    ], input: CategoryInput::class, output: CategoryOutput::class)]
+    ], output: CategoryOutput::class)]
 class Category
 {
     #[
