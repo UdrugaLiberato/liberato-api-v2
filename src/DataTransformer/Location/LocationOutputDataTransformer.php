@@ -4,6 +4,7 @@ namespace App\DataTransformer\Location;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\DTO\Location\LocationOutput;
+use App\Entity\Answer;
 use App\Entity\Location;
 
 class LocationOutputDataTransformer implements DataTransformerInterface
@@ -11,7 +12,15 @@ class LocationOutputDataTransformer implements DataTransformerInterface
 
     public function transform($object, string $to, array $context = []): object
     {
+        $answers = $object->getAnswers()->map(function (Answer $answer) {
+            return [
+                "question" => $answer->getQuestion(),
+                "answer" => $answer->getAnswer(),
+            ];
+        });
+
         return new LocationOutput(
+            $answers,
             $object->getName(),
             $object->getStreet(),
             $object->getPhone(),
