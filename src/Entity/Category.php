@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\Controller\CreateCategoryController;
 use App\DTO\Category\CategoryInput;
 use App\DTO\Category\CategoryOutput;
 use App\Repository\CategoryRepository;
@@ -16,6 +17,8 @@ use Symfony\Component\Validator\Constraints as Assert;
         'get',
         'post' => [
             "input" => CategoryInput::class,
+            "deserialize" => false,
+            "controller" => CreateCategoryController::class,
             "security" => "is_granted('ROLE_ADMIN')",
             "security_message" => "Only admins can add posts.",
             'input_formats' => [

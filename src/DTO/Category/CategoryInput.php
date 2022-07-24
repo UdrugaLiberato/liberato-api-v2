@@ -6,6 +6,6 @@ class CategoryInput
 {
     public string $name;
     public $file;
-    public array|string $questions;
+    public $questions;
     public ?string $description = null;
 }
