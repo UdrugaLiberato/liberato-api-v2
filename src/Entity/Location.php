@@ -51,7 +51,7 @@ class Location
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'locations')]
     private ?User $user;
 
-    #[ORM\OneToMany(mappedBy: 'location', targetEntity: Answer::class)]
+    #[ORM\OneToMany(mappedBy: 'location', targetEntity: Answer::class, cascade: ["persist"])]
     private Collection $answers;
 
     #[

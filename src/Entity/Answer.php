@@ -35,7 +35,7 @@ class Answer
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private ?\DateTimeImmutable $deletedAt = null;
 
-    #[ORM\ManyToOne(targetEntity: Location::class, inversedBy: 'answers')]
+    #[ORM\ManyToOne(targetEntity: Location::class, cascade: ["persist"], inversedBy: 'answers')]
     private $location;
 
     public function __construct()
