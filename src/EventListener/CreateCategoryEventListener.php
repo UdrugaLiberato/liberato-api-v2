@@ -8,6 +8,7 @@ use App\Repository\CategoryRepository;
 use App\Repository\QuestionRepository;
 use JetBrains\PhpStorm\NoReturn;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
@@ -30,8 +31,7 @@ class CreateCategoryEventListener implements EventSubscriberInterface
 
     #[NoReturn] public function addQuestionsToCategory(ViewEvent $event): void
     {
-        dd($event->getControllerResult());
-        if ($event->getRequest()->getMethod() === "POST") {
+        if ($event->getRequest()->getMethod() === Request::METHOD_PUT) {
             $questions = explode(',', $event->getRequest()->get("questions"));
             $category = $this->categoryRepository->findOneBy(["name" => $event->getRequest()->get("name")]);
 
