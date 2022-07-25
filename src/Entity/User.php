@@ -45,17 +45,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public const ROLE_USER = "ROLE_USER";
 
 
-    #[ApiProperty(iri: 'http://schema.org/contentUrl')]
-    public ?string $contentUrl = null;
-
-    /**
-     * @Vich\UploadableField(mapping="avatar", fileNameProperty="filePath")
-     */
     public ?File $file = null;
 
     #[ORM\Column(nullable: true)]
     public ?string $filePath = null;
-
 
     #[
         ORM\Id,
@@ -117,6 +110,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->posts = new ArrayCollection();
         $this->phone = null;
         $this->locations = new ArrayCollection();
+        $this->roles[] = self::ROLE_USER;
     }
 
     public function getId(): string

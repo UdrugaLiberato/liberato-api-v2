@@ -8,34 +8,37 @@ use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use ApiPlatform\Core\Validator\Exception\ValidationException;
 use App\Entity\Post;
 use App\Utils\LiberatoHelper;
-use Symfony\Component\HttpKernel\KernelInterface;
+use App\Utils\LiberatoHelperInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Validator\Constraints\Image;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 
 class PostInputDataTransformer implements DataTransformerInterface
 {
-    public string $uploadDir;
-
-    public function __construct(public KernelInterface       $kernel,
-                                public ValidatorInterface    $validator,
-                                public TokenStorageInterface $token
+    public function __construct(public LiberatoHelperInterface $liberatoHelper, public TokenStorageInterface $token
     )
     {
-        $this->uploadDir = $this->kernel->getProjectDir() . "/public/images/posts/";
     }
 
     public function transform($object, string $to, array $context = [])
     {
         $post = new Post();
-        $post->setTitle(trim($object->getTitle()));
+        $post->setTitle(trim($object->title));
         $post->setAuthor($this->token?->getToken()?->getUser());
         $post->setBody($object->body);
         $post->setTags(explode(",", $object->tags));
-        $fileNames = $this->transformPictures($object->images);
+        $fileNames = $this->liberatoHelper->transformImages($object->images, "posts");
         $post->setImages($fileNames);
         return $post;
+    }
+
+    public function supportsTransformation($data, string $to, array $context = []): bool
+    {
+        if ($data instanceof Post) {
+            return false;
+        }
+
+        return Post::class === $to && null !== ($context['input']['class'] ?? null);
     }
 
     private function transformPictures($uploadedFiles): array
@@ -78,14 +81,5 @@ class PostInputDataTransformer implements DataTransformerInterface
             return $fileNames;
         }
         return [];
-    }
-
-    public function supportsTransformation($data, string $to, array $context = []): bool
-    {
-        if ($data instanceof Post) {
-            return false;
-        }
-
-        return Post::class === $to && null !== ($context['input']['class'] ?? null);
     }
 }

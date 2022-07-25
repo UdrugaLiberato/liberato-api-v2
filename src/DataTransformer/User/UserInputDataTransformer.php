@@ -18,35 +18,35 @@ class UserInputDataTransformer implements DataTransformerInterface
 
     public function transform($object, string $to, array $context = []): object
     {
-        $errors = $this->validator->validate($object->file, new Image());
-        if (count($errors) > 0) {
-            throw new ValidationException("Only images can be uploaded!");
-        }
-
-        $originalFilename = pathinfo(
-            $object->file->getClientOriginalName(),
-            PATHINFO_FILENAME
-        );
-        // this is needed to safely include the file name as part of the URL
-        $safeFilename = LiberatoHelper::slugify($originalFilename);
-        $newFilename = date('Y-m-d') . "_" . $safeFilename . md5
-            (
-                microtime()
-            ) . '.'
-            . $object->file->guessExtension();
-
-        $object->file->move($this->kernel->getProjectDir() . '/public/images/avatar/', $newFilename);
         $user = new User();
+        if ($object->file) {
+            $errors = $this->validator->validate($object->file, new Image());
+            if (count($errors) > 0) {
+                throw new ValidationException("Only images can be uploaded!");
+            }
+
+            $originalFilename = pathinfo(
+                $object->file->getClientOriginalName(),
+                PATHINFO_FILENAME
+            );
+            // this is needed to safely include the file name as part of the URL
+            $safeFilename = LiberatoHelper::slugify($originalFilename);
+            $newFilename = date('Y-m-d') . "_" . $safeFilename . md5
+                (
+                    microtime()
+                ) . '.'
+                . $object->file->guessExtension();
+
+            $object->file->move($this->kernel->getProjectDir() . '/public/images/avatar/', $newFilename);
+            $user->setFile($object->file);
+            $user->setFilePath('/images/avatar/' . $newFilename);
+        }
         $user->setUsername($object->username);
         $user->setPassword($object->password);
         $user->setEmail($object->email);
         $user->setPhone($object->phone);
         $user->setPhone($object->phone);
-        $user->setFile($object->file);
-        $user->setFilePath('/images/avatar/' . $newFilename);
-        if ($object->role) {
-            $user->setRoles($object->role);
-        }
+
         return $user;
     }
 
