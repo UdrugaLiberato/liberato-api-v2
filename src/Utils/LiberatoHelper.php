@@ -45,16 +45,6 @@ class LiberatoHelper implements LiberatoHelperInterface
         ];
     }
 
-    public static function slugify(string $string): string
-    {
-        $string = preg_replace('~[^\pL\d]+~u', '-', $string);
-        $string = iconv('utf-8', 'us-ascii//TRANSLIT', $string);
-        $string = preg_replace('~[^-\w]+~', '', $string);
-        $string = trim($string, '-');
-        $string = preg_replace('~-+~', '-', $string);
-        return strtolower($string);
-    }
-
     public function transformImage(UploadedFile $file, string $entityName): array
     {
         $errors = $this->validator->validate($file, new Image());
@@ -83,6 +73,16 @@ class LiberatoHelper implements LiberatoHelperInterface
             "title" => $file->getClientOriginalName(),
             "mime" => $mime,
         ];
+    }
+
+    public static function slugify(string $string): string
+    {
+        $string = preg_replace('~[^\pL\d]+~u', '-', $string);
+        $string = iconv('utf-8', 'us-ascii//TRANSLIT', $string);
+        $string = preg_replace('~[^-\w]+~', '', $string);
+        $string = trim($string, '-');
+        $string = preg_replace('~-+~', '-', $string);
+        return strtolower($string);
     }
 
     public function transformImages(array $uploadedFiles, string $entityName): array

@@ -151,7 +151,7 @@ class Location
         return $this->category;
     }
 
-    public function setCategory(Category $category): self
+    public function setCategory(?Category $category): self
     {
         $this->category = $category;
 
@@ -163,7 +163,7 @@ class Location
         return $this->user;
     }
 
-    public function setUser(User|UserInterface $user): self
+    public function setUser(?UserInterface $user): self
     {
         $this->user = $user;
 

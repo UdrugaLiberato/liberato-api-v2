@@ -75,7 +75,12 @@ class PostRepository extends ServiceEntityRepository
         ;
     }
     */
-    public function update(?Post $oldPost)
+
+
+    /**
+     * @param Post|null $oldPost
+     */
+    public function update(?Post $oldPost): void
     {
         $this->_em->persist($oldPost);
         $this->_em->flush();

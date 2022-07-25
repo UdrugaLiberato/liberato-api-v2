@@ -1,6 +1,6 @@
 <?php
 
-namespace App\EventListener;
+namespace App\Events;
 
 use ApiPlatform\Core\EventListener\EventPriorities;
 use App\Entity\Question;

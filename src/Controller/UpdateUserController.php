@@ -27,7 +27,7 @@ class UpdateUserController extends AbstractController
     public function __invoke(string $id, Request $request)
     {
         $oldUser = $this->userRepository->find($id);
-        $avatar = $request->files?->get("file");
+        $avatar = $request->files->get("file");
         if ($avatar !== null) {
             $errors = $this->validator->validate($avatar, new Image());
             if (count($errors) > 0) {

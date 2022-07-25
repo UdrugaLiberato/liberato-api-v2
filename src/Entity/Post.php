@@ -105,7 +105,7 @@ class Post
         return $this->author;
     }
 
-    public function setAuthor(UserInterface $author): self
+    public function setAuthor(?UserInterface $author): self
     {
         $this->author = $author;
 

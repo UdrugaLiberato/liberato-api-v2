@@ -1,6 +1,6 @@
 <?php
 
-namespace App\EventListener;
+namespace App\Events;
 
 use App\Entity\Post;
 use Doctrine\ORM\Event\LifecycleEventArgs;
@@ -22,7 +22,7 @@ class CreatePostEventListener
             return;
         }
 
-        $user = $this->token?->getToken()?->getUser();
+        $user = $this->token->getToken()?->getUser();
         if (!$user) {
             throw new UserNotFoundException();
         } else {

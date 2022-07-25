@@ -1,6 +1,6 @@
 <?php
 
-namespace App\EventListener;
+namespace App\Events;
 
 use App\Entity\Location;
 use Doctrine\ORM\Event\LifecycleEventArgs;
@@ -20,7 +20,7 @@ class CreateLocationEventListener
             return;
         }
 
-        $user = $this->token?->getToken()?->getUser();
+        $user = $this->token->getToken()?->getUser();
         if (!$user) {
             $entity->setUser(null);
         } else {

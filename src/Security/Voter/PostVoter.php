@@ -12,6 +12,12 @@ class PostVoter extends Voter
     public const EDIT = 'POST_EDIT';
     public const VIEW = 'POST_VIEW';
 
+
+    /**
+     * @param string $attribute
+     * @param Post $subject
+     * @return bool
+     */
     protected function supports(string $attribute, $subject): bool
     {
         // replace with your own logic
@@ -20,6 +26,12 @@ class PostVoter extends Voter
             && $subject instanceof Post;
     }
 
+    /**
+     * @param string $attribute
+     * @param Post $subject
+     * @param TokenInterface $token
+     * @return bool
+     */
     protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
     {
         $user = $token->getUser();
