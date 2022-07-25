@@ -151,6 +151,9 @@
     "phpstan/phpdoc-parser": {
         "version": "1.4.5"
     },
+    "phpstan/phpstan": {
+        "version": "1.8.2"
+    },
     "psr/cache": {
         "version": "3.0.0"
     },

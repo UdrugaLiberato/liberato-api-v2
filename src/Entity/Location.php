@@ -49,7 +49,7 @@ class Location
     private Category $category;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'locations')]
-    private ?User $user;
+    private ?UserInterface $user;
 
     #[ORM\OneToMany(mappedBy: 'location', targetEntity: Answer::class, cascade: ["persist"])]
     private Collection $answers;
@@ -158,7 +158,7 @@ class Location
         return $this;
     }
 
-    public function getUser(): ?User
+    public function getUser(): ?UserInterface
     {
         return $this->user;
     }

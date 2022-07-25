@@ -6,7 +6,6 @@ use ApiPlatform\Core\EventListener\EventPriorities;
 use App\Entity\Question;
 use App\Repository\CategoryRepository;
 use App\Repository\QuestionRepository;
-use JetBrains\PhpStorm\NoReturn;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
@@ -29,7 +28,7 @@ class CreateCategoryEventListener implements EventSubscriberInterface
     }
 
 
-    #[NoReturn] public function addQuestionsToCategory(ViewEvent $event): void
+    public function addQuestionsToCategory(ViewEvent $event): void
     {
         if ($event->getRequest()->getMethod() === Request::METHOD_POST && $event->getRequest()->get("questions")) {
             $questions = explode(',', $event->getRequest()->get("questions"));

@@ -52,7 +52,7 @@ class Post
         ORM\JoinColumn(nullable: false),
         Assert\NotNull
     ]
-    private User $author;
+    private UserInterface $author;
 
     #[
         ORM\Column(type: 'string', length: 255, unique: true),
@@ -99,12 +99,12 @@ class Post
         return $this->id;
     }
 
-    public function getAuthor(): ?User
+    public function getAuthor(): ?UserInterface
     {
         return $this->author;
     }
 
-    public function setAuthor(User|UserInterface $author): self
+    public function setAuthor(UserInterface $author): self
     {
         $this->author = $author;
 
