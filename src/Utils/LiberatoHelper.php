@@ -46,6 +46,7 @@ class LiberatoHelper implements LiberatoHelperInterface
                     $newFilename
                 );
                 $fileObj = [
+                    "src" => "https://dev.udruga-liberato.hr/images/posts/" . $newFilename,
                     "path" => $newFilename,
                     "title" => $file->getClientOriginalName(),
                     "mime" => $mime,

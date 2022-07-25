@@ -6,9 +6,13 @@ use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\DTO\Post\PostOutput;
 use App\Entity\Post;
 use App\Utils\LiberatoHelper;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 class PostOutputDataTransformer implements DataTransformerInterface
 {
+    public function __construct(public KernelInterface $kernel)
+    {
+    }
 
     public function transform($object, string $to, array $context = []): object
     {
