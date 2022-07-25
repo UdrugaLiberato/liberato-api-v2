@@ -6,6 +6,7 @@ use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use ApiPlatform\Core\Validator\Exception\ValidationException;
 use App\Entity\Category;
 use App\Repository\QuestionRepository;
+use App\Utils\LiberatoHelper;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -35,7 +36,7 @@ class CategoryInputDataTransformer implements DataTransformerInterface
             PATHINFO_FILENAME
         );
         // this is needed to safely include the file name as part of the URL
-        $safeFilename = $this->slugify($originalFilename);
+        $safeFilename = LiberatoHelper::slugify($originalFilename);
         $newFilename = date('Y-m-d') . "_" . $safeFilename . md5
             (
                 microtime()
@@ -61,17 +62,6 @@ class CategoryInputDataTransformer implements DataTransformerInterface
         $category->setDescription($object->description);
 
         return $category;
-    }
-
-    private function slugify(string $title): string
-    {
-        $title = preg_replace('~[^\pL\d]+~u', '-', $title);
-        $title = iconv('utf-8', 'us-ascii//TRANSLIT', $title);
-        $title = preg_replace('~[^-\w]+~', '', $title);
-        $title = trim($title, '-');
-        $title = preg_replace('~-+~', '-', $title);
-
-        return strtolower($title);
     }
 
     public function supportsTransformation($data, string $to, array $context = []): bool

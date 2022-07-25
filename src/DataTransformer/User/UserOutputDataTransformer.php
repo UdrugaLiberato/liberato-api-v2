@@ -5,6 +5,7 @@ namespace App\DataTransformer\User;
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\DTO\User\UserOutput;
 use App\Entity\User;
+use App\Utils\LiberatoHelper;
 use Doctrine\Common\Collections\ArrayCollection;
 
 class UserOutputDataTransformer implements DataTransformerInterface
@@ -34,23 +35,13 @@ class UserOutputDataTransformer implements DataTransformerInterface
             return [
                 "id" => $post->getId(),
                 "title" => $post->getTitle(),
-                "slug" => $this->slugify($post->getTitle()),
+                "slug" => LiberatoHelper::slugify($post->getTitle()),
                 "body" => $post->getBody(),
                 "tags" => $post->getTags(),
                 "images" => $post->getImages(),
                 "created_at" => $post->getCreatedAt()->format('Y-m-d H:i:s')
             ];
         });
-    }
-
-    private function slugify(string $title): string
-    {
-        $title = preg_replace('~[^\pL\d]+~u', '-', $title);
-        $title = iconv('utf-8', 'us-ascii//TRANSLIT', $title);
-        $title = preg_replace('~[^-\w]+~', '', $title);
-        $title = trim($title, '-');
-        $title = preg_replace('~-+~', '-', $title);
-        return strtolower($title);
     }
 
     public function supportsTransformation($data, string $to, array $context = []): bool

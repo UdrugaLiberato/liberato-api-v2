@@ -3,16 +3,16 @@
 namespace App\DataTransformer\User;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 use ApiPlatform\Core\Validator\Exception\ValidationException;
 use App\Entity\User;
+use App\Utils\LiberatoHelper;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Validator\Constraints\Image;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class UserInputDataTransformer implements DataTransformerInterface
 {
-    public function __construct(private ValidatorInterface $validator, private KernelInterface
-    $kernel)
+    public function __construct(private ValidatorInterface $validator, private KernelInterface $kernel)
     {
     }
 
@@ -28,14 +28,14 @@ class UserInputDataTransformer implements DataTransformerInterface
             PATHINFO_FILENAME
         );
         // this is needed to safely include the file name as part of the URL
-        $safeFilename = $this->slugify($originalFilename);
+        $safeFilename = LiberatoHelper::slugify($originalFilename);
         $newFilename = date('Y-m-d') . "_" . $safeFilename . md5
             (
                 microtime()
             ) . '.'
             . $object->file->guessExtension();
 
-        $object->file->move($this->kernel->getProjectDir() . '/public/media/avatar/', $newFilename);
+        $object->file->move($this->kernel->getProjectDir() . '/public/images/avatar/', $newFilename);
         $user = new User();
         $user->setUsername($object->username);
         $user->setPassword($object->password);
@@ -43,8 +43,8 @@ class UserInputDataTransformer implements DataTransformerInterface
         $user->setPhone($object->phone);
         $user->setPhone($object->phone);
         $user->setFile($object->file);
-        $user->setFilePath('/media/avatar/' . $newFilename);
-        if($object->role){
+        $user->setFilePath('/images/avatar/' . $newFilename);
+        if ($object->role) {
             $user->setRoles($object->role);
         }
         return $user;
@@ -57,16 +57,5 @@ class UserInputDataTransformer implements DataTransformerInterface
         }
 
         return User::class === $to && null !== ($context['input']['class'] ?? null);
-    }
-
-    private function slugify(string $title): string
-    {
-        $title = preg_replace('~[^\pL\d]+~u', '-', $title);
-        $title = iconv('utf-8', 'us-ascii//TRANSLIT', $title);
-        $title = preg_replace('~[^-\w]+~', '', $title);
-        $title = trim($title, '-');
-        $title = preg_replace('~-+~', '-', $title);
-
-        return strtolower($title);
     }
 }

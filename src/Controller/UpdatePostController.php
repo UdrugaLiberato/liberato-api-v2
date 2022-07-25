@@ -3,15 +3,13 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use ApiPlatform\Core\Validator\Exception\ValidationException;
 use App\Entity\Post;
 use App\Repository\PostRepository;
+use App\Utils\LiberatoHelper;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Component\Validator\Constraints\Image;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[AsController]
 class UpdatePostController extends AbstractController
@@ -19,9 +17,8 @@ class UpdatePostController extends AbstractController
     private string $uploadDir;
 
     public function __construct(
-        private KernelInterface    $kernel,
-        private PostRepository     $postRepository,
-        private ValidatorInterface $validator
+        private KernelInterface $kernel,
+        private PostRepository  $postRepository,
     )
     {
         $this->uploadDir = $this->kernel->getProjectDir() . "/public/images/posts/";
@@ -60,7 +57,7 @@ class UpdatePostController extends AbstractController
                     PATHINFO_FILENAME
                 );
                 // this is needed to safely include the file name as part of the URL
-                $safeFilename = $this->slugify($originalFilename);
+                $safeFilename = LiberatoHelper::slugify($originalFilename);
                 $newFilename = date('Y-m-d') . "_" . $safeFilename . md5
                     (
                         microtime()
@@ -73,7 +70,7 @@ class UpdatePostController extends AbstractController
 
                 $F = file_get_contents($this->uploadDir . $newFilename);
                 $base64 = base64_encode($F);
-                $blob = 'data:'.$mime.';base64,'.$base64;
+                $blob = 'data:' . $mime . ';base64,' . $base64;
                 $fileObj = [
                     "path" => $newFilename,
                     "title" => $file->getClientOriginalName(),
@@ -85,16 +82,5 @@ class UpdatePostController extends AbstractController
             return $fileNames;
         }
         return [];
-    }
-
-    private function slugify(string $title): string
-    {
-        $title = preg_replace('~[^\pL\d]+~u', '-', $title);
-        $title = iconv('utf-8', 'us-ascii//TRANSLIT', $title);
-        $title = preg_replace('~[^-\w]+~', '', $title);
-        $title = trim($title, '-');
-        $title = preg_replace('~-+~', '-', $title);
-
-        return strtolower($title);
     }
 }

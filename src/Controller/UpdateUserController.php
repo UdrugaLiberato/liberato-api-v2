@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use ApiPlatform\Core\Validator\Exception\ValidationException;
 use App\Repository\UserRepository;
+use App\Utils\LiberatoHelper;
 use DateTimeImmutable;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,9 +17,9 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class UpdateUserController extends AbstractController
 {
     public function __construct(
-        private UserRepository              $userRepository,
-        private ValidatorInterface          $validator,
-        private KernelInterface             $kernel
+        private UserRepository     $userRepository,
+        private ValidatorInterface $validator,
+        private KernelInterface    $kernel
     )
     {
     }
@@ -38,16 +39,15 @@ class UpdateUserController extends AbstractController
                 PATHINFO_FILENAME
             );
             // this is needed to safely include the file name as part of the URL
-            $safeFilename = $this->slugify($originalFilename);
+            $safeFilename = LiberatoHelper::slugify($originalFilename);
             $newFilename = date('Y-m-d') . "_" . $safeFilename . md5
                 (
                     microtime()
                 ) . '.'
                 . $avatar->guessExtension();
 
-            $avatar->move($this->kernel->getProjectDir() . '/public/media/avatar/', $newFilename);
-            $oldUser->setFile($avatar);
-            $oldUser->setFilePath('/media/avatar/' . $newFilename);
+            $avatar->move($this->kernel->getProjectDir() . '/public/images/avatar/', $newFilename);
+            $oldUser->setFilePath('/images/avatar/' . $newFilename);
         }
 
         if ($request->get("username") && $request->get("username") !== $oldUser->getName()) {
@@ -73,16 +73,5 @@ class UpdateUserController extends AbstractController
         $this->userRepository->update($oldUser);
 
         return $oldUser;
-    }
-
-    private function slugify(string $title): string
-    {
-        $title = preg_replace('~[^\pL\d]+~u', '-', $title);
-        $title = iconv('utf-8', 'us-ascii//TRANSLIT', $title);
-        $title = preg_replace('~[^-\w]+~', '', $title);
-        $title = trim($title, '-');
-        $title = preg_replace('~-+~', '-', $title);
-
-        return strtolower($title);
     }
 }
