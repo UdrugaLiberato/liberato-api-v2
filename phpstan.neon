@@ -1,3 +1,4 @@
 parameters:
+    checkGenericClassInNonGenericObjectType: false
     ignoreErrors:
         - '#[Ii]d is never written, only read.$#'
