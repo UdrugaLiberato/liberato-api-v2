@@ -55,7 +55,7 @@ class Post
     private User $author;
 
     #[
-        ORM\Column(type: 'string', length: 255),
+        ORM\Column(type: 'string', length: 255, unique: true),
         Assert\Length(min: 10, minMessage: "Title must be at least {{ limit }} characters long!")
     ]
     private string $title;

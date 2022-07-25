@@ -28,7 +28,7 @@ class PostInputDataTransformer implements DataTransformerInterface
     public function transform($object, string $to, array $context = [])
     {
         $post = new Post();
-        $post->setTitle($object->title);
+        $post->setTitle(trim($object->getTitle()));
         $post->setAuthor($this->token?->getToken()?->getUser());
         $post->setBody($object->body);
         $post->setTags(explode(",", $object->tags));
