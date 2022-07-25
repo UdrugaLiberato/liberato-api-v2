@@ -1,24 +1,26 @@
 <?php
 
-namespace App\API;
+namespace App\Utils;
 
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class GoogleMaps implements GoogleMapsInterface
 {
 
-    public function __construct(private HttpClientInterface $client)
+    public function __construct(
+        public string               $apiKey,
+        private HttpClientInterface $client
+    )
     {
     }
 
     public function getCoordinateForCity(string $city): array
     {
-        $response = $this->client->request("GET", "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=" . $city . "&inputtype=textquery&=&fields=geometry&key=AIzaSyDGlqdh7h7Me5fC9WJojYoC_wvm-0CARco");
+        $response = $this->client->request("GET", "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=" . $city . "&inputtype=textquery&=&fields=geometry&key=" . $this->apiKey);
         $content = $response->toArray();
 
         $lat = $content["candidates"][0]["geometry"]["location"]["lat"];
         $lng = $content["candidates"][0]["geometry"]["location"]["lng"];
-
         return [
             "lat" => $lat,
             "lng" => $lng

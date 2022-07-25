@@ -3,8 +3,8 @@
 namespace App\DataTransformer\City;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
-use App\API\GoogleMapsInterface;
 use App\Entity\City;
+use App\Utils\GoogleMapsInterface;
 
 class CityInputDataTransformer implements DataTransformerInterface
 {

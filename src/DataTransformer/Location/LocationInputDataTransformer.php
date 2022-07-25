@@ -4,11 +4,11 @@ namespace App\DataTransformer\Location;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use ApiPlatform\Core\Validator\Exception\ValidationException;
-use App\API\GoogleMapsInterface;
 use App\Entity\Answer;
 use App\Entity\Location;
 use App\Repository\CategoryRepository;
 use App\Repository\CityRepository;
+use App\Utils\GoogleMapsInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Validator\Constraints\Image;
