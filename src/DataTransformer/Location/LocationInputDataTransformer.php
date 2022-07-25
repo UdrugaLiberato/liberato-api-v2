@@ -3,52 +3,40 @@
 namespace App\DataTransformer\Location;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
-use ApiPlatform\Core\Validator\Exception\ValidationException;
 use App\Entity\Answer;
+use App\Entity\Category;
+use App\Entity\City;
 use App\Entity\Location;
 use App\Repository\CategoryRepository;
 use App\Repository\CityRepository;
 use App\Utils\GoogleMapsInterface;
-use App\Utils\LiberatoHelper;
-use Symfony\Component\HttpKernel\KernelInterface;
+use App\Utils\LiberatoHelperInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Validator\Constraints\Image;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class LocationInputDataTransformer implements DataTransformerInterface
 {
 
-    public string $uploadDir;
-
-    /**
-     * @param KernelInterface $kernel
-     * @param ValidatorInterface $validator
-     * @param TokenStorageInterface $token
-     * @param GoogleMapsInterface $googleMapsInterface
-     * @param CityRepository $cityRepository
-     * @param CategoryRepository $categoryRepository
-     * @param TokenStorageInterface $token
-     */
-    public function __construct(public KernelInterface       $kernel,
-                                public ValidatorInterface    $validator,
-                                public TokenStorageInterface $token,
-                                public GoogleMapsInterface   $googleMapsInterface,
-                                public CityRepository        $cityRepository,
-                                public CategoryRepository    $categoryRepository,
+    public function __construct(
+        public LiberatoHelperInterface $liberatoHelper,
+        public TokenStorageInterface   $token,
+        public GoogleMapsInterface     $googleMapsInterface,
+        public CityRepository          $cityRepository,
+        public CategoryRepository      $categoryRepository,
     )
     {
-        $this->uploadDir = $this->kernel->getProjectDir() . "/public/images/locations/";
     }
 
     public function transform($object, string $to, array $context = []): object
     {
-        $fileNames = $this->transformPictures($object->images);
-        $city = $this->cityRepository->find($object->city);
-        $category = $this->categoryRepository->find($object->category);
+        $fileNames = $this->liberatoHelper->transformImages($object->images, "locations");
         [$streetName, $streetNumber] = explode(" ", $object->street);
+        $city = $this->getCity($object->city);
+        $category = $this->getCategory($object->category);
+
         ["lat" => $lat, "lng" => $lng, "formatted_address" => $formatted_address] =
             $this->googleMapsInterface->getCoordinateForStreet
             ($streetNumber . " " . $streetName, $city->getName());
+
         $location = new Location();
         $location->setName($object->name);
         $location->setCity($city);
@@ -63,6 +51,23 @@ class LocationInputDataTransformer implements DataTransformerInterface
         $location->setFeatured($object->featured);
         $location->setLatitude($lat);
         $location->setLongitude($lng);
+
+        $this->addAnswers($object, $location);
+        return $location;
+    }
+
+    private function getCity(string $id): City
+    {
+        return $this->cityRepository->find($id);
+    }
+
+    private function getCategory(string $id): Category
+    {
+        return $this->categoryRepository->find($id);
+    }
+
+    private function addAnswers(object $object, Location $location): void
+    {
         $answerArr = explode(",", $object->answers);
         foreach ($answerArr as $answer) {
             [$question, $answer] = explode(":", $answer);
@@ -71,49 +76,6 @@ class LocationInputDataTransformer implements DataTransformerInterface
             $Answer->setAnswer($answer);
             $location->addAnswer($Answer);
         }
-        return $location;
-    }
-
-    private function transformPictures($uploadedFiles): array
-    {
-        $fileNames = [];
-        if (!empty($uploadedFiles)) {
-            foreach ($uploadedFiles as $file) {
-                $errors = $this->validator->validate($file, new Image());
-                if (count($errors) > 0) {
-                    throw new ValidationException("Only images can be uploaded!");
-                }
-                $mime = $file->getMimeType();
-                $originalFilename = pathinfo(
-                    $file->getClientOriginalName(),
-                    PATHINFO_FILENAME
-                );
-                // this is needed to safely include the file name as part of the URL
-                $safeFilename = LiberatoHelper::slugify($originalFilename);
-                $newFilename = date('Y-m-d') . "_" . $safeFilename . md5
-                    (
-                        microtime()
-                    ) . '.'
-                    . $file->guessExtension();
-                $file->move(
-                    $this->uploadDir,
-                    $newFilename
-                );
-
-                $F = file_get_contents($this->uploadDir . $newFilename);
-                $base64 = base64_encode($F);
-                $blob = 'data:' . $mime . ';base64,' . $base64;
-                $fileObj = [
-                    "path" => $newFilename,
-                    "title" => $file->getClientOriginalName(),
-                    "mime" => $mime,
-                    "src" => $blob,
-                ];
-                $fileNames[] = $fileObj;
-            }
-            return $fileNames;
-        }
-        return [];
     }
 
     public function supportsTransformation($data, string $to, array $context = []): bool
