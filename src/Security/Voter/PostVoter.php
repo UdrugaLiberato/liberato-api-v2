@@ -2,6 +2,7 @@
 
 namespace App\Security\Voter;
 
+use App\Entity\Post;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -16,7 +17,7 @@ class PostVoter extends Voter
         // replace with your own logic
         // https://symfony.com/doc/current/security/voters.html
         return in_array($attribute, [self::EDIT, self::VIEW])
-            && $subject instanceof \App\Entity\Post;
+            && $subject instanceof Post;
     }
 
     protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool

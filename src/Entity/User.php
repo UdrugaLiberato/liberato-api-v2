@@ -3,13 +3,13 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
-use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Controller\UpdateUserController;
 use App\DTO\User\UserInput;
 use App\DTO\User\UserOutput;
 use App\Repository\UserRepository;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -88,13 +88,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private string $username;
 
     #[ORM\Column(type: 'datetime_immutable')]
-    private \DateTimeImmutable $createdAt;
+    private DateTimeImmutable $createdAt;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    private ?\DateTimeImmutable $updatedAt;
+    private ?DateTimeImmutable $updatedAt;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    private ?\DateTimeImmutable $deletedAt;
+    private ?DateTimeImmutable $deletedAt;
 
     #[ORM\OneToMany(mappedBy: 'author', targetEntity: Post::class, orphanRemoval: true)]
     private $posts;
@@ -104,7 +104,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function __construct()
     {
-        $this->createdAt = new \DateTimeImmutable("now");
+        $this->createdAt = new DateTimeImmutable("now");
         $this->updatedAt = null;
         $this->deletedAt = null;
         $this->posts = new ArrayCollection();
@@ -183,34 +183,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
 
     }
+
     public function getName(): ?string
     {
         return $this->username;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): ?DateTimeImmutable
     {
         return $this->createdAt;
     }
 
-    public function getUpdatedAt(): ?\DateTimeImmutable
+    public function getUpdatedAt(): ?DateTimeImmutable
     {
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
+    public function setUpdatedAt(?DateTimeImmutable $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
 
         return $this;
     }
 
-    public function getDeletedAt(): ?\DateTimeImmutable
+    public function getDeletedAt(): ?DateTimeImmutable
     {
         return $this->deletedAt;
     }
 
-    public function setDeletedAt(?\DateTimeImmutable $deletedAt): self
+    public function setDeletedAt(?DateTimeImmutable $deletedAt): self
     {
         $this->deletedAt = $deletedAt;
 
@@ -258,6 +259,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->filePath;
     }
 
+    public function setFilePath(?string $filePath): void
+    {
+        $this->filePath = $filePath;
+    }
+
     /**
      * @return File|null
      */
@@ -299,11 +305,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $this;
-    }
-
-    public function setFilePath(?string $filePath): void
-    {
-        $this->filePath = $filePath;
     }
 
 }

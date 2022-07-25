@@ -2,10 +2,11 @@
 
 namespace App\DataPersister;
 
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use ApiPlatform\Core\DataPersister\DataPersisterInterface;
 use App\Entity\User;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserDataPersister implements DataPersisterInterface
 {
@@ -33,7 +34,7 @@ class UserDataPersister implements DataPersisterInterface
 
     public function remove($data): void
     {
-        $data = $data->setDeletedAt(new \DateTimeImmutable("now"));
+        $data = $data->setDeletedAt(new DateTimeImmutable("now"));
         $this->entityManager->persist($data);
         $this->entityManager->flush();
     }

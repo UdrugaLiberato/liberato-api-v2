@@ -6,13 +6,14 @@ namespace App\DataPersister;
 
 use ApiPlatform\Core\DataPersister\DataPersisterInterface;
 use App\Entity\DonationGiver;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 
 class DonationGiverDataPersister implements DataPersisterInterface
 {
-public function __construct(private EntityManagerInterface $entityManager)
-{
-}
+    public function __construct(private EntityManagerInterface $entityManager)
+    {
+    }
 
     public function supports($data): bool
     {
@@ -27,7 +28,7 @@ public function __construct(private EntityManagerInterface $entityManager)
 
     public function remove($data): void
     {
-        $data = $data->setDeletedAt(new \DateTimeImmutable("now"));
+        $data = $data->setDeletedAt(new DateTimeImmutable("now"));
         $this->entityManager->persist($data);
         $this->entityManager->flush();
     }

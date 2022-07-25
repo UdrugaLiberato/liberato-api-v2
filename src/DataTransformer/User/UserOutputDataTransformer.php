@@ -27,6 +27,11 @@ class UserOutputDataTransformer implements DataTransformerInterface
         );
     }
 
+    public function supportsTransformation($data, string $to, array $context = []): bool
+    {
+        return UserOutput::class === $to && $data instanceof User;
+    }
+
     private function getPostsFromUser($posts): array|ArrayCollection
     {
         if (count($posts->getValues()) === 0) return [];
@@ -42,10 +47,5 @@ class UserOutputDataTransformer implements DataTransformerInterface
                 "created_at" => $post->getCreatedAt()->format('Y-m-d H:i:s')
             ];
         });
-    }
-
-    public function supportsTransformation($data, string $to, array $context = []): bool
-    {
-        return UserOutput::class === $to && $data instanceof User;
     }
 }

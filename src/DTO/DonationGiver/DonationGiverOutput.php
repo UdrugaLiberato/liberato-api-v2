@@ -10,7 +10,7 @@ class DonationGiverOutput
         public float   $moneyRequested,
         public float   $moneyGiven,
         public string  $dateOfApplication,
-        public ?string  $dateOfApproval,
+        public ?string $dateOfApproval,
         public string  $createdAt,
         public ?string $updatedAt,
         public ?string $deletedAt

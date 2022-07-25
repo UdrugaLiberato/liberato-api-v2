@@ -56,6 +56,15 @@ class LocationInputDataTransformer implements DataTransformerInterface
         return $location;
     }
 
+    public function supportsTransformation($data, string $to, array $context = []): bool
+    {
+        if ($data instanceof Location) {
+            return false;
+        }
+
+        return Location::class === $to && null !== ($context['input']['class'] ?? null);
+    }
+
     private function getCity(string $id): City
     {
         return $this->cityRepository->find($id);
@@ -76,14 +85,5 @@ class LocationInputDataTransformer implements DataTransformerInterface
             $Answer->setAnswer($answer);
             $location->addAnswer($Answer);
         }
-    }
-
-    public function supportsTransformation($data, string $to, array $context = []): bool
-    {
-        if ($data instanceof Location) {
-            return false;
-        }
-
-        return Location::class === $to && null !== ($context['input']['class'] ?? null);
     }
 }

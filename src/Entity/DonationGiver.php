@@ -8,6 +8,8 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\DTO\DonationGiver\DonationGiverInput;
 use App\DTO\DonationGiver\DonationGiverOutput;
 use App\Repository\DonationGiverRepository;
+use DateTime;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -31,13 +33,13 @@ class DonationGiver
     private string $name;
 
     #[ORM\Column(type: 'date')]
-    private \DateTime $dateOfApplication;
+    private DateTime $dateOfApplication;
 
     #[ORM\Column(type: 'boolean')]
     private bool $approved;
 
     #[ORM\Column(type: 'date', nullable: true)]
-    private ?\DateTime $dateOfApproval = null;
+    private ?DateTime $dateOfApproval = null;
 
     #[ORM\Column(type: 'float')]
     private float $moneyRequested;
@@ -49,17 +51,17 @@ class DonationGiver
     private $projects;
 
     #[ORM\Column(type: 'datetime_immutable')]
-    private \DateTimeImmutable $createdAt;
+    private DateTimeImmutable $createdAt;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    private ?\DateTimeImmutable $updatedAt;
+    private ?DateTimeImmutable $updatedAt;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    private ?\DateTimeImmutable $deletedAt;
+    private ?DateTimeImmutable $deletedAt;
 
     public function __construct()
     {
-        $this->createdAt = new \DateTimeImmutable("now");
+        $this->createdAt = new DateTimeImmutable("now");
         $this->updatedAt = null;
         $this->dateOfApproval = null;
         $this->deletedAt = null;
@@ -71,12 +73,12 @@ class DonationGiver
         return $this->id;
     }
 
-    public function getDateOfApplication(): ?\DateTime
+    public function getDateOfApplication(): ?DateTime
     {
         return $this->dateOfApplication;
     }
 
-    public function setDateOfApplication(\DateTime $dateOfApplication): self
+    public function setDateOfApplication(DateTime $dateOfApplication): self
     {
         $this->dateOfApplication = $dateOfApplication;
 
@@ -95,12 +97,12 @@ class DonationGiver
         return $this;
     }
 
-    public function getDateOfApproval(): ?\DateTime
+    public function getDateOfApproval(): ?DateTime
     {
         return $this->dateOfApproval;
     }
 
-    public function setDateOfApproval(?\DateTime $dateOfApproval): self
+    public function setDateOfApproval(?DateTime $dateOfApproval): self
     {
         $this->dateOfApproval = $dateOfApproval;
 
@@ -155,36 +157,36 @@ class DonationGiver
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): ?DateTimeImmutable
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    public function setCreatedAt(DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeImmutable
+    public function getUpdatedAt(): ?DateTimeImmutable
     {
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
+    public function setUpdatedAt(?DateTimeImmutable $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
 
         return $this;
     }
 
-    public function getDeletedAt(): ?\DateTimeImmutable
+    public function getDeletedAt(): ?DateTimeImmutable
     {
         return $this->deletedAt;
     }
 
-    public function setDeletedAt(?\DateTimeImmutable $deletedAt): self
+    public function setDeletedAt(?DateTimeImmutable $deletedAt): self
     {
         $this->deletedAt = $deletedAt;
 

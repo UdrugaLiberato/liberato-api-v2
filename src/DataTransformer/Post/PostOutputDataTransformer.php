@@ -6,16 +6,12 @@ use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\DTO\Post\PostOutput;
 use App\Entity\Post;
 use App\Utils\LiberatoHelper;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 class PostOutputDataTransformer implements DataTransformerInterface
 {
-    public function __construct(public KernelInterface $kernel)
-    {
-    }
-
     public function transform($object, string $to, array $context = []): object
     {
+
         return new PostOutput(
             $object->getAuthor()->getName(),
             $object->getId(),
@@ -23,7 +19,7 @@ class PostOutputDataTransformer implements DataTransformerInterface
             $object->getBody(),
             LiberatoHelper::slugify($object->getTitle()),
             $object->getTags(),
-            $object->getImages(),
+            LiberatoHelper::convertImagesArrayToOutput($object->getImages(), "posts/"),
             $object->getCreatedAt()->format('Y-m-d H:i:s'),
             $object->getUpdatedAt()?->format("Y-m-d H:i:s"),
             $object->getDeletedAt()?->format("Y-m-d H:i:s")

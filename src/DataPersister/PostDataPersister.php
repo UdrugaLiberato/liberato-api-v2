@@ -6,6 +6,7 @@ namespace App\DataPersister;
 
 use ApiPlatform\Core\DataPersister\DataPersisterInterface;
 use App\Entity\Post;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 
 class PostDataPersister implements DataPersisterInterface
@@ -27,7 +28,7 @@ class PostDataPersister implements DataPersisterInterface
 
     public function remove($data): void
     {
-        $data = $data->setDeletedAt(new \DateTimeImmutable("now"));
+        $data = $data->setDeletedAt(new DateTimeImmutable("now"));
         $this->entityManager->persist($data);
         $this->entityManager->flush();
     }

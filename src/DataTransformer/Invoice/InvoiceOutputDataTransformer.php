@@ -5,7 +5,6 @@ namespace App\DataTransformer\Invoice;
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\DTO\Invoice\InvoiceOutput;
 use App\Entity\Invoice;
-use App\Repository\BankAccountRepository;
 
 class InvoiceOutputDataTransformer implements DataTransformerInterface
 {

@@ -6,6 +6,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\DTO\Question\QuestionInput;
 use App\DTO\Question\QuestionOutput;
 use App\Repository\QuestionRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -42,17 +43,17 @@ class Question
     private string $question;
 
     #[ORM\Column(type: 'datetime_immutable')]
-    private \DateTimeImmutable $createdAt;
+    private DateTimeImmutable $createdAt;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    private ?\DateTimeImmutable $updatedAt = null;
+    private ?DateTimeImmutable $updatedAt = null;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    private ?\DateTimeImmutable $deletedAt = null;
+    private ?DateTimeImmutable $deletedAt = null;
 
     public function __construct()
     {
-        $this->createdAt = new \DateTimeImmutable("now");
+        $this->createdAt = new DateTimeImmutable("now");
     }
 
     public function getId(): string
@@ -84,27 +85,27 @@ class Question
         return $this;
     }
 
-    public function getCreatedAt(): \DateTimeImmutable
+    public function getCreatedAt(): DateTimeImmutable
     {
         return $this->createdAt;
     }
 
-    public function getUpdatedAt(): ?\DateTimeImmutable
+    public function getUpdatedAt(): ?DateTimeImmutable
     {
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): void
+    public function setUpdatedAt(?DateTimeImmutable $updatedAt): void
     {
         $this->updatedAt = $updatedAt;
     }
 
-    public function getDeletedAt(): ?\DateTimeImmutable
+    public function getDeletedAt(): ?DateTimeImmutable
     {
         return $this->deletedAt;
     }
 
-    public function setDeletedAt(?\DateTimeImmutable $deletedAt): void
+    public function setDeletedAt(?DateTimeImmutable $deletedAt): void
     {
         $this->deletedAt = $deletedAt;
     }

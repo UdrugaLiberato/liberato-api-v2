@@ -8,7 +8,6 @@ use App\Entity\City;
 
 class CityOutputDataTransformer implements DataTransformerInterface
 {
-
     public function transform($object, string $to, array $context = []): object
     {
         return new CityOutput(

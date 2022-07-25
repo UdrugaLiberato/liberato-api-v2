@@ -8,6 +8,7 @@ use App\Controller\UpdatePostController;
 use App\DTO\Post\PostInput;
 use App\DTO\Post\PostOutput;
 use App\Repository\PostRepository;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -78,18 +79,18 @@ class Post
     #[
         ORM\Column(type: 'datetime_immutable'),
     ]
-    private \DateTimeImmutable $createdAt;
+    private DateTimeImmutable $createdAt;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    private ?\DateTimeImmutable $updatedAt;
+    private ?DateTimeImmutable $updatedAt;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    private ?\DateTimeImmutable $deletedAt;
+    private ?DateTimeImmutable $deletedAt;
 
     public function __construct()
     {
         $this->images = [];
-        $this->createdAt = new \DateTimeImmutable("now");
+        $this->createdAt = new DateTimeImmutable("now");
         $this->deletedAt = null;
         $this->updatedAt = null;
     }
@@ -135,29 +136,29 @@ class Post
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): ?DateTimeImmutable
     {
         return $this->createdAt;
     }
 
-    public function getUpdatedAt(): ?\DateTimeImmutable
+    public function getUpdatedAt(): ?DateTimeImmutable
     {
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
+    public function setUpdatedAt(?DateTimeImmutable $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
 
         return $this;
     }
 
-    public function getDeletedAt(): ?\DateTimeImmutable
+    public function getDeletedAt(): ?DateTimeImmutable
     {
         return $this->deletedAt;
     }
 
-    public function setDeletedAt(?\DateTimeImmutable $deletedAt): self
+    public function setDeletedAt(?DateTimeImmutable $deletedAt): self
     {
         $this->deletedAt = $deletedAt;
 

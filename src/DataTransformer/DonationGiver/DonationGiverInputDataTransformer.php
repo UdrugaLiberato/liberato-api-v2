@@ -5,6 +5,7 @@ namespace App\DataTransformer\DonationGiver;
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Entity\DonationGiver;
 use App\Repository\BankAccountRepository;
+use DateTime;
 use DateTimeImmutable;
 
 class DonationGiverInputDataTransformer implements DataTransformerInterface
@@ -28,8 +29,8 @@ class DonationGiverInputDataTransformer implements DataTransformerInterface
         $donationGiver->setMoneyRequested($object->moneyRequested);
         $object->moneyGiven !== null ? $donationGiver->setMoneyGiven($object->moneyGiven) :
             $donationGiver->setMoneyGiven(0);
-        $donationGiver->setDateOfApplication(new \DateTime($object->dateOfApplication));
-        $donationGiver->setDateOfApproval(new \DateTime($object->dateOfApproval));
+        $donationGiver->setDateOfApplication(new DateTime($object->dateOfApplication));
+        $donationGiver->setDateOfApproval(new DateTime($object->dateOfApproval));
 
         return $donationGiver;
     }

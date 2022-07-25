@@ -6,6 +6,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\Controller\CreateInvoiceController;
 use App\DTO\Invoice\InvoiceOutput;
 use App\Repository\InvoiceRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: InvoiceRepository::class)]
@@ -38,16 +39,16 @@ class Invoice
     private float $amount;
 
     #[ORM\Column(type: 'datetime_immutable')]
-    private \DateTimeImmutable $payedAt;
+    private DateTimeImmutable $payedAt;
 
     #[ORM\Column(type: 'datetime_immutable')]
-    private \DateTimeImmutable $createdAt;
+    private DateTimeImmutable $createdAt;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    private \DateTimeImmutable $updatedAt;
+    private DateTimeImmutable $updatedAt;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    private \DateTimeImmutable $deletedAt;
+    private DateTimeImmutable $deletedAt;
 
     #[ORM\Column(type: 'array')]
     private array $files = [];
@@ -57,7 +58,7 @@ class Invoice
 
     public function __construct()
     {
-        $this->createdAt = new \DateTimeImmutable("now");
+        $this->createdAt = new DateTimeImmutable("now");
     }
 
     public function getId(): string
@@ -89,48 +90,48 @@ class Invoice
         return $this;
     }
 
-    public function getPayedAt(): ?\DateTimeImmutable
+    public function getPayedAt(): ?DateTimeImmutable
     {
         return $this->payedAt;
     }
 
-    public function setPayedAt(\DateTimeImmutable $payedAt): self
+    public function setPayedAt(DateTimeImmutable $payedAt): self
     {
         $this->payedAt = $payedAt;
 
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): ?DateTimeImmutable
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    public function setCreatedAt(DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeImmutable
+    public function getUpdatedAt(): ?DateTimeImmutable
     {
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
+    public function setUpdatedAt(?DateTimeImmutable $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
 
         return $this;
     }
 
-    public function getDeletedAt(): ?\DateTimeImmutable
+    public function getDeletedAt(): ?DateTimeImmutable
     {
         return $this->deletedAt;
     }
 
-    public function setDeletedAt(?\DateTimeImmutable $deletedAt): self
+    public function setDeletedAt(?DateTimeImmutable $deletedAt): self
     {
         $this->deletedAt = $deletedAt;
 

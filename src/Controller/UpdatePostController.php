@@ -6,6 +6,7 @@ namespace App\Controller;
 use App\Entity\Post;
 use App\Repository\PostRepository;
 use App\Utils\LiberatoHelper;
+use DateTimeImmutable;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsController;
@@ -35,12 +36,12 @@ class UpdatePostController extends AbstractController
         if ($request->get("body") && $request->get("body") !== $oldPost->getBody()) {
             $oldPost->setBody($request->get("body"));
         }
-        $oldPost->setTags(explode(",", $request->get("tags")));;
+        $oldPost->setTags(explode(",", $request->get("tags")));
         $fileNames = $this->transformPictures($request->files->get("images"));
         $oldPost->setImages([]);
         $oldPost->setImages($fileNames);
 
-        $oldPost->setUpdatedAt(new \DateTimeImmutable("now"));
+        $oldPost->setUpdatedAt(new DateTimeImmutable("now"));
         $this->postRepository->update($oldPost);
 
         return $oldPost;

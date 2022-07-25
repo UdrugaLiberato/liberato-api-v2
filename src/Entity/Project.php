@@ -7,6 +7,9 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\DTO\Project\ProjectOutput;
 use App\Repository\ProjectRepository;
+use DateTime;
+use DateTimeImmutable;
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -14,7 +17,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ApiResource(
     denormalizationContext: ['groups' => ['write']],
-output: ProjectOutput::class),
+    output: ProjectOutput::class),
     ORM\Entity(repositoryClass: ProjectRepository::class)]
 class Project
 {
@@ -43,13 +46,13 @@ class Project
         ORM\Column(type: 'date'),
         Groups(["write"])
     ]
-    private \DateTime $start;
+    private DateTime $start;
 
     #[
         ORM\Column(type: 'date'),
         Groups(["write"])
     ]
-    private \DateTime $end;
+    private DateTime $end;
 
     #[
         ORM\Column(type: 'float'),
@@ -66,17 +69,17 @@ class Project
     #[
         ORM\Column(type: 'datetime_immutable'),
     ]
-    private \DateTimeImmutable $createdAt;
+    private DateTimeImmutable $createdAt;
 
     #[
         ORM\Column(type: 'datetime_immutable', nullable: true),
     ]
-    private ?\DateTimeImmutable $updatedAt;
+    private ?DateTimeImmutable $updatedAt;
 
     #[
         ORM\Column(type: 'datetime_immutable', nullable: true),
     ]
-    private ?\DateTimeImmutable $deletedAt;
+    private ?DateTimeImmutable $deletedAt;
 
     #[
         ORM\ManyToMany(targetEntity: DonationGiver::class, mappedBy: 'projects'),
@@ -92,7 +95,7 @@ class Project
 
     public function __construct()
     {
-        $this->createdAt = new \DateTimeImmutable("now");
+        $this->createdAt = new DateTimeImmutable("now");
         $this->moneyGathered = 0.00;
         $this->updatedAt = null;
         $this->deletedAt = null;
@@ -117,60 +120,60 @@ class Project
         return $this;
     }
 
-    public function getStart(): ?\DateTimeInterface
+    public function getStart(): ?DateTimeInterface
     {
         return $this->start;
     }
 
-    public function setStart(\DateTime $start): self
+    public function setStart(DateTime $start): self
     {
         $this->start = $start;
 
         return $this;
     }
 
-    public function getEnd(): ?\DateTimeInterface
+    public function getEnd(): ?DateTimeInterface
     {
         return $this->end;
     }
 
-    public function setEnd(\DateTime $end): self
+    public function setEnd(DateTime $end): self
     {
         $this->end = $end;
 
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): ?DateTimeImmutable
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    public function setCreatedAt(DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeImmutable
+    public function getUpdatedAt(): ?DateTimeImmutable
     {
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
+    public function setUpdatedAt(?DateTimeImmutable $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
 
         return $this;
     }
 
-    public function getDeletedAt(): ?\DateTimeImmutable
+    public function getDeletedAt(): ?DateTimeImmutable
     {
         return $this->deletedAt;
     }
 
-    public function setDeletedAt(?\DateTimeImmutable $deletedAt): self
+    public function setDeletedAt(?DateTimeImmutable $deletedAt): self
     {
         $this->deletedAt = $deletedAt;
 

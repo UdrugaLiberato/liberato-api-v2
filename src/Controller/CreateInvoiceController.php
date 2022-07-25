@@ -6,6 +6,7 @@ use App\Entity\Invoice;
 use App\Image\ImageUploader;
 use App\Repository\BankAccountRepository;
 use App\Repository\ProjectRepository;
+use DateTimeImmutable;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -48,7 +49,7 @@ class CreateInvoiceController extends AbstractController
         $invoice->setDescription($request->request->get("description"));
         $invoice->setAmount($request->get("amount"));
         $invoice->setProject($project);
-        $invoice->setPayedAt(new \DateTimeImmutable($request->get("payedAt")));
+        $invoice->setPayedAt(new DateTimeImmutable($request->get("payedAt")));
 
         $json = json_decode($uploadedFiles, true);
         foreach ($json as $uploadedFile) {
