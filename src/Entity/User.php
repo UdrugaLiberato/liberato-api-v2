@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
@@ -22,30 +24,30 @@ use Symfony\Component\Validator\Constraints as Assert;
     ApiResource(collectionOperations: [
         'get' => [
             'security' => "is_granted('ROLE_ADMIN')",
-            'security_message' => "Only admin users are allowed to list users.",
+            'security_message' => 'Only admin users are allowed to list users.',
         ],
         'post' => [
-            "input" => UserInput::class,
+            'input' => UserInput::class,
             'input_formats' => [
                 'multipart' => ['multipart/form-data'],
             ],
         ],
-    ], itemOperations: ["get", "put" => [
-        "controller" => UpdateUserController::class,
+    ], itemOperations: ['get', 'put' => [
+        'controller' => UpdateUserController::class,
         'input_formats' => [
             'multipart' => ['multipart/form-data'],
         ],
     ]], output: UserOutput::class)]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+class User implements PasswordAuthenticatedUserInterface, UserInterface
 {
-    public const ROLE_ADMIN = "ROLE_ADMIN";
-    public const ROLE_USER = "ROLE_USER";
+    public const ROLE_ADMIN = 'ROLE_ADMIN';
+    public const ROLE_USER = 'ROLE_USER';
 
     #[
         ORM\Id,
         ORM\Column(type: 'string', unique: true),
-        ORM\GeneratedValue(strategy: "CUSTOM"),
-        ORM\CustomIdGenerator(class: "doctrine.uuid_generator")
+        ORM\GeneratedValue(strategy: 'CUSTOM'),
+        ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')
     ]
     private string $id;
 
@@ -58,7 +60,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[
         ORM\Column(type: 'string', length: 180, nullable: true),
     ]
-    private ?string $phone = "";
+    private ?string $phone = '';
 
     /**
      * @var array<string>
@@ -68,14 +70,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[
         ORM\Column(type: 'string'),
-        Assert\Length(min: 8, minMessage: "Password must be at least 8 characters long!")
+        Assert\Length(min: 8, minMessage: 'Password must be at least 8 characters long!')
     ]
     private string $password;
 
     #[
         ApiFilter(SearchFilter::class, strategy: 'ipartial'),
         ORM\Column(type: 'string', length: 255),
-        Assert\Length(min: 4, minMessage: "Username must be at least {{ limit }} characters long!")
+        Assert\Length(min: 4, minMessage: 'Username must be at least {{ limit }} characters long!')
     ]
     private string $username;
 
@@ -99,10 +101,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function __construct()
     {
-        $this->phone = "";
+        $this->phone = '';
         $this->avatar = new ArrayCollection();
         $this->posts = new ArrayCollection();
-        $this->createdAt = new DateTimeImmutable("now");
+        $this->createdAt = new DateTimeImmutable('now');
         $this->updatedAt = null;
         $this->deletedAt = null;
         $this->locations = new ArrayCollection();
@@ -138,7 +140,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getUserIdentifier(): string
     {
-        return (string)$this->email;
+        return (string) $this->email;
     }
 
     public function getRoles(): array
@@ -166,7 +168,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-
     public function getUsername(): ?string
     {
         return $this->email;
@@ -177,7 +178,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->username = $username;
 
         return $this;
-
     }
 
     public function getName(): ?string

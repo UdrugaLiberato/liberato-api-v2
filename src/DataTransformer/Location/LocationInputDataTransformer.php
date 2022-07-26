@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DataTransformer\Location;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
@@ -15,33 +17,28 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class LocationInputDataTransformer implements DataTransformerInterface
 {
-
     public function __construct(
         public LiberatoHelperInterface $liberatoHelper,
-        public TokenStorageInterface   $token,
-        public GoogleMapsInterface     $googleMapsInterface,
-        public CityRepository          $cityRepository,
-        public CategoryRepository      $categoryRepository,
-    )
-    {
+        public TokenStorageInterface $token,
+        public GoogleMapsInterface $googleMapsInterface,
+        public CityRepository $cityRepository,
+        public CategoryRepository $categoryRepository,
+    ) {
     }
 
     /**
-     * @param object $object
-     * @param string $to
+     * @param object       $object
      * @param array<mixed> $context
-     * @return Location
      */
     public function transform($object, string $to, array $context = []): Location
     {
-        $fileNames = $this->liberatoHelper->transformImages($object->images, "locations");
-        [$streetName, $streetNumber] = explode(" ", $object->street);
+        $fileNames = $this->liberatoHelper->transformImages($object->images, 'locations');
+        [$streetName, $streetNumber] = explode(' ', $object->street);
         $city = $this->getCity($object->city);
         $category = $this->getCategory($object->category);
 
-        ["lat" => $lat, "lng" => $lng, "formatted_address" => $formatted_address] =
-            $this->googleMapsInterface->getCoordinateForStreet
-            ($streetNumber . " " . $streetName, $city->getName());
+        ['lat' => $lat, 'lng' => $lng, 'formatted_address' => $formatted_address] =
+            $this->googleMapsInterface->getCoordinateForStreet($streetNumber . ' ' . $streetName, $city->getName());
 
         $location = new Location();
         $location->setName($object->name);
@@ -59,7 +56,21 @@ class LocationInputDataTransformer implements DataTransformerInterface
         $location->setLongitude($lng);
 
         $this->addAnswers($object, $location);
+
         return $location;
+    }
+
+    /**
+     * @param object       $data
+     * @param array<mixed> $context
+     */
+    public function supportsTransformation($data, string $to, array $context = []): bool
+    {
+        if ($data instanceof Location) {
+            return false;
+        }
+
+        return Location::class === $to && null !== ($context['input']['class'] ?? null);
     }
 
     private function getCity(string $id): City
@@ -74,28 +85,13 @@ class LocationInputDataTransformer implements DataTransformerInterface
 
     private function addAnswers(object $object, Location $location): void
     {
-        $answerArr = explode(",", $object->answers);
+        $answerArr = explode(',', $object->answers);
         foreach ($answerArr as $answer) {
-            [$question, $answer] = explode(":", $answer);
+            [$question, $answer] = explode(':', $answer);
             $Answer = new Answer();
             $Answer->setQuestion($question);
-            $Answer->setAnswer((bool)$answer);
+            $Answer->setAnswer((bool) $answer);
             $location->addAnswer($Answer);
         }
-    }
-
-    /**
-     * @param object $data
-     * @param string $to
-     * @param array<mixed> $context
-     * @return bool
-     */
-    public function supportsTransformation($data, string $to, array $context = []): bool
-    {
-        if ($data instanceof Location) {
-            return false;
-        }
-
-        return Location::class === $to && null !== ($context['input']['class'] ?? null);
     }
 }

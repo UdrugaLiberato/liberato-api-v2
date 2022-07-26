@@ -1,11 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DataTransformer\DonationGiver;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Entity\DonationGiver;
 use App\Repository\BankAccountRepository;
-use DateTime;
 use DateTimeImmutable;
 
 class DonationGiverInputDataTransformer implements DataTransformerInterface
@@ -15,10 +16,9 @@ class DonationGiverInputDataTransformer implements DataTransformerInterface
     }
 
     /**
-     * @param object $object
-     * @param string $to
+     * @param object       $object
      * @param array<mixed> $context
-     * @return DonationGiver
+     *
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
@@ -28,26 +28,24 @@ class DonationGiverInputDataTransformer implements DataTransformerInterface
         $oldAmount = $account->getAmount();
         if ($object->moneyGiven) {
             $account->setAmount($oldAmount + $object->moneyGiven);
-            $account->setUpdatedAt(new DateTimeImmutable("now"));
+            $account->setUpdatedAt(new DateTimeImmutable('now'));
         }
         $this->bankAccountRepository->add($account);
         $donationGiver = new DonationGiver();
         $donationGiver->setName($object->name);
         $donationGiver->setApproved($object->approved);
         $donationGiver->setMoneyRequested($object->moneyRequested);
-        $object->moneyGiven !== null ? $donationGiver->setMoneyGiven($object->moneyGiven) :
+        null !== $object->moneyGiven ? $donationGiver->setMoneyGiven($object->moneyGiven) :
             $donationGiver->setMoneyGiven(0);
-        $donationGiver->setDateOfApplication(new DateTime($object->dateOfApplication));
-        $donationGiver->setDateOfApproval(new DateTime($object->dateOfApproval));
+        $donationGiver->setDateOfApplication(new \DateTimeImmutable($object->dateOfApplication));
+        $donationGiver->setDateOfApproval(new \DateTimeImmutable($object->dateOfApproval));
 
         return $donationGiver;
     }
 
     /**
-     * @param object $data
-     * @param string $to
+     * @param object       $data
      * @param array<mixed> $context
-     * @return bool
      */
     public function supportsTransformation($data, string $to, array $context = []): bool
     {

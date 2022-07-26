@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -11,26 +13,29 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: QuestionRepository::class),
-    ApiResource(collectionOperations: [
-        'get',
-        'post' => [
-            "security" => "is_granted('ROLE_ADMIN')",
-            "security_message" => "Only admins can add questions.",
+    ApiResource(
+        collectionOperations: [
+            'get',
+            'post' => [
+                'security' => "is_granted('ROLE_ADMIN')",
+                'security_message' => 'Only admins can add questions.',
+            ],
         ],
-    ], input: QuestionInput::class,
-        output: QuestionOutput::class)]
+        input: QuestionInput::class,
+        output: QuestionOutput::class
+    )]
 class Question
 {
     #[
         ORM\Id,
         ORM\Column(type: 'string', unique: true),
-        ORM\GeneratedValue(strategy: "CUSTOM"),
-        ORM\CustomIdGenerator(class: "doctrine.uuid_generator")
+        ORM\GeneratedValue(strategy: 'CUSTOM'),
+        ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')
     ]
     private string $id;
 
     #[
-        ORM\ManyToOne(targetEntity: Category::class, cascade: ["remove"], inversedBy: 'questions'),
+        ORM\ManyToOne(targetEntity: Category::class, cascade: ['remove'], inversedBy: 'questions'),
         ORM\JoinColumn(nullable: false),
         Assert\NotNull
     ]
@@ -38,7 +43,7 @@ class Question
 
     #[
         ORM\Column(type: 'string', length: 255),
-        Assert\Length(min: 5, minMessage: "Question must be at least {{ limit }} characters long!")
+        Assert\Length(min: 5, minMessage: 'Question must be at least {{ limit }} characters long!')
     ]
     private string $question;
 
@@ -53,7 +58,7 @@ class Question
 
     public function __construct()
     {
-        $this->createdAt = new DateTimeImmutable("now");
+        $this->createdAt = new DateTimeImmutable('now');
     }
 
     public function getId(): string
@@ -110,4 +115,3 @@ class Question
         $this->deletedAt = $deletedAt;
     }
 }
-

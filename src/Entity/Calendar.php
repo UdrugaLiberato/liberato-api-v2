@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -9,7 +11,8 @@ use App\Repository\CalendarRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ApiResource(
-    input: EventInput::class, output: EventOutput::class
+    input: EventInput::class,
+    output: EventOutput::class
 ),
     ORM\Entity(repositoryClass: CalendarRepository::class)]
 class Calendar
@@ -17,8 +20,8 @@ class Calendar
     #[
         ORM\Id,
         ORM\Column(type: 'string', unique: true),
-        ORM\GeneratedValue(strategy: "CUSTOM"),
-        ORM\CustomIdGenerator(class: "doctrine.uuid_generator")
+        ORM\GeneratedValue(strategy: 'CUSTOM'),
+        ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')
     ]
     private string $Id;
 
@@ -56,5 +59,4 @@ class Calendar
 
         return $this;
     }
-
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
@@ -8,7 +10,6 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\DTO\DonationGiver\DonationGiverInput;
 use App\DTO\DonationGiver\DonationGiverOutput;
 use App\Repository\DonationGiverRepository;
-use DateTime;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -21,8 +22,8 @@ class DonationGiver
     #[
         ORM\Id,
         ORM\Column(type: 'string', unique: true),
-        ORM\GeneratedValue(strategy: "CUSTOM"),
-        ORM\CustomIdGenerator(class: "doctrine.uuid_generator")
+        ORM\GeneratedValue(strategy: 'CUSTOM'),
+        ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')
     ]
     private string $id;
 
@@ -33,13 +34,13 @@ class DonationGiver
     private string $name;
 
     #[ORM\Column(type: 'date')]
-    private DateTime $dateOfApplication;
+    private \DateTimeImmutable $dateOfApplication;
 
     #[ORM\Column(type: 'boolean')]
     private bool $approved;
 
     #[ORM\Column(type: 'date', nullable: true)]
-    private ?DateTime $dateOfApproval = null;
+    private ?\DateTimeImmutable $dateOfApproval = null;
 
     #[ORM\Column(type: 'float')]
     private float $moneyRequested;
@@ -63,7 +64,7 @@ class DonationGiver
     {
         $this->projects = new ArrayCollection();
         $this->dateOfApproval = null;
-        $this->createdAt = new DateTimeImmutable("now");
+        $this->createdAt = new DateTimeImmutable('now');
         $this->updatedAt = null;
         $this->deletedAt = null;
     }
@@ -73,12 +74,12 @@ class DonationGiver
         return $this->id;
     }
 
-    public function getDateOfApplication(): ?DateTime
+    public function getDateOfApplication(): ?DateTimeImmutable
     {
         return $this->dateOfApplication;
     }
 
-    public function setDateOfApplication(DateTime $dateOfApplication): self
+    public function setDateOfApplication(DateTimeImmutable $dateOfApplication): self
     {
         $this->dateOfApplication = $dateOfApplication;
 
@@ -97,12 +98,12 @@ class DonationGiver
         return $this;
     }
 
-    public function getDateOfApproval(): ?DateTime
+    public function getDateOfApproval(): ?DateTimeImmutable
     {
         return $this->dateOfApproval;
     }
 
-    public function setDateOfApproval(?DateTime $dateOfApproval): self
+    public function setDateOfApproval(?DateTimeImmutable $dateOfApproval): self
     {
         $this->dateOfApproval = $dateOfApproval;
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\Invoice;
@@ -11,8 +13,8 @@ use Doctrine\Persistence\ManagerRegistry;
 /**
  * @extends ServiceEntityRepository<Invoice>
  *
- * @method Invoice|null find($id, $lockMode = null, $lockVersion = null)
- * @method Invoice|null findOneBy(array $criteria, array $orderBy = null)
+ * @method null|Invoice find($id, $lockMode = null, $lockVersion = null)
+ * @method null|Invoice findOneBy(array $criteria, array $orderBy = null)
  * @method Invoice[]    findAll()
  * @method Invoice[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
@@ -7,7 +9,6 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\DTO\Project\ProjectOutput;
 use App\Repository\ProjectRepository;
-use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -17,52 +18,53 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ApiResource(
     denormalizationContext: ['groups' => ['write']],
-    output: ProjectOutput::class),
+    output: ProjectOutput::class
+),
     ORM\Entity(repositoryClass: ProjectRepository::class)]
 class Project
 {
     #[
         ORM\Id,
         ORM\Column(type: 'string', unique: true),
-        ORM\GeneratedValue(strategy: "CUSTOM"),
-        ORM\CustomIdGenerator(class: "doctrine.uuid_generator")
+        ORM\GeneratedValue(strategy: 'CUSTOM'),
+        ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')
     ]
     private string $id;
 
     #[
         ORM\Column(type: 'string', length: 255),
         ApiFilter(SearchFilter::class, strategy: 'ipartial'),
-        Groups(["write"])
+        Groups(['write'])
     ]
     private string $name;
 
     #[
         ORM\Column(type: 'text'),
-        Groups(["write"])
+        Groups(['write'])
     ]
     private string $description;
 
     #[
         ORM\Column(type: 'date'),
-        Groups(["write"])
+        Groups(['write'])
     ]
-    private DateTime $start;
+    private \DateTimeImmutable $start;
 
     #[
         ORM\Column(type: 'date'),
-        Groups(["write"])
+        Groups(['write'])
     ]
-    private DateTime $end;
+    private \DateTimeImmutable $end;
 
     #[
         ORM\Column(type: 'float'),
-        Groups(["write"])
+        Groups(['write'])
     ]
     private float $moneyNeeded;
 
     #[
         ORM\Column(type: 'float'),
-        Groups(["write"])
+        Groups(['write'])
     ]
     private float $moneyGathered;
 
@@ -83,19 +85,19 @@ class Project
 
     #[
         ORM\ManyToMany(targetEntity: DonationGiver::class, mappedBy: 'projects'),
-        Groups(["write"])
+        Groups(['write'])
     ]
     private Collection $donationGivers;
 
     #[
-        ORM\OneToMany(mappedBy: 'project', targetEntity: Invoice::class, cascade: ["persist"]),
-        Groups(["write"])
+        ORM\OneToMany(mappedBy: 'project', targetEntity: Invoice::class, cascade: ['persist']),
+        Groups(['write'])
     ]
     private Collection $invoices;
 
     public function __construct()
     {
-        $this->createdAt = new DateTimeImmutable("now");
+        $this->createdAt = new DateTimeImmutable('now');
         $this->moneyGathered = 0.00;
         $this->updatedAt = null;
         $this->deletedAt = null;
@@ -125,7 +127,7 @@ class Project
         return $this->start;
     }
 
-    public function setStart(DateTime $start): self
+    public function setStart(DateTimeImmutable $start): self
     {
         $this->start = $start;
 
@@ -137,7 +139,7 @@ class Project
         return $this->end;
     }
 
-    public function setEnd(DateTime $end): self
+    public function setEnd(DateTimeImmutable $end): self
     {
         $this->end = $end;
 

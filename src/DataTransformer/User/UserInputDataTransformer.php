@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DataTransformer\User;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
@@ -13,15 +15,13 @@ class UserInputDataTransformer implements DataTransformerInterface
     }
 
     /**
-     * @param object $object
-     * @param string $to
+     * @param object       $object
      * @param array<mixed> $context
-     * @return User
      */
     public function transform($object, string $to, array $context = []): User
     {
         $user = new User();
-        $avatar = $this->liberatoHelper->transformImage($object->file, "avatar");
+        $avatar = $this->liberatoHelper->transformImage($object->file, 'avatar');
         $user->setUsername($object->username);
         $user->setPassword($object->password);
         $user->setEmail($object->email);
@@ -32,10 +32,8 @@ class UserInputDataTransformer implements DataTransformerInterface
     }
 
     /**
-     * @param object $data
-     * @param string $to
+     * @param object       $data
      * @param array<mixed> $context
-     * @return bool
      */
     public function supportsTransformation($data, string $to, array $context = []): bool
     {

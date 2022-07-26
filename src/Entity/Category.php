@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -16,9 +18,9 @@ use Symfony\Component\Validator\Constraints as Assert;
     ApiResource(collectionOperations: [
         'get',
         'post' => [
-            "input" => CategoryInput::class,
-            "security" => "is_granted('ROLE_ADMIN')",
-            "security_message" => "Only admins can add posts.",
+            'input' => CategoryInput::class,
+            'security' => "is_granted('ROLE_ADMIN')",
+            'security_message' => 'Only admins can add posts.',
             'input_formats' => [
                 'multipart' => ['multipart/form-data'],
             ],
@@ -29,14 +31,14 @@ class Category
     #[
         ORM\Id,
         ORM\Column(type: 'string', unique: true),
-        ORM\GeneratedValue(strategy: "CUSTOM"),
-        ORM\CustomIdGenerator(class: "doctrine.uuid_generator")
+        ORM\GeneratedValue(strategy: 'CUSTOM'),
+        ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')
     ]
     private string $id;
 
     #[
         ORM\Column(type: 'string', length: 255, unique: true),
-        Assert\Length(min: 3, minMessage: "Name must be at least {{ limit }} characters long!")
+        Assert\Length(min: 3, minMessage: 'Name must be at least {{ limit }} characters long!')
     ]
     private string $name;
 
@@ -45,7 +47,7 @@ class Category
 
     #[
         ORM\Column(type: 'text', nullable: true),
-        Assert\Length(min: 5, minMessage: "Description must be at least {{ limit }} characters long!")
+        Assert\Length(min: 5, minMessage: 'Description must be at least {{ limit }} characters long!')
     ]
     private ?string $description;
 
@@ -66,7 +68,7 @@ class Category
 
     public function __construct()
     {
-        $this->createdAt = new DateTimeImmutable("now");
+        $this->createdAt = new DateTimeImmutable('now');
         $this->questions = new ArrayCollection();
         $this->locations = new ArrayCollection();
         $this->icon = new ArrayCollection();

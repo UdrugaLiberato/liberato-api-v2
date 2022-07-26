@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DataTransformer\Location;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
@@ -11,10 +13,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 class LocationOutputDataTransformer implements DataTransformerInterface
 {
     /**
-     * @param object $object
-     * @param string $to
+     * @param object       $object
      * @param array<mixed> $context
-     * @return LocationOutput
      */
     public function transform($object, string $to, array $context = []): LocationOutput
     {
@@ -37,26 +37,22 @@ class LocationOutputDataTransformer implements DataTransformerInterface
         );
     }
 
-    private function getAnswerAndQuestions(ArrayCollection $answers): ArrayCollection
-    {
-        return $answers->map(function (Answer $answer) {
-            return [
-                "question" => $answer->getQuestion(),
-                "answer" => $answer->getAnswer(),
-            ];
-        });
-
-    }
-
     /**
-     * @param object $data
-     * @param string $to
+     * @param object       $data
      * @param array<mixed> $context
-     * @return bool
      */
     public function supportsTransformation($data, string $to, array $context = []): bool
     {
         return LocationOutput::class === $to && $data instanceof Location;
+    }
 
+    private function getAnswerAndQuestions(ArrayCollection $answers): ArrayCollection
+    {
+        return $answers->map(static function (Answer $answer) {
+            return [
+                'question' => $answer->getQuestion(),
+                'answer' => $answer->getAnswer(),
+            ];
+        });
     }
 }

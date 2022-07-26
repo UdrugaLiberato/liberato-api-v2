@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -14,18 +16,18 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CityRepository::class),
     ApiResource(collectionOperations: [
-        "get",
-        "post" => [
-            "security" => "is_granted('ROLE_ADMIN')",
-            "security_message" => "Only admins can add posts.",
-        ]], input: CityInput::class, output: CityOutput::class)]
+        'get',
+        'post' => [
+            'security' => "is_granted('ROLE_ADMIN')",
+            'security_message' => 'Only admins can add posts.',
+        ], ], input: CityInput::class, output: CityOutput::class)]
 class City
 {
     #[
         ORM\Id,
         ORM\Column(type: 'string', unique: true),
-        ORM\GeneratedValue(strategy: "CUSTOM"),
-        ORM\CustomIdGenerator(class: "doctrine.uuid_generator")
+        ORM\GeneratedValue(strategy: 'CUSTOM'),
+        ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')
     ]
     private string $id;
 
@@ -33,7 +35,7 @@ class City
         ORM\Column(type: 'string', length: 255, unique: true, nullable: false),
         Assert\Length(
             min: 3,
-            minMessage: "Name field must be at {{ limit }} characters long!"
+            minMessage: 'Name field must be at {{ limit }} characters long!'
         )
     ]
     private string $name;
@@ -41,7 +43,7 @@ class City
     #[
         ORM\Column(type: 'float', nullable: false),
         Assert\Range(
-            notInRangeMessage: "Your latitude must be between {{ min }} and {{ max }} deg.",
+            notInRangeMessage: 'Your latitude must be between {{ min }} and {{ max }} deg.',
             min: -90,
             max: 90,
         )
@@ -51,7 +53,7 @@ class City
     #[
         ORM\Column(type: 'float', nullable: false),
         Assert\Range(
-            notInRangeMessage: "Your longitude must be between {{ min }} and {{ max }} deg.",
+            notInRangeMessage: 'Your longitude must be between {{ min }} and {{ max }} deg.',
             min: -180,
             max: 180,
         )
@@ -73,7 +75,7 @@ class City
     public function __construct()
     {
         $this->locations = new ArrayCollection();
-        $this->createdAt = new DateTimeImmutable("now");
+        $this->createdAt = new DateTimeImmutable('now');
     }
 
     public function getId(): string

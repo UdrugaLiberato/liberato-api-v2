@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\OpenApi;
@@ -12,14 +13,11 @@ final class JwtDecorator implements OpenApiFactoryInterface
 {
     public function __construct(
         private OpenApiFactoryInterface $decorated
-    )
-    {
+    ) {
     }
-
 
     /**
      * @param array<mixed> $context
-     * @return OpenApi
      */
     public function __invoke(array $context = []): OpenApi
     {

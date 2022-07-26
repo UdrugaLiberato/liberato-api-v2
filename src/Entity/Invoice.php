@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -20,16 +22,17 @@ use Doctrine\ORM\Mapping as ORM;
             'input_formats' => [
                 'multipart' => ['multipart/form-data'],
             ],
-        ]
-    ], output: InvoiceOutput::class
+        ],
+    ],
+    output: InvoiceOutput::class
 )]
 class Invoice
 {
     #[
         ORM\Id,
         ORM\Column(type: 'string', unique: true),
-        ORM\GeneratedValue(strategy: "CUSTOM"),
-        ORM\CustomIdGenerator(class: "doctrine.uuid_generator")
+        ORM\GeneratedValue(strategy: 'CUSTOM'),
+        ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')
     ]
     private string $id;
 
@@ -54,12 +57,12 @@ class Invoice
     #[ORM\Column(type: 'array')]
     private ArrayCollection $files;
 
-    #[ORM\ManyToOne(targetEntity: Project::class, cascade: ["persist"], inversedBy: 'invoices')]
+    #[ORM\ManyToOne(targetEntity: Project::class, cascade: ['persist'], inversedBy: 'invoices')]
     private Project $project;
 
     public function __construct()
     {
-        $this->createdAt = new DateTimeImmutable("now");
+        $this->createdAt = new DateTimeImmutable('now');
         $this->files = new ArrayCollection();
     }
 

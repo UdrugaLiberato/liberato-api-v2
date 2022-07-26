@@ -20,7 +20,7 @@ class InvoiceDataPersister implements DataPersisterInterface
         return $data instanceof Invoice;
     }
 
-    public function persist($data)
+    public function persist($data): void
     {
         $this->entityManager->persist($data);
         $this->entityManager->flush();
@@ -28,7 +28,7 @@ class InvoiceDataPersister implements DataPersisterInterface
 
     public function remove($data): void
     {
-        $data = $data->setDeletedAt(new DateTimeImmutable("now"));
+        $data = $data->setDeletedAt(new DateTimeImmutable('now'));
         $this->entityManager->persist($data);
         $this->entityManager->flush();
     }

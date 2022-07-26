@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DataTransformer\Project;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
@@ -9,23 +11,22 @@ use App\Entity\Project;
 class ProjectOutputDataTransformer implements DataTransformerInterface
 {
     /**
-     * @param object $object
-     * @param string $to
+     * @param object       $object
      * @param array<mixed> $context
-     * @return ProjectOutput
      */
     public function transform($object, string $to, array $context = []): ProjectOutput
     {
-        $files = $object->getInvoices()->map(function ($invoice) {
+        $files = $object->getInvoices()->map(static function ($invoice) {
             foreach ($invoice->getFiles() as $file) {
                 return $file;
             }
         });
+
         return new ProjectOutput(
             $object->getName(),
             $object->getDescription(),
-            $object->getStart()->format("Y-m-d H:i:s"),
-            $object->getEnd()->format("Y-m-d H:i:s"),
+            $object->getStart()->format('Y-m-d H:i:s'),
+            $object->getEnd()->format('Y-m-d H:i:s'),
             $object->getMoneyNeeded(),
             $object->getMoneyGathered(),
             $object->getCreatedAt()->format('Y-m-d H:i:s'),
@@ -37,10 +38,8 @@ class ProjectOutputDataTransformer implements DataTransformerInterface
     }
 
     /**
-     * @param object $data
-     * @param string $to
+     * @param object       $data
      * @param array<mixed> $context
-     * @return boolean
      */
     public function supportsTransformation($data, string $to, array $context = []): bool
     {

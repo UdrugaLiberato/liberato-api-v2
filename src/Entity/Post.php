@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -13,13 +15,12 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
-
 #[ApiResource(collectionOperations: [
     'get',
     'post' => [
-        "input" => PostInput::class,
-        "security" => "is_granted('ROLE_ADMIN')",
-        "security_message" => "Only admins can add posts.",
+        'input' => PostInput::class,
+        'security' => "is_granted('ROLE_ADMIN')",
+        'security_message' => 'Only admins can add posts.',
         'input_formats' => [
             'multipart' => ['multipart/form-data'],
         ],
@@ -27,10 +28,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 ], itemOperations: [
     'get',
     'put' => [
-        "controller" => UpdatePostController::class,
-        "deserialize" => false,
-        "security" => "is_granted('ROLE_ADMIN')",
-        "security_message" => "Only admins can add posts.",
+        'controller' => UpdatePostController::class,
+        'deserialize' => false,
+        'security' => "is_granted('ROLE_ADMIN')",
+        'security_message' => 'Only admins can add posts.',
         'input_formats' => [
             'multipart' => ['multipart/form-data'],
         ],
@@ -42,13 +43,13 @@ class Post
     #[
         ORM\Id,
         ORM\Column(type: 'string', unique: true),
-        ORM\GeneratedValue(strategy: "CUSTOM"),
-        ORM\CustomIdGenerator(class: "doctrine.uuid_generator")
+        ORM\GeneratedValue(strategy: 'CUSTOM'),
+        ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')
     ]
     private string $id;
 
     #[
-        ORM\ManyToOne(targetEntity: User::class, cascade: ["remove"], inversedBy: 'posts'),
+        ORM\ManyToOne(targetEntity: User::class, cascade: ['remove'], inversedBy: 'posts'),
         ORM\JoinColumn(nullable: false),
         Assert\NotNull
     ]
@@ -56,16 +57,15 @@ class Post
 
     #[
         ORM\Column(type: 'string', length: 255, unique: true),
-        Assert\Length(min: 10, minMessage: "Title must be at least {{ limit }} characters long!")
+        Assert\Length(min: 10, minMessage: 'Title must be at least {{ limit }} characters long!')
     ]
     private string $title;
 
     #[
         ORM\Column(type: 'text'),
-        Assert\Length(min: 125, minMessage: "Body should be at least {{ limit }} characters long!")
+        Assert\Length(min: 125, minMessage: 'Body should be at least {{ limit }} characters long!')
     ]
     private string $body;
-
 
     #[ORM\Column(type: 'array')]
     private array $tags;
@@ -87,7 +87,7 @@ class Post
     public function __construct()
     {
         $this->images = new ArrayCollection();
-        $this->createdAt = new DateTimeImmutable("now");
+        $this->createdAt = new DateTimeImmutable('now');
         $this->deletedAt = null;
         $this->updatedAt = null;
     }

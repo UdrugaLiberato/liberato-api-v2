@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DataTransformer\Invoice;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
@@ -9,10 +11,8 @@ use App\Entity\Invoice;
 class InvoiceOutputDataTransformer implements DataTransformerInterface
 {
     /**
-     * @param object $object
-     * @param string $to
+     * @param object       $object
      * @param array<mixed> $context
-     * @return InvoiceOutput
      */
     public function transform($object, string $to, array $context = []): InvoiceOutput
     {
@@ -26,10 +26,8 @@ class InvoiceOutputDataTransformer implements DataTransformerInterface
     }
 
     /**
-     * @param object $data
-     * @param string $to
+     * @param object       $data
      * @param array<mixed> $context
-     * @return bool
      */
     public function supportsTransformation($data, string $to, array $context = []): bool
     {

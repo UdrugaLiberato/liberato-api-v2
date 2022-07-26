@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\DataTransformer\NewsArticle;
@@ -10,10 +11,8 @@ use App\Entity\NewsArticle;
 class NewsArticleOutputDataTransformer implements DataTransformerInterface
 {
     /**
-     * @param object $object
-     * @param string $to
+     * @param object       $object
      * @param array<mixed> $context
-     * @return NewsArticleOutput
      */
     public function transform($object, string $to, array $context = []): NewsArticleOutput
     {
@@ -22,16 +21,14 @@ class NewsArticleOutputDataTransformer implements DataTransformerInterface
             $object->getUrl(),
             null === $object->getFilePath() ? null : $object->getFilePath(),
             $object->getCreatedAt()->format('Y-m-d H:i:s'),
-            $object->getUpdatedAt()?->format("Y-m-d H:i:s"),
-            $object->getDeletedAt()?->format("Y-m-d H:i:s")
+            $object->getUpdatedAt()?->format('Y-m-d H:i:s'),
+            $object->getDeletedAt()?->format('Y-m-d H:i:s')
         );
     }
 
     /**
-     * @param object $data
-     * @param string $to
+     * @param object       $data
      * @param array<mixed> $context
-     * @return bool
      */
     public function supportsTransformation($data, string $to, array $context = []): bool
     {

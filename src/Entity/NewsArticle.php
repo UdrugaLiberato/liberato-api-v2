@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -19,14 +21,14 @@ use Doctrine\ORM\Mapping as ORM;
                 'multipart' => ['multipart/form-data'],
             ],
         ],
-    ], itemOperations: ["get"], input: NewsArticleInput::class, output: NewsArticleOutput::class)]
+    ], itemOperations: ['get'], input: NewsArticleInput::class, output: NewsArticleOutput::class)]
 class NewsArticle
 {
     #[
         ORM\Id,
         ORM\Column(type: 'string', unique: true),
-        ORM\GeneratedValue(strategy: "CUSTOM"),
-        ORM\CustomIdGenerator(class: "doctrine.uuid_generator")
+        ORM\GeneratedValue(strategy: 'CUSTOM'),
+        ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')
     ]
     private string $id;
 
@@ -50,7 +52,7 @@ class NewsArticle
 
     public function __construct()
     {
-        $this->createdAt = new DateTimeImmutable("now");
+        $this->createdAt = new DateTimeImmutable('now');
         $this->updatedAt = null;
         $this->deletedAt = null;
         $this->image = new ArrayCollection();

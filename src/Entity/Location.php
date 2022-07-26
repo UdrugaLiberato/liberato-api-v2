@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
@@ -21,22 +23,23 @@ use Symfony\Component\Validator\Constraints as Assert;
         collectionOperations: [
             'get',
             'post' => [
-                "input" => LocationInput::class,
-                "security" => "is_granted('ROLE_ADMIN')",
-                "security_message" => "Only admins can add posts.",
+                'input' => LocationInput::class,
+                'security' => "is_granted('ROLE_ADMIN')",
+                'security_message' => 'Only admins can add posts.',
                 'input_formats' => [
                     'multipart' => ['multipart/form-data'],
                 ],
-            ]
-        ], output: LocationOutput::class
+            ],
+        ],
+        output: LocationOutput::class
     )]
 class Location
 {
     #[
         ORM\Id,
         ORM\Column(type: 'string', unique: true),
-        ORM\GeneratedValue(strategy: "CUSTOM"),
-        ORM\CustomIdGenerator(class: "doctrine.uuid_generator")
+        ORM\GeneratedValue(strategy: 'CUSTOM'),
+        ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')
     ]
     private string $id;
 
@@ -50,7 +53,7 @@ class Location
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'locations')]
     private ?UserInterface $user;
 
-    #[ORM\OneToMany(mappedBy: 'location', targetEntity: Answer::class, cascade: ["persist"])]
+    #[ORM\OneToMany(mappedBy: 'location', targetEntity: Answer::class, cascade: ['persist'])]
     private Collection $answers;
 
     #[
@@ -70,9 +73,10 @@ class Location
         ApiFilter(SearchFilter::class, strategy: 'ipartial'),
         ORM\Column(type: 'string', length: 255),
         Assert\Length(
-            min: 3, max: 32,
-            minMessage: "Name must be at least {{ limit }} characters long!",
-            maxMessage: "Name must be at most {{ limit }} characters long!",
+            min: 3,
+            max: 32,
+            minMessage: 'Name must be at least {{ limit }} characters long!',
+            maxMessage: 'Name must be at most {{ limit }} characters long!',
         )
     ]
     private string $name;
@@ -99,14 +103,14 @@ class Location
 
     #[
         ORM\Column(type: 'text', nullable: true),
-        Assert\Length(max: 255, maxMessage: "About field must be at most {{ limit }} characters long!")
+        Assert\Length(max: 255, maxMessage: 'About field must be at most {{ limit }} characters long!')
     ]
     private ?string $about;
 
     #[
         ORM\Column(type: 'float', nullable: false),
         Assert\Range(
-            notInRangeMessage: "Your latitude must be between {{ min }} and {{ max }} deg.",
+            notInRangeMessage: 'Your latitude must be between {{ min }} and {{ max }} deg.',
             min: -90,
             max: 90,
         )
@@ -116,7 +120,7 @@ class Location
     #[
         ORM\Column(type: 'float', nullable: false),
         Assert\Range(
-            notInRangeMessage: "Your longitude must be between {{ min }} and {{ max }} deg.",
+            notInRangeMessage: 'Your longitude must be between {{ min }} and {{ max }} deg.',
             min: -180,
             max: 180,
         )
@@ -136,7 +140,7 @@ class Location
     {
         $this->answers = new ArrayCollection();
         $this->images = new ArrayCollection();
-        $this->createdAt = new DateTimeImmutable("now");
+        $this->createdAt = new DateTimeImmutable('now');
         $this->updatedAt = null;
         $this->deletedAt = null;
     }
@@ -240,7 +244,6 @@ class Location
     {
         $this->longitude = $longitude;
     }
-
 
     public function getStreet(): ?string
     {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DataTransformer\DonationGiver;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
@@ -9,10 +11,8 @@ use App\Entity\DonationGiver;
 class DonationGiverOutputDataTransformer implements DataTransformerInterface
 {
     /**
-     * @param object $object
-     * @param string $to
+     * @param object       $object
      * @param array<mixed> $context
-     * @return DonationGiverOutput
      */
     public function transform($object, string $to, array $context = []): DonationGiverOutput
     {
@@ -21,20 +21,17 @@ class DonationGiverOutputDataTransformer implements DataTransformerInterface
             $object->getApproved(),
             $object->getMoneyRequested(),
             $object->getMoneyGiven(),
-            $object->getDateOfApplication()->format("Y-m-d H:i:s")
-            ,
-            $object->getDateOfApproval()?->format("Y-m-d H:i:s"),
+            $object->getDateOfApplication()->format('Y-m-d H:i:s'),
+            $object->getDateOfApproval()?->format('Y-m-d H:i:s'),
             $object->getCreatedAt()->format('Y-m-d H:i:s'),
-            $object->getUpdatedAt()?->format("Y-m-d H:i:s"),
-            $object->getDeletedAt()?->format("Y-m-d H:i:s")
+            $object->getUpdatedAt()?->format('Y-m-d H:i:s'),
+            $object->getDeletedAt()?->format('Y-m-d H:i:s')
         );
     }
 
     /**
-     * @param object $data
-     * @param string $to
+     * @param object       $data
      * @param array<mixed> $context
-     * @return bool
      */
     public function supportsTransformation($data, string $to, array $context = []): bool
     {

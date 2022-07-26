@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DataTransformer\Event;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
@@ -8,10 +10,8 @@ use App\Entity\Calendar;
 class EventInputDataTransformer implements DataTransformerInterface
 {
     /**
-     * @param object $object
-     * @param string $to
+     * @param object       $object
      * @param array<mixed> $context
-     * @return Calendar
      */
     public function transform($object, string $to, array $context = []): Calendar
     {
@@ -23,10 +23,8 @@ class EventInputDataTransformer implements DataTransformerInterface
     }
 
     /**
-     * @param object $data
-     * @param string $to
+     * @param object       $data
      * @param array<mixed> $context
-     * @return bool
      */
     public function supportsTransformation($data, string $to, array $context = []): bool
     {

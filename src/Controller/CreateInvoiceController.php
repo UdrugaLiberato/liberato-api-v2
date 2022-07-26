@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Entity\Invoice;
@@ -22,13 +24,12 @@ class CreateInvoiceController extends AbstractController
     private string $publicPath;
 
     public function __construct(
-        private BankAccountRepository   $bankAccountRepository,
-        private ProjectRepository       $projectRepository,
-        private ImageUploader           $imageUploader,
-        private MailerInterface         $mailer,
+        private BankAccountRepository $bankAccountRepository,
+        private ProjectRepository $projectRepository,
+        private ImageUploader $imageUploader,
+        private MailerInterface $mailer,
         protected ParameterBagInterface $parameterBag
-    )
-    {
+    ) {
         $this->publicPath = $this->parameterBag->get('kernel.project_dir');
     }
 
@@ -38,26 +39,25 @@ class CreateInvoiceController extends AbstractController
      * @throws \Exception
      */
     public function __invoke(
-        Request            $request,
-        ManagerRegistry    $doctrine,
+        Request $request,
+        ManagerRegistry $doctrine,
         ValidatorInterface $validator,
-        SluggerInterface   $slugger
-    ): Invoice
-    {
+        SluggerInterface $slugger
+    ): Invoice {
         $entityManager = $doctrine->getManager();
-        $uploadedFiles = $request->get("files");
+        $uploadedFiles = $request->get('files');
         $files = [];
-        $pid = explode("/", $request->get("project"));
+        $pid = explode('/', $request->get('project'));
         $project = $this->projectRepository->findOneBy(['id' => $pid]);
         $invoice = new Invoice();
-        $invoice->setDescription($request->request->get("description"));
-        $invoice->setAmount($request->get("amount"));
+        $invoice->setDescription($request->request->get('description'));
+        $invoice->setAmount($request->get('amount'));
         $invoice->setProject($project);
-        $invoice->setPayedAt(new \DateTimeImmutable($request->get("payedAt")));
+        $invoice->setPayedAt(new \DateTimeImmutable($request->get('payedAt')));
 
         $json = json_decode($uploadedFiles, true);
         foreach ($json as $uploadedFile) {
-            $file = $this->imageUploader->convertFile($uploadedFile["src"]);
+            $file = $this->imageUploader->convertFile($uploadedFile['src']);
             $originalFilename = pathinfo($file->getFilename(), PATHINFO_FILENAME);
             // this is needed to safely include the file name as part of the URL
             $safeFilename = $slugger->slug($originalFilename);
@@ -67,43 +67,41 @@ class CreateInvoiceController extends AbstractController
                 $this->getParameter('invoices_directory'),
                 $newFilename
             );
-            $files[] = ["filename" => $uploadedFile["title"], "path" => '/media/invoices/' .
-                $newFilename];
+            $files[] = ['filename' => $uploadedFile['title'], 'path' => '/media/invoices/' .
+                $newFilename, ];
         }
         $invoice->setFiles($files);
         $project->addInvoice($invoice);
 
         $account = $this->bankAccountRepository->findAll()[0];
         $oldAmount = $account->getAmount();
-        $account->setAmount($oldAmount - $request->get("amount"));
+        $account->setAmount($oldAmount - $request->get('amount'));
         $this->bankAccountRepository->add($account);
         $entityManager->persist($invoice);
         $entityManager->flush();
 
         $this->sendMail($invoice);
+
         return $invoice;
     }
 
     private function sendMail(Invoice $invoice): void
     {
-
         $email = (new Email())
             ->from('hello@example.com')
             ->to('you@example.com')
-            //->cc('cc@example.com')
-            //->bcc('bcc@example.com')
-            //->replyTo('fabien@example.com')
-            //->priority(Email::PRIORITY_HIGH)
+            // ->cc('cc@example.com')
+            // ->bcc('bcc@example.com')
+            // ->replyTo('fabien@example.com')
+            // ->priority(Email::PRIORITY_HIGH)
             ->subject('Udruga Liberato Racun!')
             ->text('Racuni u prilogu!')
             ->html('<p>Racuni u prilogu!</p>');
 
-
         foreach ($invoice->getFiles() as $file) {
 //            dd($this->publicPath . '/public' . $file["path"]);
-            $email->attachFromPath($this->publicPath . '/public' . $file["path"], $file["filename"]);
+            $email->attachFromPath($this->publicPath . '/public' . $file['path'], $file['filename']);
         }
         $this->mailer->send($email);
-
     }
 }

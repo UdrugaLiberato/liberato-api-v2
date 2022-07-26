@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Image;
 
 use Symfony\Component\Filesystem\Filesystem;
@@ -31,7 +33,7 @@ class ImageUploader
         $ext = explode('/', explode(':', explode(';', $base64Exploded[0])[0])[1])[1];
 
         $filesystem = new Filesystem();
-        $content = base64_decode($img);
+        $content = base64_decode($img, true);
 
         $filesystem->dumpFile('media/location/images' . 'file.' . $ext, $content);
 
@@ -45,7 +47,7 @@ class ImageUploader
         $ext = explode('/', explode(':', explode(';', $base64Exploded[0])[0])[1])[1];
 
         $filesystem = new Filesystem();
-        $content = base64_decode($file);
+        $content = base64_decode($file, true);
 
         $filesystem->dumpFile('media/invoices/' . 'file.' . $ext, $content);
 

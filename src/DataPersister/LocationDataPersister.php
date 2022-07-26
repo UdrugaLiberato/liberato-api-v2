@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DataPersister;
 
 use ApiPlatform\Core\DataPersister\DataPersisterInterface;
@@ -18,7 +20,7 @@ class LocationDataPersister implements DataPersisterInterface
         return $data instanceof Location;
     }
 
-    public function persist($data)
+    public function persist($data): void
     {
         $this->entityManager->persist($data);
         $this->entityManager->flush();
@@ -26,7 +28,7 @@ class LocationDataPersister implements DataPersisterInterface
 
     public function remove($data): void
     {
-        $data = $data->setDeletedAt(new DateTimeImmutable("now"));
+        $data = $data->setDeletedAt(new DateTimeImmutable('now'));
         $this->entityManager->persist($data);
         $this->entityManager->flush();
     }

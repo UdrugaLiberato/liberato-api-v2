@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -11,24 +13,27 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[
     ORM\Entity(repositoryClass: BankAccountRepository::class),
-    ApiResource(collectionOperations: [
-        'get' => [
-            'security' => "is_granted('ROLE_ADMIN')",
-            'security_message' => "Only admin users are allowed to list users.",
+    ApiResource(
+        collectionOperations: [
+            'get' => [
+                'security' => "is_granted('ROLE_ADMIN')",
+                'security_message' => 'Only admin users are allowed to list users.',
+            ],
+            'post' => [
+                'security' => "is_granted('ROLE_ADMIN')",
+                'security_message' => 'Only admin users are allowed to list users.',
+            ],
         ],
-        'post' => [
-            'security' => "is_granted('ROLE_ADMIN')",
-            'security_message' => "Only admin users are allowed to list users.",
-        ]
-    ], input: BankAccountInput::class,
-        output: BankAccountOutput::class)]
+        input: BankAccountInput::class,
+        output: BankAccountOutput::class
+    )]
 class BankAccount
 {
     #[
         ORM\Id,
         ORM\Column(type: 'string', unique: true),
-        ORM\GeneratedValue(strategy: "CUSTOM"),
-        ORM\CustomIdGenerator(class: "doctrine.uuid_generator")
+        ORM\GeneratedValue(strategy: 'CUSTOM'),
+        ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')
     ]
     private string $id;
 
@@ -55,7 +60,7 @@ class BankAccount
 
     public function __construct()
     {
-        $this->createdAt = new DateTimeImmutable("now");
+        $this->createdAt = new DateTimeImmutable('now');
         $this->updatedAt = null;
         $this->deletedAt = null;
         $this->amount = 0;
@@ -143,6 +148,4 @@ class BankAccount
     {
         $this->bankAccountHolderName = $bankAccountHolderName;
     }
-
-
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DataTransformer\City;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
@@ -13,14 +15,12 @@ class CityInputDataTransformer implements DataTransformerInterface
     }
 
     /**
-     * @param object $object
-     * @param string $to
+     * @param object       $object
      * @param array<mixed> $context
-     * @return City
      */
     public function transform($object, string $to, array $context = []): City
     {
-        ["lat" => $lat, "lng" => $lng] = $this->googleMaps->getCoordinateForCity($object->name);
+        ['lat' => $lat, 'lng' => $lng] = $this->googleMaps->getCoordinateForCity($object->name);
 
         $city = new City();
         $city->setName($object->name);
@@ -31,10 +31,8 @@ class CityInputDataTransformer implements DataTransformerInterface
     }
 
     /**
-     * @param object $data
-     * @param string $to
+     * @param object       $data
      * @param array<mixed> $context
-     * @return bool
      */
     public function supportsTransformation($data, string $to, array $context = []): bool
     {

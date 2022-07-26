@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\DonationGiver;
@@ -11,8 +13,8 @@ use Doctrine\Persistence\ManagerRegistry;
 /**
  * @extends ServiceEntityRepository<DonationGiver>
  *
- * @method DonationGiver|null find($id, $lockMode = null, $lockVersion = null)
- * @method DonationGiver|null findOneBy(array $criteria, array $orderBy = null)
+ * @method null|DonationGiver find($id, $lockMode = null, $lockVersion = null)
+ * @method null|DonationGiver findOneBy(array $criteria, array $orderBy = null)
  * @method DonationGiver[]    findAll()
  * @method DonationGiver[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */

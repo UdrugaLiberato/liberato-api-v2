@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Security\Voter;
 
 use App\Entity\Post;
@@ -12,25 +14,19 @@ class PostVoter extends Voter
     public const EDIT = 'POST_EDIT';
     public const VIEW = 'POST_VIEW';
 
-
     /**
-     * @param string $attribute
      * @param Post $subject
-     * @return bool
      */
     protected function supports(string $attribute, $subject): bool
     {
         // replace with your own logic
         // https://symfony.com/doc/current/security/voters.html
-        return in_array($attribute, [self::EDIT, self::VIEW])
+        return \in_array($attribute, [self::EDIT, self::VIEW], true)
             && $subject instanceof Post;
     }
 
     /**
-     * @param string $attribute
      * @param Post $subject
-     * @param TokenInterface $token
-     * @return bool
      */
     protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
     {
@@ -46,6 +42,7 @@ class PostVoter extends Voter
                 // logic to determine if the user can EDIT
                 // return true or false
                 break;
+
             case self::VIEW:
                 // logic to determine if the user can VIEW
                 // return true or false

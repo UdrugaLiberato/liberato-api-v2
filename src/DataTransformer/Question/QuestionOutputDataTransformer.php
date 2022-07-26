@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DataTransformer\Question;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
@@ -9,10 +11,8 @@ use App\Entity\Question;
 class QuestionOutputDataTransformer implements DataTransformerInterface
 {
     /**
-     * @param object $object
-     * @param string $to
+     * @param object       $object
      * @param array<mixed> $context
-     * @return QuestionOutput
      */
     public function transform($object, string $to, array $context = []): QuestionOutput
     {
@@ -23,10 +23,8 @@ class QuestionOutputDataTransformer implements DataTransformerInterface
     }
 
     /**
-     * @param object $data
-     * @param string $to
+     * @param object       $data
      * @param array<mixed> $context
-     * @return boolean
      */
     public function supportsTransformation($data, string $to, array $context = []): bool
     {

@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Events\Listener;
 
 use App\Entity\Post;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
-
 
 class CreatePostEventListener
 {
@@ -25,8 +26,7 @@ class CreatePostEventListener
         $user = $this->token->getToken()?->getUser();
         if (!$user) {
             throw new UserNotFoundException();
-        } else {
-            $entity->setAuthor($user);
         }
+        $entity->setAuthor($user);
     }
 }
