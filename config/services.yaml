@@ -47,18 +47,6 @@ services:
   'App\DataTransformer\NewsArticle\NewsArticleInputDataTransformer': ~
   'App\DataTransformer\NewsArticle\NewsArticleOutputDataTransformer': ~
 
-  App\Events\Listener\CreatePostEventListener:
-    tags:
-      - name: 'doctrine.event_listener'
-        event: 'prePersist'
-        priority: 500
-
-  App\Events\Listener\CreateLocationEventListener:
-    tags:
-      - name: 'doctrine.event_listener'
-        event: 'prePersist'
-        priority: 500
-
   acme_api.event.authentication_success_listener:
     class: App\Events\Listener\AuthenticationSuccessListener
     tags:
