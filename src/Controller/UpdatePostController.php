@@ -5,24 +5,20 @@ namespace App\Controller;
 
 use App\Entity\Post;
 use App\Repository\PostRepository;
-use App\Utils\LiberatoHelper;
+use App\Utils\LiberatoHelperInterface;
 use DateTimeImmutable;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsController;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 #[AsController]
 class UpdatePostController extends AbstractController
 {
-    private string $uploadDir;
-
     public function __construct(
-        private KernelInterface $kernel,
-        private PostRepository  $postRepository,
+        private LiberatoHelperInterface $liberatoHelper,
+        private PostRepository          $postRepository,
     )
     {
-        $this->uploadDir = $this->kernel->getProjectDir() . "/public/images/posts/";
     }
 
     public function __invoke(string $id, Request $request): Post
@@ -37,51 +33,12 @@ class UpdatePostController extends AbstractController
             $oldPost->setBody($request->get("body"));
         }
         $oldPost->setTags(explode(",", $request->get("tags")));
-        $fileNames = $this->transformPictures($request->files->get("images"));
-        $oldPost->setImages([]);
+        $fileNames = $this->liberatoHelper->transformImages($request->files->get("images"), "posts");
         $oldPost->setImages($fileNames);
 
         $oldPost->setUpdatedAt(new DateTimeImmutable("now"));
         $this->postRepository->update($oldPost);
 
         return $oldPost;
-    }
-
-    private function transformPictures($uploadedFiles): array
-    {
-        $fileNames = [];
-        if (!empty($uploadedFiles)) {
-            foreach ($uploadedFiles as $file) {
-                $mime = $file->getMimeType();
-                $originalFilename = pathinfo(
-                    $file->getClientOriginalName(),
-                    PATHINFO_FILENAME
-                );
-                // this is needed to safely include the file name as part of the URL
-                $safeFilename = LiberatoHelper::slugify($originalFilename);
-                $newFilename = date('Y-m-d') . "_" . $safeFilename . md5
-                    (
-                        microtime()
-                    ) . '.'
-                    . $file->guessExtension();
-                $file->move(
-                    $this->uploadDir,
-                    $newFilename
-                );
-
-                $F = file_get_contents($this->uploadDir . $newFilename);
-                $base64 = base64_encode($F);
-                $blob = 'data:' . $mime . ';base64,' . $base64;
-                $fileObj = [
-                    "path" => $newFilename,
-                    "title" => $file->getClientOriginalName(),
-                    "mime" => $mime,
-                    "src" => $blob,
-                ];
-                $fileNames[] = $fileObj;
-            }
-            return $fileNames;
-        }
-        return [];
     }
 }

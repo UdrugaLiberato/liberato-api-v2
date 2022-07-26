@@ -14,7 +14,13 @@ class CategoryInputDataTransformer implements DataTransformerInterface
     {
     }
 
-    public function transform($object, string $to, array $context = []): object
+    /**
+     * @param object $object
+     * @param string $to
+     * @param array<mixed> $context
+     * @return Category
+     */
+    public function transform($object, string $to, array $context = []): Category
     {
         $category = new Category();
         $category->setName($object->name);
@@ -24,6 +30,12 @@ class CategoryInputDataTransformer implements DataTransformerInterface
         return $category;
     }
 
+    /**
+     * @param object $data
+     * @param string $to
+     * @param array<mixed> $context
+     * @return bool
+     */
     public function supportsTransformation($data, string $to, array $context = []): bool
     {
         if ($data instanceof Category) {

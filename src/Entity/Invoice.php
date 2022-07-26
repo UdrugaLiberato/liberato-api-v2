@@ -7,6 +7,7 @@ use App\Controller\CreateInvoiceController;
 use App\DTO\Invoice\InvoiceOutput;
 use App\Repository\InvoiceRepository;
 use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: InvoiceRepository::class)]
@@ -30,7 +31,7 @@ class Invoice
         ORM\GeneratedValue(strategy: "CUSTOM"),
         ORM\CustomIdGenerator(class: "doctrine.uuid_generator")
     ]
-    private $id;
+    private string $id;
 
     #[ORM\Column(type: 'text', nullable: true)]
     private string $description;
@@ -51,14 +52,15 @@ class Invoice
     private DateTimeImmutable $deletedAt;
 
     #[ORM\Column(type: 'array')]
-    private array $files = [];
+    private ArrayCollection $files;
 
     #[ORM\ManyToOne(targetEntity: Project::class, cascade: ["persist"], inversedBy: 'invoices')]
-    private $project;
+    private Project $project;
 
     public function __construct()
     {
         $this->createdAt = new DateTimeImmutable("now");
+        $this->files = new ArrayCollection();
     }
 
     public function getId(): string
@@ -138,12 +140,12 @@ class Invoice
         return $this;
     }
 
-    public function getFiles(): ?array
+    public function getFiles(): ?ArrayCollection
     {
         return $this->files;
     }
 
-    public function setFiles(array $files): self
+    public function setFiles(ArrayCollection $files): self
     {
         $this->files = $files;
 

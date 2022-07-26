@@ -27,7 +27,7 @@ class Question
         ORM\GeneratedValue(strategy: "CUSTOM"),
         ORM\CustomIdGenerator(class: "doctrine.uuid_generator")
     ]
-    private $id;
+    private string $id;
 
     #[
         ORM\ManyToOne(targetEntity: Category::class, cascade: ["remove"], inversedBy: 'questions'),

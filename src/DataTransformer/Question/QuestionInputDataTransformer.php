@@ -7,7 +7,13 @@ use App\Entity\Question;
 
 class QuestionInputDataTransformer implements DataTransformerInterface
 {
-    public function transform($object, string $to, array $context = [])
+    /**
+     * @param object $object
+     * @param string $to
+     * @param array<mixed> $context
+     * @return Question
+     */
+    public function transform($object, string $to, array $context = []): Question
     {
         $question = new Question();
         $question->setQuestion($object->question);
@@ -16,6 +22,12 @@ class QuestionInputDataTransformer implements DataTransformerInterface
         return $question;
     }
 
+    /**
+     * @param object $data
+     * @param string $to
+     * @param array<mixed> $context
+     * @return bool
+     */
     public function supportsTransformation($data, string $to, array $context = []): bool
     {
         if ($data instanceof Question) {

@@ -8,8 +8,13 @@ use App\Entity\BankAccount;
 
 class BankAccountOutputDataTransformer implements DataTransformerInterface
 {
-
-    public function transform($object, string $to, array $context = [])
+    /**
+     * @param object $object
+     * @param string $to
+     * @param array<mixed> $context
+     * @return BankAccountOutput
+     */
+    public function transform($object, string $to, array $context = []): BankAccountOutput
     {
         return new BankAccountOutput(
             $object->getIban(),
@@ -22,6 +27,12 @@ class BankAccountOutputDataTransformer implements DataTransformerInterface
         );
     }
 
+    /**
+     * @param object $data
+     * @param string $to
+     * @param array<mixed> $context
+     * @return bool
+     */
     public function supportsTransformation($data, string $to, array $context = []): bool
     {
         return BankAccountOutput::class === $to && $data instanceof BankAccount;

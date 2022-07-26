@@ -8,9 +8,13 @@ use App\Entity\Question;
 
 class QuestionOutputDataTransformer implements DataTransformerInterface
 {
-
-
-    public function transform($object, string $to, array $context = [])
+    /**
+     * @param object $object
+     * @param string $to
+     * @param array<mixed> $context
+     * @return QuestionOutput
+     */
+    public function transform($object, string $to, array $context = []): QuestionOutput
     {
         return new QuestionOutput(
             $object->getQuestion(),
@@ -18,6 +22,12 @@ class QuestionOutputDataTransformer implements DataTransformerInterface
         );
     }
 
+    /**
+     * @param object $data
+     * @param string $to
+     * @param array<mixed> $context
+     * @return boolean
+     */
     public function supportsTransformation($data, string $to, array $context = []): bool
     {
         return QuestionOutput::class === $to && $data instanceof Question;

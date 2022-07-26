@@ -2,6 +2,7 @@
 
 namespace App\Utils;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 interface LiberatoHelperInterface
@@ -13,30 +14,30 @@ interface LiberatoHelperInterface
     public static function slugify(string $string): string;
 
     /**
-     * @param array<string> $image
+     * @param ArrayCollection $image
      * @param string $entityName
-     * @return array<string>
+     * @return ArrayCollection
      */
-    public static function convertImageArrayToOutput(array $image, string $entityName): array;
+    public static function convertImageArrayToOutput(ArrayCollection $image, string $entityName): ArrayCollection;
 
     /**
-     * @param array<array<string>> $images
+     * @param ArrayCollection $images
      * @param string $entityName
-     * @return array<array<string>>
+     * @return ArrayCollection
      */
-    public static function convertImagesArrayToOutput(array $images, string $entityName): array;
+    public static function convertImagesArrayToOutput(ArrayCollection $images, string $entityName): ArrayCollection;
 
     /**
-     * @param array<UploadedFile> $uploadedFiles
+     * @param ArrayCollection $uploadedFiles
      * @param string $entityName
-     * @return array<array<string>>
+     * @return ArrayCollection
      */
-    public function transformImages(array $uploadedFiles, string $entityName): array;
+    public function transformImages(ArrayCollection $uploadedFiles, string $entityName): ArrayCollection;
 
     /**
      * @param UploadedFile $file
      * @param string $entityName
-     * @return array<string>
+     * @return ArrayCollection
      */
-    public function transformImage(UploadedFile $file, string $entityName): array;
+    public function transformImage(UploadedFile $file, string $entityName): ArrayCollection;
 }

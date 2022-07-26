@@ -6,21 +6,20 @@ use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\DTO\Location\LocationOutput;
 use App\Entity\Answer;
 use App\Entity\Location;
+use Doctrine\Common\Collections\ArrayCollection;
 
 class LocationOutputDataTransformer implements DataTransformerInterface
 {
-
-    public function transform($object, string $to, array $context = []): object
+    /**
+     * @param object $object
+     * @param string $to
+     * @param array<mixed> $context
+     * @return LocationOutput
+     */
+    public function transform($object, string $to, array $context = []): LocationOutput
     {
-        $answers = $object->getAnswers()->map(function (Answer $answer) {
-            return [
-                "question" => $answer->getQuestion(),
-                "answer" => $answer->getAnswer(),
-            ];
-        });
-
         return new LocationOutput(
-            $answers,
+            $this->getAnswerAndQuestions($object->getAnswers()),
             $object->getName(),
             $object->getStreet(),
             $object->getPhone(),
@@ -38,6 +37,23 @@ class LocationOutputDataTransformer implements DataTransformerInterface
         );
     }
 
+    private function getAnswerAndQuestions(ArrayCollection $answers): ArrayCollection
+    {
+        return $answers->map(function (Answer $answer) {
+            return [
+                "question" => $answer->getQuestion(),
+                "answer" => $answer->getAnswer(),
+            ];
+        });
+
+    }
+
+    /**
+     * @param object $data
+     * @param string $to
+     * @param array<mixed> $context
+     * @return bool
+     */
     public function supportsTransformation($data, string $to, array $context = []): bool
     {
         return LocationOutput::class === $to && $data instanceof Location;

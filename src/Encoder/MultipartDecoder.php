@@ -16,6 +16,8 @@ final class MultipartDecoder implements DecoderInterface
 
     /**
      * {@inheritdoc}
+     * @param array<mixed> $context
+     * @return null|array<mixed>
      */
     public function decode(string $data, string $format, array $context = []): ?array
     {

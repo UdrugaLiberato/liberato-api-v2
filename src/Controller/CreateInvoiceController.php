@@ -6,7 +6,6 @@ use App\Entity\Invoice;
 use App\Image\ImageUploader;
 use App\Repository\BankAccountRepository;
 use App\Repository\ProjectRepository;
-use DateTimeImmutable;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -20,7 +19,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 #[AsController]
 class CreateInvoiceController extends AbstractController
 {
-    private $publicPath;
+    private string $publicPath;
 
     public function __construct(
         private BankAccountRepository   $bankAccountRepository,
@@ -33,12 +32,17 @@ class CreateInvoiceController extends AbstractController
         $this->publicPath = $this->parameterBag->get('kernel.project_dir');
     }
 
+    /**
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Exception
+     */
     public function __invoke(
         Request            $request,
         ManagerRegistry    $doctrine,
         ValidatorInterface $validator,
         SluggerInterface   $slugger
-    )
+    ): Invoice
     {
         $entityManager = $doctrine->getManager();
         $uploadedFiles = $request->get("files");
@@ -49,7 +53,7 @@ class CreateInvoiceController extends AbstractController
         $invoice->setDescription($request->request->get("description"));
         $invoice->setAmount($request->get("amount"));
         $invoice->setProject($project);
-        $invoice->setPayedAt(new DateTimeImmutable($request->get("payedAt")));
+        $invoice->setPayedAt(new \DateTimeImmutable($request->get("payedAt")));
 
         $json = json_decode($uploadedFiles, true);
         foreach ($json as $uploadedFile) {
@@ -80,7 +84,7 @@ class CreateInvoiceController extends AbstractController
         return $invoice;
     }
 
-    private function sendMail(Invoice $invoice)
+    private function sendMail(Invoice $invoice): void
     {
 
         $email = (new Email())

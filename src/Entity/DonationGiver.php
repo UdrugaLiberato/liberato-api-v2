@@ -24,7 +24,7 @@ class DonationGiver
         ORM\GeneratedValue(strategy: "CUSTOM"),
         ORM\CustomIdGenerator(class: "doctrine.uuid_generator")
     ]
-    private $id;
+    private string $id;
 
     #[
         ORM\Column(type: 'string'),
@@ -48,7 +48,7 @@ class DonationGiver
     private float $moneyGiven;
 
     #[ORM\ManyToMany(targetEntity: Project::class, inversedBy: 'donationGivers')]
-    private $projects;
+    private Collection $projects;
 
     #[ORM\Column(type: 'datetime_immutable')]
     private DateTimeImmutable $createdAt;
@@ -61,11 +61,11 @@ class DonationGiver
 
     public function __construct()
     {
+        $this->projects = new ArrayCollection();
+        $this->dateOfApproval = null;
         $this->createdAt = new DateTimeImmutable("now");
         $this->updatedAt = null;
-        $this->dateOfApproval = null;
         $this->deletedAt = null;
-        $this->projects = new ArrayCollection();
     }
 
     public function getId(): string
@@ -133,10 +133,7 @@ class DonationGiver
         return $this;
     }
 
-    /**
-     * @return Collection<int, Project>
-     */
-    public function getProjects(): Collection
+    public function getProjects(): ArrayCollection
     {
         return $this->projects;
     }

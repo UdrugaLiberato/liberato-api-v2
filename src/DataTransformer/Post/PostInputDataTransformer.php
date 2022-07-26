@@ -17,7 +17,13 @@ class PostInputDataTransformer implements DataTransformerInterface
     {
     }
 
-    public function transform($object, string $to, array $context = [])
+    /**
+     * @param object $object
+     * @param string $to
+     * @param array<mixed> $context
+     * @return Post
+     */
+    public function transform($object, string $to, array $context = []): Post
     {
         $post = new Post();
         $post->setTitle(trim($object->title));
@@ -29,6 +35,12 @@ class PostInputDataTransformer implements DataTransformerInterface
         return $post;
     }
 
+    /**
+     * @param object $data
+     * @param string $to
+     * @param array<mixed> $context
+     * @return boolean
+     */
     public function supportsTransformation($data, string $to, array $context = []): bool
     {
         if ($data instanceof Post) {

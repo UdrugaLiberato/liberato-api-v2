@@ -27,7 +27,7 @@ class City
         ORM\GeneratedValue(strategy: "CUSTOM"),
         ORM\CustomIdGenerator(class: "doctrine.uuid_generator")
     ]
-    private $id;
+    private string $id;
 
     #[
         ORM\Column(type: 'string', length: 255, unique: true, nullable: false),
@@ -68,12 +68,12 @@ class City
     private ?DateTimeImmutable $deletedAt = null;
 
     #[ORM\OneToMany(mappedBy: 'city', targetEntity: Location::class, orphanRemoval: true)]
-    private $locations;
+    private Collection $locations;
 
     public function __construct()
     {
-        $this->createdAt = new DateTimeImmutable("now");
         $this->locations = new ArrayCollection();
+        $this->createdAt = new DateTimeImmutable("now");
     }
 
     public function getId(): string
@@ -147,10 +147,7 @@ class City
         $this->deletedAt = $deletedAt;
     }
 
-    /**
-     * @return Collection<int, Location>
-     */
-    public function getLocations(): Collection
+    public function getLocations(): ArrayCollection
     {
         return $this->locations;
     }

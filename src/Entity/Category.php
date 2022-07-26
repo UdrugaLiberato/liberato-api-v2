@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\Controller\CreateCategoryController;
 use App\DTO\Category\CategoryInput;
 use App\DTO\Category\CategoryOutput;
 use App\Repository\CategoryRepository;
@@ -33,7 +32,7 @@ class Category
         ORM\GeneratedValue(strategy: "CUSTOM"),
         ORM\CustomIdGenerator(class: "doctrine.uuid_generator")
     ]
-    private $id;
+    private string $id;
 
     #[
         ORM\Column(type: 'string', length: 255, unique: true),
@@ -42,7 +41,7 @@ class Category
     private string $name;
 
     #[ORM\Column(type: 'array', nullable: true)]
-    private ?array $icon;
+    private ?ArrayCollection $icon;
 
     #[
         ORM\Column(type: 'text', nullable: true),
@@ -60,17 +59,17 @@ class Category
     private ?DateTimeImmutable $deletedAt = null;
 
     #[ORM\OneToMany(mappedBy: 'Category', targetEntity: Question::class)]
-    private $questions;
+    private ArrayCollection $questions;
 
     #[ORM\OneToMany(mappedBy: 'category', targetEntity: Location::class)]
-    private $locations;
+    private ArrayCollection $locations;
 
     public function __construct()
     {
         $this->createdAt = new DateTimeImmutable("now");
         $this->questions = new ArrayCollection();
         $this->locations = new ArrayCollection();
-        $this->icon = [];
+        $this->icon = new ArrayCollection();
     }
 
     public function getId(): string
@@ -90,12 +89,12 @@ class Category
         return $this;
     }
 
-    public function getIcon(): ?array
+    public function getIcon(): ?ArrayCollection
     {
         return $this->icon;
     }
 
-    public function setIcon(array $icon): self
+    public function setIcon(ArrayCollection $icon): self
     {
         $this->icon = $icon;
 
@@ -169,10 +168,7 @@ class Category
         return $this;
     }
 
-    /**
-     * @return Collection<int, Location>
-     */
-    public function getLocations(): Collection
+    public function getLocations(): ArrayCollection
     {
         return $this->locations;
     }

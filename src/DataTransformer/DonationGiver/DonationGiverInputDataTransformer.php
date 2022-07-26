@@ -14,7 +14,15 @@ class DonationGiverInputDataTransformer implements DataTransformerInterface
     {
     }
 
-    public function transform($object, string $to, array $context = [])
+    /**
+     * @param object $object
+     * @param string $to
+     * @param array<mixed> $context
+     * @return DonationGiver
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function transform($object, string $to, array $context = []): DonationGiver
     {
         $account = $this->bankAccountRepository->findAll()[0];
         $oldAmount = $account->getAmount();
@@ -35,6 +43,12 @@ class DonationGiverInputDataTransformer implements DataTransformerInterface
         return $donationGiver;
     }
 
+    /**
+     * @param object $data
+     * @param string $to
+     * @param array<mixed> $context
+     * @return bool
+     */
     public function supportsTransformation($data, string $to, array $context = []): bool
     {
         if ($data instanceof DonationGiver) {

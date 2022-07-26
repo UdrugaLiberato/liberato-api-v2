@@ -7,12 +7,10 @@ use App\DTO\NewsArticle\NewsArticleInput;
 use App\DTO\NewsArticle\NewsArticleOutput;
 use App\Repository\NewsArticleRepository;
 use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\HttpFoundation\File\File;
-use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[
-    Vich\Uploadable,
     ORM\Entity(repositoryClass: NewsArticleRepository::class),
     ApiResource(collectionOperations: [
         'get',
@@ -24,21 +22,22 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
     ], itemOperations: ["get"], input: NewsArticleInput::class, output: NewsArticleOutput::class)]
 class NewsArticle
 {
-    #[Vich\UploadableField(mapping: "news", fileNameProperty: "filePath")]
-    public ?File $file = null;
-    #[ORM\Column(nullable: true)]
-    public ?string $filePath = null;
     #[
         ORM\Id,
         ORM\Column(type: 'string', unique: true),
         ORM\GeneratedValue(strategy: "CUSTOM"),
         ORM\CustomIdGenerator(class: "doctrine.uuid_generator")
     ]
-    private $id;
+    private string $id;
+
     #[ORM\Column(type: 'string', length: 255)]
     private string $title;
+
     #[ORM\Column(type: 'string', length: 255)]
     private string $url;
+
+    #[ORM\Column(nullable: true)]
+    private ArrayCollection $image;
 
     #[ORM\Column(type: 'datetime_immutable')]
     private DateTimeImmutable $createdAt;
@@ -54,6 +53,7 @@ class NewsArticle
         $this->createdAt = new DateTimeImmutable("now");
         $this->updatedAt = null;
         $this->deletedAt = null;
+        $this->image = new ArrayCollection();
     }
 
     public function getId(): ?string
@@ -73,30 +73,14 @@ class NewsArticle
         return $this;
     }
 
-    public function getFilePath(): ?string
+    public function getImage(): ArrayCollection
     {
-        return $this->filePath;
+        return $this->image;
     }
 
-    /**
-     * @param string|null $filePath
-     */
-    public function setFilePath(?string $filePath): void
+    public function setImage(ArrayCollection $image): void
     {
-        $this->filePath = $filePath;
-    }
-
-    /**
-     * @return File|null
-     */
-    public function getFile(): ?File
-    {
-        return $this->file;
-    }
-
-    public function setFile(?File $file): void
-    {
-        $this->file = $file;
+        $this->image = $image;
     }
 
     public function getUrl(): ?string

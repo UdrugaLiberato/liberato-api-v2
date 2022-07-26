@@ -24,7 +24,7 @@ class LocationDataPersister implements DataPersisterInterface
         $this->entityManager->flush();
     }
 
-    public function remove($data)
+    public function remove($data): void
     {
         $data = $data->setDeletedAt(new DateTimeImmutable("now"));
         $this->entityManager->persist($data);

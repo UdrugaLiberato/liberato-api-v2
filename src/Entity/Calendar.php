@@ -20,7 +20,7 @@ class Calendar
         ORM\GeneratedValue(strategy: "CUSTOM"),
         ORM\CustomIdGenerator(class: "doctrine.uuid_generator")
     ]
-    private $Id;
+    private string $Id;
 
     #[ORM\Column(type: 'string', length: 255)]
     private string $Subject;

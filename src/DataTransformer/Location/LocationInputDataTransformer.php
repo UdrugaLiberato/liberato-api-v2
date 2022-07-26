@@ -26,7 +26,13 @@ class LocationInputDataTransformer implements DataTransformerInterface
     {
     }
 
-    public function transform($object, string $to, array $context = []): object
+    /**
+     * @param object $object
+     * @param string $to
+     * @param array<mixed> $context
+     * @return Location
+     */
+    public function transform($object, string $to, array $context = []): Location
     {
         $fileNames = $this->liberatoHelper->transformImages($object->images, "locations");
         [$streetName, $streetNumber] = explode(" ", $object->street);
@@ -78,6 +84,12 @@ class LocationInputDataTransformer implements DataTransformerInterface
         }
     }
 
+    /**
+     * @param object $data
+     * @param string $to
+     * @param array<mixed> $context
+     * @return bool
+     */
     public function supportsTransformation($data, string $to, array $context = []): bool
     {
         if ($data instanceof Location) {

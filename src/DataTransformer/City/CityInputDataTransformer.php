@@ -12,7 +12,13 @@ class CityInputDataTransformer implements DataTransformerInterface
     {
     }
 
-    public function transform($object, string $to, array $context = []): object
+    /**
+     * @param object $object
+     * @param string $to
+     * @param array<mixed> $context
+     * @return City
+     */
+    public function transform($object, string $to, array $context = []): City
     {
         ["lat" => $lat, "lng" => $lng] = $this->googleMaps->getCoordinateForCity($object->name);
 
@@ -24,6 +30,12 @@ class CityInputDataTransformer implements DataTransformerInterface
         return $city;
     }
 
+    /**
+     * @param object $data
+     * @param string $to
+     * @param array<mixed> $context
+     * @return bool
+     */
     public function supportsTransformation($data, string $to, array $context = []): bool
     {
         if ($data instanceof City) {

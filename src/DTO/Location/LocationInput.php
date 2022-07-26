@@ -2,18 +2,20 @@
 
 namespace App\DTO\Location;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 class LocationInput
 {
     public string $category;
     public string $user;
     public string $city;
-    public $answers;
-    public $images;
+    public ArrayCollection $answers;
+    public ArrayCollection $images;
     public string $name;
     public string $street;
-    public $email;
-    public $phone;
-    public $about;
-    public $published;
-    public $featured;
+    public string $email;
+    public string $phone;
+    public string $about;
+    public bool $published;
+    public bool $featured;
 }

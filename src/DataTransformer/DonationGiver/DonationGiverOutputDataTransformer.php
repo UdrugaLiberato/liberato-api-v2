@@ -8,8 +8,13 @@ use App\Entity\DonationGiver;
 
 class DonationGiverOutputDataTransformer implements DataTransformerInterface
 {
-
-    public function transform($object, string $to, array $context = [])
+    /**
+     * @param object $object
+     * @param string $to
+     * @param array<mixed> $context
+     * @return DonationGiverOutput
+     */
+    public function transform($object, string $to, array $context = []): DonationGiverOutput
     {
         return new DonationGiverOutput(
             $object->getName(),
@@ -25,6 +30,12 @@ class DonationGiverOutputDataTransformer implements DataTransformerInterface
         );
     }
 
+    /**
+     * @param object $data
+     * @param string $to
+     * @param array<mixed> $context
+     * @return bool
+     */
     public function supportsTransformation($data, string $to, array $context = []): bool
     {
         return DonationGiverOutput::class === $to && $data instanceof DonationGiver;

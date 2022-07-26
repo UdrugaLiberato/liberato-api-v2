@@ -9,7 +9,13 @@ use App\Entity\NewsArticle;
 
 class NewsArticleOutputDataTransformer implements DataTransformerInterface
 {
-    public function transform($object, string $to, array $context = []): object
+    /**
+     * @param object $object
+     * @param string $to
+     * @param array<mixed> $context
+     * @return NewsArticleOutput
+     */
+    public function transform($object, string $to, array $context = []): NewsArticleOutput
     {
         return new NewsArticleOutput(
             $object->getTitle(),
@@ -21,6 +27,12 @@ class NewsArticleOutputDataTransformer implements DataTransformerInterface
         );
     }
 
+    /**
+     * @param object $data
+     * @param string $to
+     * @param array<mixed> $context
+     * @return bool
+     */
     public function supportsTransformation($data, string $to, array $context = []): bool
     {
         return NewsArticleOutput::class === $to && $data instanceof NewsArticle;

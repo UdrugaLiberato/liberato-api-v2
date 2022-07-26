@@ -27,7 +27,7 @@ class Project
         ORM\GeneratedValue(strategy: "CUSTOM"),
         ORM\CustomIdGenerator(class: "doctrine.uuid_generator")
     ]
-    private $id;
+    private string $id;
 
     #[
         ORM\Column(type: 'string', length: 255),
@@ -85,13 +85,13 @@ class Project
         ORM\ManyToMany(targetEntity: DonationGiver::class, mappedBy: 'projects'),
         Groups(["write"])
     ]
-    private $donationGivers;
+    private Collection $donationGivers;
 
     #[
         ORM\OneToMany(mappedBy: 'project', targetEntity: Invoice::class, cascade: ["persist"]),
         Groups(["write"])
     ]
-    private $invoices;
+    private Collection $invoices;
 
     public function __construct()
     {
@@ -204,10 +204,7 @@ class Project
         return $this;
     }
 
-    /**
-     * @return Collection<int, DonationGiver>
-     */
-    public function getDonationGivers(): Collection
+    public function getDonationGivers(): ArrayCollection
     {
         return $this->donationGivers;
     }
@@ -231,10 +228,7 @@ class Project
         return $this;
     }
 
-    /**
-     * @return Collection<int, Invoice>
-     */
-    public function getInvoices(): Collection
+    public function getInvoices(): ArrayCollection
     {
         return $this->invoices;
     }

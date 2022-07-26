@@ -2,53 +2,28 @@
 
 namespace App\Controller;
 
-use ApiPlatform\Core\Validator\Exception\ValidationException;
 use App\Repository\UserRepository;
-use App\Utils\LiberatoHelper;
+use App\Utils\LiberatoHelperInterface;
 use DateTimeImmutable;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsController;
-use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Component\Validator\Constraints\Image;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[AsController]
 class UpdateUserController extends AbstractController
 {
     public function __construct(
-        private UserRepository     $userRepository,
-        private ValidatorInterface $validator,
-        private KernelInterface    $kernel
+        private UserRepository          $userRepository,
+        private LiberatoHelperInterface $liberatoHelper
     )
     {
     }
 
-    public function __invoke(string $id, Request $request)
+    public function __invoke(string $id, Request $request): UserInterface
     {
         $oldUser = $this->userRepository->find($id);
-        $avatar = $request->files->get("file");
-        if ($avatar !== null) {
-            $errors = $this->validator->validate($avatar, new Image());
-            if (count($errors) > 0) {
-                throw new ValidationException("Only images can be uploaded!");
-            }
-
-            $originalFilename = pathinfo(
-                $avatar->getClientOriginalName(),
-                PATHINFO_FILENAME
-            );
-            // this is needed to safely include the file name as part of the URL
-            $safeFilename = LiberatoHelper::slugify($originalFilename);
-            $newFilename = date('Y-m-d') . "_" . $safeFilename . md5
-                (
-                    microtime()
-                ) . '.'
-                . $avatar->guessExtension();
-
-            $avatar->move($this->kernel->getProjectDir() . '/public/images/avatar/', $newFilename);
-            $oldUser->setFilePath('/images/avatar/' . $newFilename);
-        }
+        $avatar = $this->$this->liberatoHelper->transformImage($request->files->get('file'), "avatar");
 
         if ($request->get("username") && $request->get("username") !== $oldUser->getName()) {
             $oldUser->setUsername($request->get("username"));
@@ -69,6 +44,7 @@ class UpdateUserController extends AbstractController
             $oldUser->setRoles($request->get("role"));
         }
 
+        $oldUser->setAvatar($avatar);
         $oldUser->setUpdatedAt(new DateTimeImmutable("now"));
         $this->userRepository->update($oldUser);
 

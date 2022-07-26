@@ -14,9 +14,8 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
-use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
-#[Vich\Uploadable,
+#[
     ORM\Entity(repositoryClass: LocationRepository::class),
     ApiResource(
         collectionOperations: [
@@ -39,7 +38,7 @@ class Location
         ORM\GeneratedValue(strategy: "CUSTOM"),
         ORM\CustomIdGenerator(class: "doctrine.uuid_generator")
     ]
-    private $id;
+    private string $id;
 
     #[
         ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'locations'),
@@ -65,7 +64,7 @@ class Location
     #[
         ORM\Column(type: 'array')
     ]
-    private array $images = [];
+    private ArrayCollection $images;
 
     #[
         ApiFilter(SearchFilter::class, strategy: 'ipartial'),
@@ -136,6 +135,7 @@ class Location
     public function __construct()
     {
         $this->answers = new ArrayCollection();
+        $this->images = new ArrayCollection();
         $this->createdAt = new DateTimeImmutable("now");
         $this->updatedAt = null;
         $this->deletedAt = null;
@@ -197,12 +197,12 @@ class Location
         return $this;
     }
 
-    public function getImages(): ?array
+    public function getImages(): ArrayCollection
     {
         return $this->images;
     }
 
-    public function setImages(array $images): self
+    public function setImages(ArrayCollection $images): self
     {
         $this->images = $images;
 

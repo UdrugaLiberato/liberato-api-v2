@@ -13,14 +13,11 @@ use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
-use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[
-    Vich\Uploadable,
     ORM\Entity(repositoryClass: UserRepository::class),
     ApiResource(collectionOperations: [
         'get' => [
@@ -44,12 +41,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public const ROLE_ADMIN = "ROLE_ADMIN";
     public const ROLE_USER = "ROLE_USER";
 
-
-    public ?File $file = null;
-
-    #[ORM\Column(nullable: true)]
-    public ?string $filePath = null;
-
     #[
         ORM\Id,
         ORM\Column(type: 'string', unique: true),
@@ -67,11 +58,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[
         ORM\Column(type: 'string', length: 180, nullable: true),
     ]
-    private ?string $phone;
+    private ?string $phone = "";
 
-    #[
-        ORM\Column(type: 'json')
-    ]
+    /**
+     * @var array<string>
+     */
+    #[ORM\Column(type: 'json')]
     private array $roles;
 
     #[
@@ -87,6 +79,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     ]
     private string $username;
 
+    #[ORM\Column(type: 'array')]
+    private ArrayCollection $avatar;
+
     #[ORM\Column(type: 'datetime_immutable')]
     private DateTimeImmutable $createdAt;
 
@@ -97,18 +92,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?DateTimeImmutable $deletedAt;
 
     #[ORM\OneToMany(mappedBy: 'author', targetEntity: Post::class, orphanRemoval: true)]
-    private $posts;
+    private Collection $posts;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Location::class)]
-    private $locations;
+    private Collection $locations;
 
     public function __construct()
     {
+        $this->phone = "";
+        $this->avatar = new ArrayCollection();
+        $this->posts = new ArrayCollection();
         $this->createdAt = new DateTimeImmutable("now");
         $this->updatedAt = null;
         $this->deletedAt = null;
-        $this->posts = new ArrayCollection();
-        $this->phone = null;
         $this->locations = new ArrayCollection();
         $this->roles[] = self::ROLE_USER;
     }
@@ -218,7 +214,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function eraseCredentials()
+    public function eraseCredentials(): void
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
@@ -254,33 +250,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getFilePath(): ?string
+    public function getAvatar(): ArrayCollection
     {
-        return $this->filePath;
+        return $this->avatar;
     }
 
-    public function setFilePath(?string $filePath): void
+    public function setAvatar(ArrayCollection $avatar): void
     {
-        $this->filePath = $filePath;
+        $this->avatar = $avatar;
     }
 
-    /**
-     * @return File|null
-     */
-    public function getFile(): ?File
-    {
-        return $this->file;
-    }
-
-    public function setFile(?File $file): void
-    {
-        $this->file = $file;
-    }
-
-    /**
-     * @return Collection<int, Location>
-     */
-    public function getLocations(): Collection
+    public function getLocations(): ArrayCollection
     {
         return $this->locations;
     }
@@ -306,5 +286,4 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
-
 }

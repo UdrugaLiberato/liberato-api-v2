@@ -8,8 +8,13 @@ use App\Entity\Project;
 
 class ProjectOutputDataTransformer implements DataTransformerInterface
 {
-
-    public function transform($object, string $to, array $context = [])
+    /**
+     * @param object $object
+     * @param string $to
+     * @param array<mixed> $context
+     * @return ProjectOutput
+     */
+    public function transform($object, string $to, array $context = []): ProjectOutput
     {
         $files = $object->getInvoices()->map(function ($invoice) {
             foreach ($invoice->getFiles() as $file) {
@@ -31,6 +36,12 @@ class ProjectOutputDataTransformer implements DataTransformerInterface
         );
     }
 
+    /**
+     * @param object $data
+     * @param string $to
+     * @param array<mixed> $context
+     * @return boolean
+     */
     public function supportsTransformation($data, string $to, array $context = []): bool
     {
         return ProjectOutput::class === $to && $data instanceof Project;

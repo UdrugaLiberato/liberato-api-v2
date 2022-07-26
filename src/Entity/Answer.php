@@ -17,7 +17,7 @@ class Answer
         ORM\GeneratedValue(strategy: "CUSTOM"),
         ORM\CustomIdGenerator(class: "doctrine.uuid_generator")
     ]
-    private $id;
+    private string $id;
 
     #[ORM\Column(type: 'string')]
     private string $question;
@@ -37,7 +37,7 @@ class Answer
     private ?DateTimeImmutable $deletedAt = null;
 
     #[ORM\ManyToOne(targetEntity: Location::class, cascade: ["persist"], inversedBy: 'answers')]
-    private $location;
+    private Location $location;
 
     public function __construct()
     {

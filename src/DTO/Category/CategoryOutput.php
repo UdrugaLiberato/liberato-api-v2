@@ -2,15 +2,17 @@
 
 namespace App\DTO\Category;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 class CategoryOutput
 {
     public function __construct(
-        public string  $name,
-        public         $questions,
-        public ?string $description,
-        public string  $createdAt,
-        public ?string $deletedAt,
-        public         $icon
+        public string          $name,
+        public ArrayCollection $questions,
+        public ?string         $description,
+        public string          $createdAt,
+        public ?string         $deletedAt,
+        public ArrayCollection $icon
     )
     {
     }

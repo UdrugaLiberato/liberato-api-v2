@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\Controller\CreatePostAction;
 use App\Controller\UpdatePostController;
 use App\DTO\Post\PostInput;
 use App\DTO\Post\PostOutput;
@@ -46,10 +45,10 @@ class Post
         ORM\GeneratedValue(strategy: "CUSTOM"),
         ORM\CustomIdGenerator(class: "doctrine.uuid_generator")
     ]
-    private $id;
+    private string $id;
 
     #[
-        ORM\ManyToOne(targetEntity: User::class, inversedBy: 'posts'),
+        ORM\ManyToOne(targetEntity: User::class, cascade: ["remove"], inversedBy: 'posts'),
         ORM\JoinColumn(nullable: false),
         Assert\NotNull
     ]
@@ -67,14 +66,12 @@ class Post
     ]
     private string $body;
 
-    #[
-        ORM\Column(type: 'array'),
-    ]
+
+    #[ORM\Column(type: 'array')]
     private array $tags;
 
     #[ORM\Column(type: 'array')]
-    private array $images;
-
+    private ArrayCollection $images;
 
     #[
         ORM\Column(type: 'datetime_immutable'),
@@ -89,13 +86,13 @@ class Post
 
     public function __construct()
     {
-        $this->images = [];
+        $this->images = new ArrayCollection();
         $this->createdAt = new DateTimeImmutable("now");
         $this->deletedAt = null;
         $this->updatedAt = null;
     }
 
-    public function getId()
+    public function getId(): string
     {
         return $this->id;
     }
@@ -175,12 +172,12 @@ class Post
         $this->tags = $tags;
     }
 
-    public function getImages(): ArrayCollection|array
+    public function getImages(): ArrayCollection
     {
         return $this->images;
     }
 
-    public function setImages(ArrayCollection|array $images): void
+    public function setImages(ArrayCollection $images): void
     {
         $this->images = $images;
     }

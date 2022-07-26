@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Events;
+namespace App\Events\Listener;
 
 use App\Entity\Location;
 use Doctrine\ORM\Event\LifecycleEventArgs;

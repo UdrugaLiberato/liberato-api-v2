@@ -9,9 +9,14 @@ use App\Utils\LiberatoHelper;
 
 class PostOutputDataTransformer implements DataTransformerInterface
 {
-    public function transform($object, string $to, array $context = []): object
+    /**
+     * @param object $object
+     * @param string $to
+     * @param array<mixed> $context
+     * @return PostOutput
+     */
+    public function transform($object, string $to, array $context = []): PostOutput
     {
-
         return new PostOutput(
             $object->getAuthor()->getName(),
             $object->getId(),
@@ -26,6 +31,12 @@ class PostOutputDataTransformer implements DataTransformerInterface
         );
     }
 
+    /**
+     * @param object $data
+     * @param string $to
+     * @param array<mixed> $context
+     * @return bool
+     */
     public function supportsTransformation($data, string $to, array $context = []): bool
     {
         return PostOutput::class === $to && $data instanceof Post;

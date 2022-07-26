@@ -5,37 +5,36 @@ namespace App\DataTransformer\NewsArticle;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Entity\NewsArticle;
-use App\Utils\LiberatoHelper;
-use Symfony\Component\HttpKernel\KernelInterface;
+use App\Utils\LiberatoHelperInterface;
 
 class NewsArticleInputDataTransformer implements DataTransformerInterface
 {
-    public function __construct(private KernelInterface $kernel)
+    public function __construct(private LiberatoHelperInterface $liberatoHelper)
     {
     }
 
-    public function transform($object, string $to, array $context = []): object
+    /**
+     * @param object $object
+     * @param string $to
+     * @param array<mixed> $context
+     * @return NewsArticle
+     */
+    public function transform($object, string $to, array $context = []): NewsArticle
     {
-        $originalFilename = pathinfo(
-            $object->file->getClientOriginalName(),
-            PATHINFO_FILENAME
-        );
-        // this is needed to safely include the file name as part of the URL
-        $safeFilename = LiberatoHelper::slugify($originalFilename);
-        $newFilename = date('Y-m-d') . "_" . $safeFilename . md5
-            (
-                microtime()
-            ) . '.'
-            . $object->file->guessExtension();
-
-        $object->file->move($this->kernel->getProjectDir() . '/public/images/news/', $newFilename);
+        $image = $this->liberatoHelper->transformImage($object->file, "news");
         $article = new NewsArticle();
         $article->setTitle($object->title);
         $article->setUrl($object->url);
-        $article->setFilePath('/images/news/' . $newFilename);
+        $article->setImage($image);
         return $article;
     }
 
+    /**
+     * @param object $data
+     * @param string $to
+     * @param array<mixed> $context
+     * @return bool
+     */
     public function supportsTransformation($data, string $to, array $context = []): bool
     {
         if ($data instanceof NewsArticle) {

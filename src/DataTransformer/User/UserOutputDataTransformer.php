@@ -7,10 +7,18 @@ use App\DTO\User\UserOutput;
 use App\Entity\User;
 use App\Utils\LiberatoHelper;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 class UserOutputDataTransformer implements DataTransformerInterface
 {
-    public function transform($object, string $to, array $context = []): object
+
+    /**
+     * @param object $object
+     * @param string $to
+     * @param array<mixed> $context
+     * @return UserOutput
+     */
+    public function transform($object, string $to, array $context = []): UserOutput
     {
         $posts = $this->getPostsFromUser($object->getPosts());
         return new UserOutput(
@@ -18,8 +26,8 @@ class UserOutputDataTransformer implements DataTransformerInterface
             $object->getName(),
             $object->getEmail(),
             $object->getRoles()[0],
-            null === $object->getPhone() ? null : $object->getPhone(),
-            null === $object->getFilePath() ? null : $object->getFilePath(),
+            $object->getPhone() ?? null,
+            $object->getAvatar() ?? null,
             $posts,
             $object->getCreatedAt()->format('Y-m-d H:i:s'),
             $object->getUpdatedAt()?->format("Y-m-d H:i:s"),
@@ -27,16 +35,11 @@ class UserOutputDataTransformer implements DataTransformerInterface
         );
     }
 
-    public function supportsTransformation($data, string $to, array $context = []): bool
+    private function getPostsFromUser(Collection $posts): ArrayCollection
     {
-        return UserOutput::class === $to && $data instanceof User;
-    }
+        if (count($posts->getValues()) === 0) return new ArrayCollection();
 
-    private function getPostsFromUser($posts): array|ArrayCollection
-    {
-        if (count($posts->getValues()) === 0) return [];
-
-        return $posts->map(function ($post) {
+        $filteredPostOutput = $posts->map(function ($post) {
             return [
                 "id" => $post->getId(),
                 "title" => $post->getTitle(),
@@ -47,5 +50,18 @@ class UserOutputDataTransformer implements DataTransformerInterface
                 "created_at" => $post->getCreatedAt()->format('Y-m-d H:i:s')
             ];
         });
+
+        return new ArrayCollection($filteredPostOutput->toArray());
+    }
+
+    /**
+     * @param object $data
+     * @param string $to
+     * @param array<mixed> $context
+     * @return bool
+     */
+    public function supportsTransformation($data, string $to, array $context = []): bool
+    {
+        return UserOutput::class === $to && $data instanceof User;
     }
 }
