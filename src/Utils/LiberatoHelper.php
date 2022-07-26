@@ -81,14 +81,14 @@ class LiberatoHelper implements LiberatoHelperInterface
     {
         $string = preg_replace('~[^\pL\d]+~u', '-', $string);
         $string = iconv('utf-8', 'us-ascii//TRANSLIT', $string);
-        $string = preg_replace('~[^-\w]+~', '', $string);
+        $string = preg_replace('~[^-\w]+~', '', (string) $string);
         $string = trim($string, '-');
         $string = preg_replace('~-+~', '-', $string);
 
         return mb_strtolower($string);
     }
 
-    public function transformImages(ArrayCollection $uploadedFiles, string $entityName): ArrayCollection
+    public function transformImages(array $uploadedFiles, string $entityName): ArrayCollection
     {
         $fileNames = new ArrayCollection();
         foreach ($uploadedFiles as $file) {

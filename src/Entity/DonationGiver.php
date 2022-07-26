@@ -136,7 +136,7 @@ class DonationGiver
 
     public function getProjects(): ArrayCollection
     {
-        return $this->projects;
+        return new ArrayCollection($this->projects->toArray());
     }
 
     public function addProject(Project $project): self

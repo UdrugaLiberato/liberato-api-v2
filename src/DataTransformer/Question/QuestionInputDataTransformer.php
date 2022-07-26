@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace App\DataTransformer\Question;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
+use App\DTO\Question\QuestionInput;
 use App\Entity\Question;
 
 class QuestionInputDataTransformer implements DataTransformerInterface
 {
     /**
-     * @param object       $object
-     * @param array<mixed> $context
+     * @param QuestionInput $object
+     * @param array<mixed>  $context
      */
     public function transform($object, string $to, array $context = []): Question
     {

@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace App\DataTransformer\BankAccount;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
+use App\DTO\BankAccount\BankAccountInput;
 use App\Entity\BankAccount;
 
 class BankAccountInputDataTransformer implements DataTransformerInterface
 {
     /**
-     * @param object       $object
-     * @param array<mixed> $context
+     * @param BankAccountInput $object
+     * @param array<mixed>     $context
      */
     public function transform($object, string $to, array $context = []): BankAccount
     {

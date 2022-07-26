@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\DataTransformer\City;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
+use App\DTO\City\CityInput;
 use App\Entity\City;
 use App\Utils\GoogleMapsInterface;
 
@@ -15,7 +16,7 @@ class CityInputDataTransformer implements DataTransformerInterface
     }
 
     /**
-     * @param object       $object
+     * @param CityInput    $object
      * @param array<mixed> $context
      */
     public function transform($object, string $to, array $context = []): City

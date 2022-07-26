@@ -208,7 +208,7 @@ class Project
 
     public function getDonationGivers(): ArrayCollection
     {
-        return $this->donationGivers;
+        return new ArrayCollection($this->donationGivers->toArray());
     }
 
     public function addDonationGiver(DonationGiver $donationGiver): self
@@ -232,7 +232,7 @@ class Project
 
     public function getInvoices(): ArrayCollection
     {
-        return $this->invoices;
+        return new ArrayCollection($this->invoices->toArray());
     }
 
     public function addInvoice(Invoice $invoice): self

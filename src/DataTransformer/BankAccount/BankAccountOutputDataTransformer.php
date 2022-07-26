@@ -11,7 +11,7 @@ use App\Entity\BankAccount;
 class BankAccountOutputDataTransformer implements DataTransformerInterface
 {
     /**
-     * @param object       $object
+     * @param BankAccount  $object
      * @param array<mixed> $context
      */
     public function transform($object, string $to, array $context = []): BankAccountOutput

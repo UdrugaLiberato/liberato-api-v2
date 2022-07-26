@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\DataTransformer\DonationGiver;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
+use App\DTO\DonationGiver\DonationGiverInput;
 use App\Entity\DonationGiver;
 use App\Repository\BankAccountRepository;
 use DateTimeImmutable;
@@ -16,8 +17,8 @@ class DonationGiverInputDataTransformer implements DataTransformerInterface
     }
 
     /**
-     * @param object       $object
-     * @param array<mixed> $context
+     * @param DonationGiverInput $object
+     * @param array<mixed>       $context
      *
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException

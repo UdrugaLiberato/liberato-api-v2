@@ -11,7 +11,7 @@ use App\Entity\Invoice;
 class InvoiceOutputDataTransformer implements DataTransformerInterface
 {
     /**
-     * @param object       $object
+     * @param Invoice      $object
      * @param array<mixed> $context
      */
     public function transform($object, string $to, array $context = []): InvoiceOutput

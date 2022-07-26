@@ -12,7 +12,6 @@ use App\Repository\PostRepository;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ApiResource(collectionOperations: [
@@ -53,7 +52,7 @@ class Post
         ORM\JoinColumn(nullable: false),
         Assert\NotNull
     ]
-    private UserInterface $author;
+    private User $author;
 
     #[
         ORM\Column(type: 'string', length: 255, unique: true),
@@ -67,6 +66,9 @@ class Post
     ]
     private string $body;
 
+    /**
+     * @var string[]
+     */
     #[ORM\Column(type: 'array')]
     private array $tags;
 
@@ -97,12 +99,12 @@ class Post
         return $this->id;
     }
 
-    public function getAuthor(): ?UserInterface
+    public function getAuthor(): User
     {
         return $this->author;
     }
 
-    public function setAuthor(?UserInterface $author): self
+    public function setAuthor(?User $author): self
     {
         $this->author = $author;
 
@@ -162,11 +164,17 @@ class Post
         return $this;
     }
 
+    /**
+     * @return string[]
+     */
     public function getTags(): array
     {
         return $this->tags;
     }
 
+    /**
+     * @param string[] $tags
+     */
     public function setTags(array $tags): void
     {
         $this->tags = $tags;

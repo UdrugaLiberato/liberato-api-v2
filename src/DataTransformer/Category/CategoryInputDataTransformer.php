@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\DataTransformer\Category;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
+use App\DTO\Category\CategoryInput;
 use App\Entity\Category;
 use App\Utils\LiberatoHelperInterface;
 
@@ -16,8 +17,8 @@ class CategoryInputDataTransformer implements DataTransformerInterface
     }
 
     /**
-     * @param object       $object
-     * @param array<mixed> $context
+     * @param CategoryInput $object
+     * @param array<mixed>  $context
      */
     public function transform($object, string $to, array $context = []): Category
     {

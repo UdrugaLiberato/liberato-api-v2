@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace App\DataTransformer\Event;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
+use App\DTO\Event\EventInput;
 use App\Entity\Calendar;
 
 class EventInputDataTransformer implements DataTransformerInterface
 {
     /**
-     * @param object       $object
+     * @param EventInput   $object
      * @param array<mixed> $context
      */
     public function transform($object, string $to, array $context = []): Calendar

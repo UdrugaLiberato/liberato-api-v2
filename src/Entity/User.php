@@ -262,7 +262,7 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
 
     public function getLocations(): ArrayCollection
     {
-        return $this->locations;
+        return new ArrayCollection($this->locations->toArray());
     }
 
     public function addLocation(Location $location): self

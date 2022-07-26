@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\DataTransformer\Location;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
+use App\DTO\Location\LocationInput;
 use App\Entity\Answer;
 use App\Entity\Category;
 use App\Entity\City;
@@ -27,8 +28,8 @@ class LocationInputDataTransformer implements DataTransformerInterface
     }
 
     /**
-     * @param object       $object
-     * @param array<mixed> $context
+     * @param LocationInput $object
+     * @param array<mixed>  $context
      */
     public function transform($object, string $to, array $context = []): Location
     {
@@ -43,7 +44,6 @@ class LocationInputDataTransformer implements DataTransformerInterface
         $location = new Location();
         $location->setName($object->name);
         $location->setCity($city);
-        $location->setUser($this->token->getToken()?->getUser());
         $location->setCategory($category);
         $location->setStreet($formatted_address);
         $location->setImages($fileNames);
@@ -83,7 +83,7 @@ class LocationInputDataTransformer implements DataTransformerInterface
         return $this->categoryRepository->find($id);
     }
 
-    private function addAnswers(object $object, Location $location): void
+    private function addAnswers(LocationInput $object, Location $location): void
     {
         $answerArr = explode(',', $object->answers);
         foreach ($answerArr as $answer) {

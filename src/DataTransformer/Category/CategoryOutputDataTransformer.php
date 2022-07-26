@@ -21,14 +21,14 @@ class CategoryOutputDataTransformer implements DataTransformerInterface
     }
 
     /**
-     * @param object       $object
+     * @param Category     $object
      * @param array<mixed> $context
      */
     public function transform($object, string $to, array $context = []): CategoryOutput
     {
         return new CategoryOutput(
             $object->getName(),
-            $this->getQuestionAndAnswerArr($object),
+            $this->getQuestionAndAnswerArr($object->getId()),
             null === $object->getDescription() ? null : $object->getDescription(),
             $object->getCreatedAt()->format('Y-m-d H:i:s'),
             null === $object->getDeletedAt() ? null : $object->getDeletedAt()->format('Y-m-d H:i:s"'),
@@ -45,10 +45,10 @@ class CategoryOutputDataTransformer implements DataTransformerInterface
         return CategoryOutput::class === $to && $data instanceof Category;
     }
 
-    private function getQuestionAndAnswerArr(object $object): ArrayCollection
+    private function getQuestionAndAnswerArr(string $id): ArrayCollection
     {
         $qAC = new ArrayCollection();
-        $questions = $this->questionRepository->findBy(['category' => $object->getId()]);
+        $questions = $this->questionRepository->findBy(['category' => $id]);
         array_map(static function (Question $question) use ($qAC): void {
             $qAC->add([
                 'id' => $question->getId(),

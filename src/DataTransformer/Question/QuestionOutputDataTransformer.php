@@ -11,7 +11,7 @@ use App\Entity\Question;
 class QuestionOutputDataTransformer implements DataTransformerInterface
 {
     /**
-     * @param object       $object
+     * @param Question     $object
      * @param array<mixed> $context
      */
     public function transform($object, string $to, array $context = []): QuestionOutput

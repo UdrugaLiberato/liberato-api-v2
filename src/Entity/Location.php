@@ -14,7 +14,6 @@ use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[
@@ -51,7 +50,7 @@ class Location
     private Category $category;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'locations')]
-    private ?UserInterface $user;
+    private ?User $user;
 
     #[ORM\OneToMany(mappedBy: 'location', targetEntity: Answer::class, cascade: ['persist'])]
     private Collection $answers;
@@ -162,12 +161,12 @@ class Location
         return $this;
     }
 
-    public function getUser(): ?UserInterface
+    public function getUser(): ?User
     {
         return $this->user;
     }
 
-    public function setUser(?UserInterface $user): self
+    public function setUser(?User $user): self
     {
         $this->user = $user;
 

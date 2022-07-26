@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\DataTransformer\NewsArticle;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
+use App\DTO\NewsArticle\NewsArticleInput;
 use App\Entity\NewsArticle;
 use App\Utils\LiberatoHelperInterface;
 
@@ -15,12 +16,12 @@ class NewsArticleInputDataTransformer implements DataTransformerInterface
     }
 
     /**
-     * @param object       $object
-     * @param array<mixed> $context
+     * @param NewsArticleInput $object
+     * @param array<mixed>     $context
      */
     public function transform($object, string $to, array $context = []): NewsArticle
     {
-        $image = $this->liberatoHelper->transformImage($object->file, 'news');
+        $image = $this->liberatoHelper->transformImage($object->image, 'news');
         $article = new NewsArticle();
         $article->setTitle($object->title);
         $article->setUrl($object->url);

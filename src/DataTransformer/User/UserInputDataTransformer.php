@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\DataTransformer\User;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
+use App\DTO\User\UserInput;
 use App\Entity\User;
 use App\Utils\LiberatoHelperInterface;
 
@@ -15,7 +16,7 @@ class UserInputDataTransformer implements DataTransformerInterface
     }
 
     /**
-     * @param object       $object
+     * @param UserInput    $object
      * @param array<mixed> $context
      */
     public function transform($object, string $to, array $context = []): User

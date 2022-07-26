@@ -11,8 +11,8 @@ use App\Entity\DonationGiver;
 class DonationGiverOutputDataTransformer implements DataTransformerInterface
 {
     /**
-     * @param object       $object
-     * @param array<mixed> $context
+     * @param DonationGiver $object
+     * @param array<mixed>  $context
      */
     public function transform($object, string $to, array $context = []): DonationGiverOutput
     {

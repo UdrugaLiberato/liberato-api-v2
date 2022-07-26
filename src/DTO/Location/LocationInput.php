@@ -4,15 +4,17 @@ declare(strict_types=1);
 
 namespace App\DTO\Location;
 
-use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class LocationInput
 {
     public string $category;
     public string $user;
     public string $city;
-    public ArrayCollection $answers;
-    public ArrayCollection $images;
+    public string $answers;
+
+    /** @var array<UploadedFile> */
+    public array $images;
     public string $name;
     public string $street;
     public string $email;

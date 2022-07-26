@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\Controller\CreateInvoiceController;
 use App\DTO\Invoice\InvoiceOutput;
 use App\Repository\InvoiceRepository;
 use DateTimeImmutable;
@@ -17,8 +16,6 @@ use Doctrine\ORM\Mapping as ORM;
     collectionOperations: [
         'get',
         'post' => [
-            'controller' => CreateInvoiceController::class,
-            'deserialize' => false,
             'input_formats' => [
                 'multipart' => ['multipart/form-data'],
             ],

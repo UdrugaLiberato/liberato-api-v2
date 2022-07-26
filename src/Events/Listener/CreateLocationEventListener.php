@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Events\Listener;
 
 use App\Entity\Location;
+use App\Entity\User;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -22,6 +23,7 @@ class CreateLocationEventListener
             return;
         }
 
+        /** @var null|User $user */
         $user = $this->token->getToken()?->getUser();
         if (!$user) {
             $entity->setUser(null);

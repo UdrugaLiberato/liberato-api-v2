@@ -12,7 +12,7 @@ use App\Utils\LiberatoHelper;
 class PostOutputDataTransformer implements DataTransformerInterface
 {
     /**
-     * @param object       $object
+     * @param Post         $object
      * @param array<mixed> $context
      */
     public function transform($object, string $to, array $context = []): PostOutput

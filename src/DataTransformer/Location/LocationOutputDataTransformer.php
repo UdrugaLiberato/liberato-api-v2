@@ -9,11 +9,12 @@ use App\DTO\Location\LocationOutput;
 use App\Entity\Answer;
 use App\Entity\Location;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 class LocationOutputDataTransformer implements DataTransformerInterface
 {
     /**
-     * @param object       $object
+     * @param Location     $object
      * @param array<mixed> $context
      */
     public function transform($object, string $to, array $context = []): LocationOutput
@@ -46,13 +47,13 @@ class LocationOutputDataTransformer implements DataTransformerInterface
         return LocationOutput::class === $to && $data instanceof Location;
     }
 
-    private function getAnswerAndQuestions(ArrayCollection $answers): ArrayCollection
+    private function getAnswerAndQuestions(Collection $answers): ArrayCollection
     {
-        return $answers->map(static function (Answer $answer) {
+        return new ArrayCollection($answers->map(static function (Answer $answer) {
             return [
                 'question' => $answer->getQuestion(),
                 'answer' => $answer->getAnswer(),
             ];
-        });
+        })->toArray());
     }
 }
