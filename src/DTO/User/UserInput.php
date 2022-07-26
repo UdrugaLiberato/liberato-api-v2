@@ -12,6 +12,6 @@ class UserInput
     public string $email;
     public string $password;
     public string $role;
-    public UploadedFile $file;
+    public ?UploadedFile $file;
     public ?string $phone;
 }
