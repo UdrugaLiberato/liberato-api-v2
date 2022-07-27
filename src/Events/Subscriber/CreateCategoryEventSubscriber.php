@@ -19,8 +19,7 @@ class CreateCategoryEventSubscriber implements EventSubscriberInterface
     public function __construct(
         public CategoryRepository $categoryRepository,
         public QuestionRepository $questionRepository,
-    )
-    {
+    ) {
     }
 
     public static function getSubscribedEvents(): array
