@@ -25,7 +25,8 @@ class UpdateUserController extends AbstractController
     public function __invoke(string $id, Request $request): UserInterface
     {
         $userToUpdate = $this->userRepository->find($id);
-        $userToUpdate->getAvatar()->map(function (string $imagePath) {
+        $userToUpdate->getAvatar()->map(function (string $imagePath): void {
+            if ($imagePath === "anonymous-user.png") return;
             $file = $this->liberatoHelper->getImagePath('avatar/') . $imagePath;
             if (file_exists($file)) {
                 unlink($file);
