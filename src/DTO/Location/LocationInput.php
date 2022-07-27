@@ -12,14 +12,21 @@ class LocationInput
     public string $user;
     public string $city;
     public string $answers;
-
     /** @var array<UploadedFile> */
     public array $images;
     public string $name;
     public string $street;
-    public string $email;
-    public string $phone;
-    public string $about;
-    public bool $published;
-    public bool $featured;
+    public ?string $email;
+    public ?string $phone;
+    public ?string $about;
+    public mixed $published;
+    public mixed $featured;
+
+    public function __construct()
+    {
+        $this->images = $this->images ?? [];
+        $this->phone = $this->phone ?? null;
+        $this->email = $this->email ?? null;
+        $this->about = $this->about ?? null;
+    }
 }

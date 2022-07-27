@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Controller;
@@ -21,14 +22,14 @@ class UpdateCityController
 
     public function __invoke(string $id, Request $request): City
     {
-        $name = $request->toArray()["name"] ?? null;
+        $name = $request->toArray()['name'] ?? null;
         $cityToUpdate = $this->cityRepository->find($id);
 
         if (!$name || $name === $cityToUpdate->getName()) {
             return $cityToUpdate;
         }
 
-        ["lat" => $lat, "lng" => $lng] = $this->googleMaps->getCoordinateForCity($name);
+        ['lat' => $lat, 'lng' => $lng] = $this->googleMaps->getCoordinateForCity($name);
 
         $cityToUpdate->setName($name);
         $cityToUpdate->setLatitude($lat);

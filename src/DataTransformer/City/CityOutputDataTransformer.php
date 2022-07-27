@@ -11,7 +11,7 @@ use App\Entity\City;
 class CityOutputDataTransformer implements DataTransformerInterface
 {
     /**
-     * @param City         $object
+     * @param City $object
      * @param array<mixed> $context
      */
     public function transform($object, string $to, array $context = []): CityOutput
@@ -21,11 +21,12 @@ class CityOutputDataTransformer implements DataTransformerInterface
             $object->getLatitude(),
             $object->getLongitude(),
             $object->getCreatedAt()->format('Y-m-d H:i:s'),
+            count($object->getLocations()->toArray())
         );
     }
 
     /**
-     * @param object       $data
+     * @param object $data
      * @param array<mixed> $context
      */
     public function supportsTransformation($data, string $to, array $context = []): bool

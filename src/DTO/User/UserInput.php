@@ -14,4 +14,9 @@ class UserInput
     public string $role;
     public ?UploadedFile $file;
     public ?string $phone;
+
+    public function __construct()
+    {
+        $this->file = $this->file ?? null;
+    }
 }
