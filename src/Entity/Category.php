@@ -60,7 +60,7 @@ class Category
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private ?DateTimeImmutable $deletedAt = null;
 
-    #[ORM\OneToMany(mappedBy: 'Category', targetEntity: Question::class)]
+    #[ORM\OneToMany(mappedBy: 'Category', targetEntity: Question::class, cascade: ["remove"])]
     private Collection $questions;
 
     #[ORM\OneToMany(mappedBy: 'category', targetEntity: Location::class)]
@@ -172,7 +172,7 @@ class Category
 
     public function getLocations(): ArrayCollection
     {
-        return $this->locations;
+        return new ArrayCollection($this->locations->toArray());
     }
 
     public function addLocation(Location $location): self

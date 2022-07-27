@@ -13,13 +13,12 @@ class CategoryInputDataTransformer implements DataTransformerInterface
 {
     public function __construct(
         public LiberatoHelperInterface $liberatoHelper,
-    )
-    {
+    ) {
     }
 
     /**
      * @param CategoryInput $object
-     * @param array<mixed> $context
+     * @param array<mixed>  $context
      */
     public function transform($object, string $to, array $context = []): Category
     {
@@ -32,7 +31,7 @@ class CategoryInputDataTransformer implements DataTransformerInterface
     }
 
     /**
-     * @param object $data
+     * @param object       $data
      * @param array<mixed> $context
      */
     public function supportsTransformation($data, string $to, array $context = []): bool

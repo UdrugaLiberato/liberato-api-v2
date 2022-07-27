@@ -15,13 +15,14 @@ use Doctrine\Common\Collections\ArrayCollection;
 class CategoryOutputDataTransformer implements DataTransformerInterface
 {
     public function __construct(
-        public QuestionRepository $questionRepository,
+        public QuestionRepository      $questionRepository,
         public LiberatoHelperInterface $liberatoHelper
-    ) {
+    )
+    {
     }
 
     /**
-     * @param Category     $object
+     * @param Category $object
      * @param array<mixed> $context
      */
     public function transform($object, string $to, array $context = []): CategoryOutput
@@ -29,20 +30,11 @@ class CategoryOutputDataTransformer implements DataTransformerInterface
         return new CategoryOutput(
             $object->getName(),
             $this->getQuestionAndAnswerArr($object->getId()),
-            null === $object->getDescription() ? null : $object->getDescription(),
+            $object->getDescription() ?? null,
             $object->getCreatedAt()->format('Y-m-d H:i:s'),
-            null === $object->getDeletedAt() ? null : $object->getDeletedAt()->format('Y-m-d H:i:s"'),
-            $this->liberatoHelper->convertImageArrayToOutput($object->getIcon(), 'category'),
+            $object->getDeletedAt()?->format('Y-m-d H:i:s"') ?? null,
+            $this->liberatoHelper->convertImageArrayToOutput($object->getIcon(), 'category/'),
         );
-    }
-
-    /**
-     * @param object       $data
-     * @param array<mixed> $context
-     */
-    public function supportsTransformation($data, string $to, array $context = []): bool
-    {
-        return CategoryOutput::class === $to && $data instanceof Category;
     }
 
     private function getQuestionAndAnswerArr(string $id): ArrayCollection
@@ -57,5 +49,14 @@ class CategoryOutputDataTransformer implements DataTransformerInterface
         }, $questions);
 
         return $qAC;
+    }
+
+    /**
+     * @param object $data
+     * @param array<mixed> $context
+     */
+    public function supportsTransformation($data, string $to, array $context = []): bool
+    {
+        return CategoryOutput::class === $to && $data instanceof Category;
     }
 }
