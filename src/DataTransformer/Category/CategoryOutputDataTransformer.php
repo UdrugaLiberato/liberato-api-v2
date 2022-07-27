@@ -28,13 +28,14 @@ class CategoryOutputDataTransformer implements DataTransformerInterface
     public function transform($object, string $to, array $context = []): CategoryOutput
     {
         return new CategoryOutput(
+            $object->getId(),
             $object->getName(),
             $this->getQuestionAndAnswerArr($object->getId()),
             $object->getDescription() ?? null,
             $object->getCreatedAt()->format('Y-m-d H:i:s'),
             $object->getDeletedAt()?->format('Y-m-d H:i:s"') ?? null,
             $this->liberatoHelper->convertImageArrayToOutput($object->getIcon(), 'category/'),
-            count($object->getLocations()->toArray())
+            \count($object->getLocations()->toArray())
         );
     }
 

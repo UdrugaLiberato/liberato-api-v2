@@ -11,12 +11,13 @@ use App\Entity\NewsArticle;
 class NewsArticleOutputDataTransformer implements DataTransformerInterface
 {
     /**
-     * @param NewsArticle  $object
+     * @param NewsArticle $object
      * @param array<mixed> $context
      */
     public function transform($object, string $to, array $context = []): NewsArticleOutput
     {
         return new NewsArticleOutput(
+            $object->getId(),
             $object->getTitle(),
             $object->getUrl(),
             $object->getImage(),
@@ -27,7 +28,7 @@ class NewsArticleOutputDataTransformer implements DataTransformerInterface
     }
 
     /**
-     * @param object       $data
+     * @param object $data
      * @param array<mixed> $context
      */
     public function supportsTransformation($data, string $to, array $context = []): bool

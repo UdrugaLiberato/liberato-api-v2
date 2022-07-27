@@ -17,11 +17,12 @@ class CityOutputDataTransformer implements DataTransformerInterface
     public function transform($object, string $to, array $context = []): CityOutput
     {
         return new CityOutput(
+            $object->getId(),
             $object->getName(),
             $object->getLatitude(),
             $object->getLongitude(),
             $object->getCreatedAt()->format('Y-m-d H:i:s'),
-            count($object->getLocations()->toArray())
+            \count($object->getLocations()->toArray())
         );
     }
 

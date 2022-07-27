@@ -12,6 +12,7 @@ class LocationInput
     public string $user;
     public string $city;
     public string $answers;
+
     /** @var array<UploadedFile> */
     public array $images;
     public string $name;

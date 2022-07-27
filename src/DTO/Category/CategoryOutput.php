@@ -8,8 +8,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 class CategoryOutput
 {
-
     public function __construct(
+        public string          $id,
         public string          $name,
         public ArrayCollection $questions,
         public ?string         $description,
