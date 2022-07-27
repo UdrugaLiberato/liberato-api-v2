@@ -12,17 +12,16 @@ final class PostOutput
      * @param array<string> $tags
      */
     public function __construct(
-        public string          $id,
-        public string          $author,
-        public string          $title,
-        public string          $body,
-        public string          $slug,
-        public array           $tags,
+        public string $id,
+        public string $author,
+        public string $title,
+        public string $body,
+        public string $slug,
+        public array $tags,
         public ArrayCollection $images,
-        public string          $createdAt,
-        public ?string         $updatedAt,
-        public ?string         $deletedAt
-    )
-    {
+        public string $createdAt,
+        public ?string $updatedAt,
+        public ?string $deletedAt
+    ) {
     }
 }

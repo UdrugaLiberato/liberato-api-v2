@@ -49,7 +49,7 @@ class Post
 
     #[
         ORM\ManyToOne(targetEntity: User::class, cascade: ['remove'], inversedBy: 'posts'),
-        ORM\JoinColumn(nullable: false),
+        ORM\JoinColumn(name: "user_id", referencedColumnName: "id", nullable: false, onDelete: "CASCADE"),
         Assert\NotNull
     ]
     private User $author;

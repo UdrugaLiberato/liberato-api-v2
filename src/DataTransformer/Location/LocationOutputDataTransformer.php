@@ -14,7 +14,7 @@ use Doctrine\Common\Collections\Collection;
 class LocationOutputDataTransformer implements DataTransformerInterface
 {
     /**
-     * @param Location $object
+     * @param Location     $object
      * @param array<mixed> $context
      */
     public function transform($object, string $to, array $context = []): LocationOutput
@@ -39,6 +39,15 @@ class LocationOutputDataTransformer implements DataTransformerInterface
         );
     }
 
+    /**
+     * @param object       $data
+     * @param array<mixed> $context
+     */
+    public function supportsTransformation($data, string $to, array $context = []): bool
+    {
+        return LocationOutput::class === $to && $data instanceof Location;
+    }
+
     private function getAnswerAndQuestions(Collection $answers): ArrayCollection
     {
         return new ArrayCollection($answers->map(static function (Answer $answer) {
@@ -47,14 +56,5 @@ class LocationOutputDataTransformer implements DataTransformerInterface
                 'answer' => $answer->getAnswer(),
             ];
         })->toArray());
-    }
-
-    /**
-     * @param object $data
-     * @param array<mixed> $context
-     */
-    public function supportsTransformation($data, string $to, array $context = []): bool
-    {
-        return LocationOutput::class === $to && $data instanceof Location;
     }
 }
