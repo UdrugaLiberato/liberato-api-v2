@@ -15,14 +15,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 class CategoryOutputDataTransformer implements DataTransformerInterface
 {
     public function __construct(
-        public QuestionRepository      $questionRepository,
+        public QuestionRepository $questionRepository,
         public LiberatoHelperInterface $liberatoHelper
-    )
-    {
+    ) {
     }
 
     /**
-     * @param Category $object
+     * @param Category     $object
      * @param array<mixed> $context
      */
     public function transform($object, string $to, array $context = []): CategoryOutput
@@ -37,6 +36,15 @@ class CategoryOutputDataTransformer implements DataTransformerInterface
         );
     }
 
+    /**
+     * @param object       $data
+     * @param array<mixed> $context
+     */
+    public function supportsTransformation($data, string $to, array $context = []): bool
+    {
+        return CategoryOutput::class === $to && $data instanceof Category;
+    }
+
     private function getQuestionAndAnswerArr(string $id): ArrayCollection
     {
         $qAC = new ArrayCollection();
@@ -49,14 +57,5 @@ class CategoryOutputDataTransformer implements DataTransformerInterface
         }, $questions);
 
         return $qAC;
-    }
-
-    /**
-     * @param object $data
-     * @param array<mixed> $context
-     */
-    public function supportsTransformation($data, string $to, array $context = []): bool
-    {
-        return CategoryOutput::class === $to && $data instanceof Category;
     }
 }

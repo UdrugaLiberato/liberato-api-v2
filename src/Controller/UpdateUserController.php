@@ -16,39 +16,46 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class UpdateUserController extends AbstractController
 {
     public function __construct(
-        private UserRepository $userRepository,
+        private UserRepository          $userRepository,
         private LiberatoHelperInterface $liberatoHelper
-    ) {
+    )
+    {
     }
 
     public function __invoke(string $id, Request $request): UserInterface
     {
-        $oldUser = $this->userRepository->find($id);
-        $avatar = $this->{$this}->liberatoHelper->transformImage($request->files->get('file'), 'avatar');
+        $userToUpdate = $this->userRepository->find($id);
+        $userToUpdate->getAvatar()->map(function (string $imagePath) {
+            $file = $this->liberatoHelper->getImagePath('avatar/') . $imagePath;
+            if (file_exists($file)) {
+                unlink($file);
+            }
+        });
+        $avatar = $this->liberatoHelper->transformImage($request->files->get('file'), 'avatar');
 
-        if ($request->get('username') && $request->get('username') !== $oldUser->getName()) {
-            $oldUser->setUsername($request->get('username'));
+        if ($request->get('username') && $request->get('username') !== $userToUpdate->getName()) {
+            $userToUpdate->setUsername($request->get('username'));
         }
 
         if ($request->get('password')) {
-            $oldUser->setPassword($request->get('password'));
+            $userToUpdate->setPassword($request->get('password'));
         }
 
-        if ($request->get('email') && $request->get('email') !== $oldUser->getEmail()) {
-            $oldUser->setEmail($request->get('email'));
+        if ($request->get('email') && $request->get('email') !== $userToUpdate->getEmail()) {
+            $userToUpdate->setEmail($request->get('email'));
         }
 
-        if ($request->get('phone') && $request->get('phone') !== $oldUser->getPhone()) {
-            $oldUser->setPhone($request->get('phone'));
+        if ($request->get('phone') && $request->get('phone') !== $userToUpdate->getPhone()) {
+            $userToUpdate->setPhone($request->get('phone'));
         }
-        if ($request->get('role') && $request->get('role') !== $oldUser->getRoles()[0]) {
-            $oldUser->setRoles($request->get('role'));
+        if ($request->get('role') && $request->get('role') !== $userToUpdate->getRoles()[0]) {
+            $userToUpdate->setRoles($request->get('role'));
         }
 
-        $oldUser->setAvatar($avatar);
-        $oldUser->setUpdatedAt(new DateTimeImmutable('now'));
-        $this->userRepository->update($oldUser);
+        $userToUpdate->setAvatar($avatar);
+        $userToUpdate->setUpdatedAt(new DateTimeImmutable('now'));
+        $this->userRepository->update($userToUpdate);
 
-        return $oldUser;
+        return $userToUpdate;
     }
 }

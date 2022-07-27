@@ -77,4 +77,10 @@ class CategoryRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function update(Category $category): void
+    {
+        $this->_em->persist($category);
+        $this->_em->flush();
+    }
 }

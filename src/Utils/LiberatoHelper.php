@@ -124,4 +124,9 @@ class LiberatoHelper implements LiberatoHelperInterface
 
         return $fileNames;
     }
+
+    public function getImagePath(string $subdirectoryWithSlash): string
+    {
+        return $this->kernel->getProjectDir() . '/public/images/' . $subdirectoryWithSlash;
+    }
 }

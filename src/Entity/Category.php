@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\Controller\UpdateCategoryController;
 use App\DTO\Category\CategoryInput;
 use App\DTO\Category\CategoryOutput;
 use App\Repository\CategoryRepository;
@@ -21,6 +22,19 @@ use Symfony\Component\Validator\Constraints as Assert;
             'input' => CategoryInput::class,
             'security' => "is_granted('ROLE_ADMIN')",
             'security_message' => 'Only admins can add posts.',
+            'input_formats' => [
+                'multipart' => ['multipart/form-data'],
+            ],
+        ],
+    ], itemOperations: [
+        'get',
+        'delete' => [
+            'security' => "is_granted('ROLE_ADMIN')",
+            'security_message' => 'Only admins can delete“ posts.',
+        ],
+        'put' => [
+            'controller' => UpdateCategoryController::class,
+            'deserialize' => false,
             'input_formats' => [
                 'multipart' => ['multipart/form-data'],
             ],
@@ -60,7 +74,7 @@ class Category
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private ?DateTimeImmutable $deletedAt = null;
 
-    #[ORM\OneToMany(mappedBy: 'Category', targetEntity: Question::class, cascade: ["remove"])]
+    #[ORM\OneToMany(mappedBy: 'Category', targetEntity: Question::class, cascade: ['remove'])]
     private Collection $questions;
 
     #[ORM\OneToMany(mappedBy: 'category', targetEntity: Location::class)]

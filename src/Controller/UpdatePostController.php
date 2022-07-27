@@ -17,28 +17,35 @@ class UpdatePostController extends AbstractController
 {
     public function __construct(
         private LiberatoHelperInterface $liberatoHelper,
-        private PostRepository $postRepository,
-    ) {
+        private PostRepository          $postRepository,
+    )
+    {
     }
 
     public function __invoke(string $id, Request $request): Post
     {
-        $oldPost = $this->postRepository->find($id);
+        $postToUpdate = $this->postRepository->find($id);
 
-        if ($request->get('title') && $request->get('title') !== $oldPost->getTitle()) {
-            $oldPost->setTitle($request->get('title'));
+        $postToUpdate->getImages()->map(function (array $image): void {
+            $file = $this->liberatoHelper->getImagePath('posts/') . $image['path'];
+            if (file_exists($file)) {
+                unlink($file);
+            }
+        });
+        if ($request->get('title') && $request->get('title') !== $postToUpdate->getTitle()) {
+            $postToUpdate->setTitle($request->get('title'));
         }
 
-        if ($request->get('body') && $request->get('body') !== $oldPost->getBody()) {
-            $oldPost->setBody($request->get('body'));
+        if ($request->get('body') && $request->get('body') !== $postToUpdate->getBody()) {
+            $postToUpdate->setBody($request->get('body'));
         }
-        $oldPost->setTags(explode(',', $request->get('tags')));
+        $postToUpdate->setTags(explode(',', $request->get('tags')));
         $fileNames = $this->liberatoHelper->transformImages($request->files->get('images'), 'posts');
-        $oldPost->setImages($fileNames);
+        $postToUpdate->setImages($fileNames);
 
-        $oldPost->setUpdatedAt(new DateTimeImmutable('now'));
-        $this->postRepository->update($oldPost);
+        $postToUpdate->setUpdatedAt(new DateTimeImmutable('now'));
+        $this->postRepository->update($postToUpdate);
 
-        return $oldPost;
+        return $postToUpdate;
     }
 }
