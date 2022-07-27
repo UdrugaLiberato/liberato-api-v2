@@ -48,8 +48,9 @@ class LiberatoHelper implements LiberatoHelperInterface
         ]);
     }
 
-    public function transformImage(UploadedFile $file, string $entityName): ArrayCollection
+    public function transformImage(?UploadedFile $file, string $entityName): ArrayCollection
     {
+        if ($file === null) return new ArrayCollection();
         $errors = $this->validator->validate($file, new Image());
         if (\count($errors) > 0) {
             throw new ValidationException('Only images can be uploaded!');

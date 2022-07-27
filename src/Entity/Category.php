@@ -61,10 +61,10 @@ class Category
     private ?DateTimeImmutable $deletedAt = null;
 
     #[ORM\OneToMany(mappedBy: 'Category', targetEntity: Question::class)]
-    private ArrayCollection $questions;
+    private Collection $questions;
 
     #[ORM\OneToMany(mappedBy: 'category', targetEntity: Location::class)]
-    private ArrayCollection $locations;
+    private Collection $locations;
 
     public function __construct()
     {

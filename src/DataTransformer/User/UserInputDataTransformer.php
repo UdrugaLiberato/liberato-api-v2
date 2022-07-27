@@ -26,9 +26,9 @@ class UserInputDataTransformer implements DataTransformerInterface
 
         $avatar = null === $object->file ? $this->createAnonymousAvatar() :
         $this->liberatoHelper->transformImage(
-        $object->file,
-        'avatar'
-    );
+            $object->file,
+            'avatar'
+        );
         $user->setUsername($object->username);
         $user->setPassword($object->password);
         $user->setEmail($object->email);

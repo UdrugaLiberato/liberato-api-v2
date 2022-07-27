@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Events\Subscriber;
 
 use ApiPlatform\Core\EventListener\EventPriorities;
@@ -31,6 +33,7 @@ final class CreateLocationEventSubscriber implements EventSubscriberInterface
         if (!$entity instanceof Location || Request::METHOD_POST !== $method) {
             return;
         }
+
         /** @var null|User $user */
         $user = $this->token->getToken()?->getUser();
         $entity->setUser($user ?? null);

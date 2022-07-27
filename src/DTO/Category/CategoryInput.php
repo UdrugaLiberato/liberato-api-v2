@@ -9,7 +9,13 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 class CategoryInput
 {
     public string $name;
-    public UploadedFile $file;
+    public ?UploadedFile $file;
     public string $questions;
-    public ?string $description = null;
+    public ?string $description;
+
+    public function __construct()
+    {
+        $this->file = $this->file ?? null;
+        $this->description = $this->description ?? null;
+    }
 }
