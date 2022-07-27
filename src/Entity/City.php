@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\Controller\UpdateCityController;
 use App\DTO\City\CityInput;
 use App\DTO\City\CityOutput;
 use App\Repository\CityRepository;
@@ -19,8 +20,19 @@ use Symfony\Component\Validator\Constraints as Assert;
         'get',
         'post' => [
             'security' => "is_granted('ROLE_ADMIN')",
-            'security_message' => 'Only admins can add posts.',
-        ], ], input: CityInput::class, output: CityOutput::class)]
+            'security_message' => 'Only admins can add city.',
+        ],], itemOperations: [
+        "get",
+        "delete" => [
+            'security' => "is_granted('ROLE_ADMIN')",
+            'security_message' => 'Only admins can delete posts',
+        ],
+        "put" => [
+            "controller" => UpdateCityController::class,
+            'security' => "is_granted('ROLE_ADMIN')",
+            'security_message' => 'Only admins can delete posts',
+        ]
+    ], input: CityInput::class, output: CityOutput::class)]
 class City
 {
     #[

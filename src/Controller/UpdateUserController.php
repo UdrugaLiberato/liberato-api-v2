@@ -16,17 +16,18 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class UpdateUserController extends AbstractController
 {
     public function __construct(
-        private UserRepository          $userRepository,
+        private UserRepository $userRepository,
         private LiberatoHelperInterface $liberatoHelper
-    )
-    {
+    ) {
     }
 
     public function __invoke(string $id, Request $request): UserInterface
     {
         $userToUpdate = $this->userRepository->find($id);
         $userToUpdate->getAvatar()->map(function (string $imagePath): void {
-            if ($imagePath === "anonymous-user.png") return;
+            if ('anonymous-user.png' === $imagePath) {
+                return;
+            }
             $file = $this->liberatoHelper->getImagePath('avatar/') . $imagePath;
             if (file_exists($file)) {
                 unlink($file);

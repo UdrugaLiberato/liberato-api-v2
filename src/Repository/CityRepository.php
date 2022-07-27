@@ -77,4 +77,10 @@ class CityRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function update(City $city): void
+    {
+        $this->_em->persist($city);
+        $this->_em->flush();
+    }
 }
