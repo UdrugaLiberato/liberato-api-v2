@@ -18,18 +18,21 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[
     ORM\Entity(repositoryClass: LocationRepository::class),
-    ApiResource(
-        collectionOperations: [
-            'get',
-            'post' => [
-                'input' => LocationInput::class,
-                'security' => "is_granted('ROLE_ADMIN')",
-                'security_message' => 'Only admins can add posts.',
-                'input_formats' => [
-                    'multipart' => ['multipart/form-data'],
-                ],
+    ApiResource(collectionOperations: [
+        'get',
+        'post' => [
+            'input' => LocationInput::class,
+            'security' => "is_granted('ROLE_ADMIN')",
+            'security_message' => 'Only admins can add posts.',
+            'input_formats' => [
+                'multipart' => ['multipart/form-data'],
             ],
         ],
+    ],
+        itemOperations: ["get", "put" => [
+            "security" => "is_granted('ROLE_ADMIN') or object.getUser() == user",
+            "security_message" => "Only admins and the author can update this location.",
+        ], "delete" => ["security" => "is_granted('ROLE_ADMIN')", "security_message" => "Only admins can delete this location."]],
         output: LocationOutput::class
     )]
 class Location

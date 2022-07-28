@@ -20,16 +20,17 @@ class LocationInputDataTransformer implements DataTransformerInterface
 {
     public function __construct(
         public LiberatoHelperInterface $liberatoHelper,
-        public TokenStorageInterface $token,
-        public GoogleMapsInterface $googleMapsInterface,
-        public CityRepository $cityRepository,
-        public CategoryRepository $categoryRepository,
-    ) {
+        public TokenStorageInterface   $token,
+        public GoogleMapsInterface     $googleMapsInterface,
+        public CityRepository          $cityRepository,
+        public CategoryRepository      $categoryRepository,
+    )
+    {
     }
 
     /**
      * @param LocationInput $object
-     * @param array<mixed>  $context
+     * @param array<mixed> $context
      */
     public function transform($object, string $to, array $context = []): Location
     {
@@ -60,19 +61,6 @@ class LocationInputDataTransformer implements DataTransformerInterface
         return $location;
     }
 
-    /**
-     * @param array|object $data
-     * @param array<mixed> $context
-     */
-    public function supportsTransformation($data, string $to, array $context = []): bool
-    {
-        if ($data instanceof Location) {
-            return false;
-        }
-
-        return Location::class === $to && null !== ($context['input']['class'] ?? null);
-    }
-
     private function getCity(string $id): City
     {
         return $this->cityRepository->find($id);
@@ -90,8 +78,21 @@ class LocationInputDataTransformer implements DataTransformerInterface
             [$question, $answer] = explode(':', $answer);
             $Answer = new Answer();
             $Answer->setQuestion($question);
-            $Answer->setAnswer((bool) $answer);
+            $Answer->setAnswer((bool)$answer);
             $location->addAnswer($Answer);
         }
+    }
+
+    /**
+     * @param object $data
+     * @param array<mixed> $context
+     */
+    public function supportsTransformation($data, string $to, array $context = []): bool
+    {
+        if ($data instanceof Location) {
+            return false;
+        }
+
+        return Location::class === $to && null !== ($context['input']['class'] ?? null);
     }
 }

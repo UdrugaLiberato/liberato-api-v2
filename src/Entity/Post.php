@@ -26,11 +26,15 @@ use Symfony\Component\Validator\Constraints as Assert;
     ],
 ], itemOperations: [
     'get',
+    "delete" => [
+        'security' => "is_granted('ROLE_ADMIN')",
+        'security_message' => 'Only admins can delete posts.',
+    ],
     'put' => [
         'controller' => UpdatePostController::class,
         'deserialize' => false,
         'security' => "is_granted('ROLE_ADMIN')",
-        'security_message' => 'Only admins can add posts.',
+        'security_message' => 'Only admins can update posts.',
         'input_formats' => [
             'multipart' => ['multipart/form-data'],
         ],

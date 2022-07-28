@@ -36,8 +36,12 @@ class Question
 
     #[
         ORM\ManyToOne(targetEntity: Category::class, cascade: ['remove'], inversedBy: 'questions'),
-        ORM\JoinColumn(name: "category_id", referencedColumnName: "id", nullable: false,
-            onDelete: "CASCADE"),
+        ORM\JoinColumn(
+            name: 'category_id',
+            referencedColumnName: 'id',
+            nullable: false,
+            onDelete: 'CASCADE'
+        ),
         Assert\NotNull
     ]
     private Category $category;

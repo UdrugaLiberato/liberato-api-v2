@@ -21,18 +21,17 @@ use Symfony\Component\Validator\Constraints as Assert;
         'post' => [
             'security' => "is_granted('ROLE_ADMIN')",
             'security_message' => 'Only admins can add city.',
-        ], ], itemOperations: [
-            'get',
-            'delete' => [
-                'security' => "is_granted('ROLE_ADMIN')",
-                'security_message' => 'Only admins can delete posts',
-            ],
-            'put' => [
-                'controller' => UpdateCityController::class,
-                'security' => "is_granted('ROLE_ADMIN')",
-                'security_message' => 'Only admins can delete posts',
-            ],
-        ], input: CityInput::class, output: CityOutput::class)]
+        ],], itemOperations: [
+        'get',
+        'delete' => [
+            'security' => "is_granted('ROLE_ADMIN')",
+            'security_message' => 'Only admins can delete cities',
+        ],
+        'put' => [
+            'controller' => UpdateCityController::class,
+            'security' => "is_granted('ROLE_ADMIN')",
+            "security_message" => "Only admins can update cities"],
+    ], input: CityInput::class, output: CityOutput::class)]
 class City
 {
     #[
