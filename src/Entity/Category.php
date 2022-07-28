@@ -30,7 +30,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         'get',
         'delete' => [
             'security' => "is_granted('ROLE_ADMIN')",
-            'security_message' => 'Only admins can delete“ posts.',
+            'security_message' => 'Only admins can delete posts.',
         ],
         'put' => [
             'controller' => UpdateCategoryController::class,

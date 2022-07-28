@@ -40,7 +40,7 @@ class Answer
 
     #[
         ORM\ManyToOne(targetEntity: Location::class, inversedBy: 'answers'),
-        ORM\JoinColumn(name: "location_id", referencedColumnName: "id", onDelete: "CASCADE")
+        ORM\JoinColumn(name: 'location_id', referencedColumnName: 'id', onDelete: 'CASCADE')
     ]
     private Location $location;
 

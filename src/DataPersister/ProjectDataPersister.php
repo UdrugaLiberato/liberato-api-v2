@@ -28,7 +28,7 @@ class ProjectDataPersister implements DataPersisterInterface
 
     public function remove($data): void
     {
-        $data = $data->setDeletedAt(new DateTimeImmutable('now'));
+        $data->setDeletedAt(new DateTimeImmutable('now'));
         $this->entityManager->persist($data);
         $this->entityManager->flush();
     }
