@@ -26,7 +26,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     ],
 ], itemOperations: [
     'get',
-    "delete" => [
+    'delete' => [
         'security' => "is_granted('ROLE_ADMIN')",
         'security_message' => 'Only admins can delete posts.',
     ],

@@ -34,14 +34,14 @@ use Symfony\Component\Validator\Constraints as Assert;
         ],
     ], itemOperations: ['get', 'put' => [
         'controller' => UpdateUserController::class,
-        "security" => "is_granted('ROLE_ADMIN') or object == user",
-        "security_message" => "Only admin users are allowed to update users.",
+        'security' => "is_granted('ROLE_ADMIN') or object == user",
+        'security_message' => 'Only admin users are allowed to update users.',
         'input_formats' => [
             'multipart' => ['multipart/form-data'],
         ],
-        "delete" => [
-            "security" => "is_granted('ROLE_ADMIN') or object.getUsername() == user.getUsername()",
-            "security_message" => "Only admin users are allowed to delete users.",
+        'delete' => [
+            'security' => "is_granted('ROLE_ADMIN') or object.getUsername() == user.getUsername()",
+            'security_message' => 'Only admin users are allowed to delete users.',
         ],
     ]], output: UserOutput::class)]
 class User implements PasswordAuthenticatedUserInterface, UserInterface
@@ -146,7 +146,7 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
 
     public function getUserIdentifier(): string
     {
-        return (string)$this->email;
+        return (string) $this->email;
     }
 
     public function getRoles(): array
