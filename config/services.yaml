@@ -42,6 +42,7 @@ services:
   'App\DataTransformer\DonationGiver\DonationGiverOutputDataTransformer': ~
   'App\DataTransformer\Project\ProjectOutputDataTransformer': ~
   'App\DataTransformer\Invoice\InvoiceOutputDataTransformer': ~
+  'App\DataTransformer\Invoice\InvoiceInputDataTransformer': ~
   'App\DataTransformer\BankAccount\BankAccountInputDataTransformer': ~
   'App\DataTransformer\BankAccount\BankAccountOutputDataTransformer': ~
   'App\DataTransformer\NewsArticle\NewsArticleInputDataTransformer': ~

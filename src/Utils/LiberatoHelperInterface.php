@@ -23,4 +23,7 @@ interface LiberatoHelperInterface
     public function transformImage(?UploadedFile $file, string $entityName): ArrayCollection;
 
     public function getImagePath(string $subdirectoryWithSlash): string;
+
+    /** @param array<UploadedFile> $files */
+    public function transformFiles(array $files, string $entityName): ArrayCollection;
 }

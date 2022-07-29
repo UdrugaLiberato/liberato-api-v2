@@ -7,26 +7,33 @@ namespace App\DataTransformer\Invoice;
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\DTO\Invoice\InvoiceOutput;
 use App\Entity\Invoice;
+use App\Utils\LiberatoHelperInterface;
 
 class InvoiceOutputDataTransformer implements DataTransformerInterface
 {
     /**
-     * @param Invoice      $object
+     * @param Invoice $object
      * @param array<mixed> $context
      */
     public function transform($object, string $to, array $context = []): InvoiceOutput
     {
         return new InvoiceOutput(
+            $object->getId(),
             $object->getDescription(),
             $object->getAmount(),
+            $object->getCurrency(),
+            $object->getInvoiceNumber(),
+            $object->isSendToAccountant(),
             $object->getPayedAt()->format('Y-m-d H:i:s'),
             $object->getFiles(),
-            $object->getProject()
+            $object->getProject(),
+            $object->getCreatedAt()->format('Y-m-d H:i:s'),
+            $object->getUpdatedAt()?->format('Y-m-d H:i:s') ?? null
         );
     }
 
     /**
-     * @param object       $data
+     * @param object $data
      * @param array<mixed> $context
      */
     public function supportsTransformation($data, string $to, array $context = []): bool

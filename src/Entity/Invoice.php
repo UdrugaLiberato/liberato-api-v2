@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\Controller\UpdateInvoiceController;
+use App\DTO\Invoice\InvoiceInput;
 use App\DTO\Invoice\InvoiceOutput;
 use App\Repository\InvoiceRepository;
 use DateTimeImmutable;
@@ -16,11 +18,26 @@ use Doctrine\ORM\Mapping as ORM;
     collectionOperations: [
         'get',
         'post' => [
+            "input" => InvoiceInput::class,
+            'security' => "is_granted('ROLE_ADMIN')",
+            'security_message' => 'Only admin users are allowed to add invoices.',
             'input_formats' => [
                 'multipart' => ['multipart/form-data'],
             ],
         ],
     ],
+    itemOperations: ['get', 'delete' => [
+        'security' => "is_granted('ROLE_ADMIN')",
+        'security_message' => 'Only admin users are allowed to delete invoices.',
+    ], 'put' => [
+        'security' => "is_granted('ROLE_ADMIN')",
+        'security_message' => 'Only admin users are allowed to edit invoices.',
+        'deserialize' => false,
+        'controller' => UpdateInvoiceController::class,
+        'input_formats' => [
+            'multipart' => ['multipart/form-data'],
+        ],
+    ]],
     output: InvoiceOutput::class
 )]
 class Invoice
@@ -38,6 +55,15 @@ class Invoice
 
     #[ORM\Column(type: 'float')]
     private float $amount;
+
+    #[ORM\Column(type: "string", nullable: true)]
+    private ?string $invoiceNumber;
+
+    #[ORM\Column(type: "boolean", nullable: false)]
+    private bool $sendToAccountant;
+
+    #[ORM\Column(type: "string", nullable: false)]
+    private string $currency;
 
     #[ORM\Column(type: 'datetime_immutable')]
     private DateTimeImmutable $payedAt;
@@ -102,6 +128,36 @@ class Invoice
         $this->payedAt = $payedAt;
 
         return $this;
+    }
+
+    public function getCurrency(): string
+    {
+        return $this->currency;
+    }
+
+    public function setCurrency(string $currency): void
+    {
+        $this->currency = $currency;
+    }
+
+    public function getInvoiceNumber(): ?string
+    {
+        return $this->invoiceNumber;
+    }
+
+    public function setInvoiceNumber(?string $invoiceNumber): void
+    {
+        $this->invoiceNumber = $invoiceNumber;
+    }
+
+    public function isSendToAccountant(): bool
+    {
+        return $this->sendToAccountant;
+    }
+
+    public function setSendToAccountant(bool $sendToAccountant): void
+    {
+        $this->sendToAccountant = $sendToAccountant;
     }
 
     public function getCreatedAt(): ?DateTimeImmutable
