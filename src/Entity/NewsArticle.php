@@ -5,23 +5,35 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\Controller\UpdateNewsArticleController;
 use App\DTO\NewsArticle\NewsArticleInput;
 use App\DTO\NewsArticle\NewsArticleOutput;
 use App\Repository\NewsArticleRepository;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[
     ORM\Entity(repositoryClass: NewsArticleRepository::class),
     ApiResource(collectionOperations: [
         'get',
         'post' => [
+            "security" => "is_granted('ROLE_ADMIN')",
+            "security_message" => "Only admin users are allowed to add news articles.",
             'input_formats' => [
                 'multipart' => ['multipart/form-data'],
             ],
         ],
-    ], itemOperations: ['get'], input: NewsArticleInput::class, output: NewsArticleOutput::class)]
+    ], itemOperations: ['get', "put" => [
+        "security" => "is_granted('ROLE_ADMIN')",
+        "deserialize" => false,
+        "controller" => UpdateNewsArticleController::class,
+        "security_message" => "Only admin users are allowed to edit news articles.",
+        'input_formats' => [
+            'multipart' => ['multipart/form-data'],
+        ],
+    ]], input: NewsArticleInput::class, output: NewsArticleOutput::class)]
 class NewsArticle
 {
     #[
@@ -32,13 +44,20 @@ class NewsArticle
     ]
     private string $id;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[
+        ORM\Column(type: 'string', length: 255),
+        Assert\NotBlank(message: "Title is required.")
+    ]
     private string $title;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[
+        ORM\Column(type: 'string', length: 255),
+        Assert\NotBlank(message: "URL is required."),
+        Assert\Url(message: "URL is not valid.")
+    ]
     private string $url;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column(type: 'array', nullable: true)]
     private ArrayCollection $image;
 
     #[ORM\Column(type: 'datetime_immutable')]
