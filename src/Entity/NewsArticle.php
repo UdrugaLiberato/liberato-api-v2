@@ -19,17 +19,17 @@ use Symfony\Component\Validator\Constraints as Assert;
     ApiResource(collectionOperations: [
         'get',
         'post' => [
-            "security" => "is_granted('ROLE_ADMIN')",
-            "security_message" => "Only admin users are allowed to add news articles.",
+            'security' => "is_granted('ROLE_ADMIN')",
+            'security_message' => 'Only admin users are allowed to add news articles.',
             'input_formats' => [
                 'multipart' => ['multipart/form-data'],
             ],
         ],
-    ], itemOperations: ['get', "put" => [
-        "security" => "is_granted('ROLE_ADMIN')",
-        "deserialize" => false,
-        "controller" => UpdateNewsArticleController::class,
-        "security_message" => "Only admin users are allowed to edit news articles.",
+    ], itemOperations: ['get', 'put' => [
+        'security' => "is_granted('ROLE_ADMIN')",
+        'deserialize' => false,
+        'controller' => UpdateNewsArticleController::class,
+        'security_message' => 'Only admin users are allowed to edit news articles.',
         'input_formats' => [
             'multipart' => ['multipart/form-data'],
         ],
@@ -46,14 +46,14 @@ class NewsArticle
 
     #[
         ORM\Column(type: 'string', length: 255),
-        Assert\NotBlank(message: "Title is required.")
+        Assert\NotBlank(message: 'Title is required.')
     ]
     private string $title;
 
     #[
         ORM\Column(type: 'string', length: 255),
-        Assert\NotBlank(message: "URL is required."),
-        Assert\Url(message: "URL is not valid.")
+        Assert\NotBlank(message: 'URL is required.'),
+        Assert\Url(message: 'URL is not valid.')
     ]
     private string $url;
 

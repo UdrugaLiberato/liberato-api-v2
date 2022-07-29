@@ -77,4 +77,10 @@ class NewsArticleRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function update(NewsArticle $entity): void
+    {
+        $this->_em->persist($entity);
+        $this->_em->flush();
+    }
 }

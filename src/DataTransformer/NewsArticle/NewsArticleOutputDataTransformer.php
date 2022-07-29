@@ -16,7 +16,7 @@ class NewsArticleOutputDataTransformer implements DataTransformerInterface
     }
 
     /**
-     * @param NewsArticle $object
+     * @param NewsArticle  $object
      * @param array<mixed> $context
      */
     public function transform($object, string $to, array $context = []): NewsArticleOutput
@@ -25,7 +25,7 @@ class NewsArticleOutputDataTransformer implements DataTransformerInterface
             $object->getId(),
             $object->getTitle(),
             $object->getUrl(),
-            $this->liberatoHelper->convertImageArrayToOutput($object->getImage(), "news/"),
+            $this->liberatoHelper->convertImageArrayToOutput($object->getImage(), 'news/'),
             $object->getCreatedAt()->format('Y-m-d H:i:s'),
             $object->getUpdatedAt()?->format('Y-m-d H:i:s'),
             $object->getDeletedAt()?->format('Y-m-d H:i:s')
@@ -33,7 +33,7 @@ class NewsArticleOutputDataTransformer implements DataTransformerInterface
     }
 
     /**
-     * @param object $data
+     * @param object       $data
      * @param array<mixed> $context
      */
     public function supportsTransformation($data, string $to, array $context = []): bool
