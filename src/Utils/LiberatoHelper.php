@@ -147,8 +147,8 @@ class LiberatoHelper implements LiberatoHelperInterface
             // this is needed to safely include the file name as part of the URL
             $safeFilename = self::slugify($originalFilename);
             $newFilename = date('Y-m-d') . '_' . $safeFilename . md5(
-                    microtime()
-                ) . '.'
+                microtime()
+            ) . '.'
                 . $file->guessExtension();
             $file->move(
                 $this->uploadDir . $entityName,

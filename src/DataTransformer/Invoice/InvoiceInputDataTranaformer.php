@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DataTransformer\Invoice;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
@@ -12,15 +14,14 @@ class InvoiceInputDataTranaformer implements DataTransformerInterface
 {
     public function __construct(
         private LiberatoHelperInterface $liberatoHelper,
-        private ProjectRepository       $projectRepository
-    )
-    {
+        private ProjectRepository $projectRepository
+    ) {
     }
 
     /**
      * @param InvoiceInput $object
      * @param array<mixed> $context
-     * @return Invoice
+     *
      * @throws \Exception
      */
     public function transform($object, string $to, array $context = []): Invoice
@@ -41,12 +42,11 @@ class InvoiceInputDataTranaformer implements DataTransformerInterface
     }
 
     /**
-     * @param object $data
+     * @param object       $data
      * @param array<mixed> $context
      */
     public function supportsTransformation($data, string $to, array $context = []): bool
     {
-
         if ($data instanceof Invoice) {
             return false;
         }

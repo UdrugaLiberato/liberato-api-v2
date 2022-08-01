@@ -7,12 +7,11 @@ namespace App\DataTransformer\Invoice;
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\DTO\Invoice\InvoiceOutput;
 use App\Entity\Invoice;
-use App\Utils\LiberatoHelperInterface;
 
 class InvoiceOutputDataTransformer implements DataTransformerInterface
 {
     /**
-     * @param Invoice $object
+     * @param Invoice      $object
      * @param array<mixed> $context
      */
     public function transform($object, string $to, array $context = []): InvoiceOutput
@@ -33,7 +32,7 @@ class InvoiceOutputDataTransformer implements DataTransformerInterface
     }
 
     /**
-     * @param object $data
+     * @param object       $data
      * @param array<mixed> $context
      */
     public function supportsTransformation($data, string $to, array $context = []): bool

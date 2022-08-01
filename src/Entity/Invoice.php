@@ -18,7 +18,7 @@ use Doctrine\ORM\Mapping as ORM;
     collectionOperations: [
         'get',
         'post' => [
-            "input" => InvoiceInput::class,
+            'input' => InvoiceInput::class,
             'security' => "is_granted('ROLE_ADMIN')",
             'security_message' => 'Only admin users are allowed to add invoices.',
             'input_formats' => [
@@ -56,13 +56,13 @@ class Invoice
     #[ORM\Column(type: 'float')]
     private float $amount;
 
-    #[ORM\Column(type: "string", nullable: true)]
+    #[ORM\Column(type: 'string', nullable: true)]
     private ?string $invoiceNumber;
 
-    #[ORM\Column(type: "boolean", nullable: false)]
+    #[ORM\Column(type: 'boolean', nullable: false)]
     private bool $sendToAccountant;
 
-    #[ORM\Column(type: "string", nullable: false)]
+    #[ORM\Column(type: 'string', nullable: false)]
     private string $currency;
 
     #[ORM\Column(type: 'datetime_immutable')]
