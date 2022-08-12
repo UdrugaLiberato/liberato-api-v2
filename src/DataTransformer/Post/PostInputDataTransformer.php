@@ -14,12 +14,13 @@ class PostInputDataTransformer implements DataTransformerInterface
 {
     public function __construct(
         public LiberatoHelperInterface $liberatoHelper,
-        public TokenStorageInterface $token
-    ) {
+        public TokenStorageInterface   $token
+    )
+    {
     }
 
     /**
-     * @param PostInput    $object
+     * @param PostInput $object
      * @param array<mixed> $context
      */
     public function transform($object, string $to, array $context = []): Post
@@ -35,7 +36,7 @@ class PostInputDataTransformer implements DataTransformerInterface
     }
 
     /**
-     * @param object       $data
+     * @param object $data
      * @param array<mixed> $context
      */
     public function supportsTransformation($data, string $to, array $context = []): bool

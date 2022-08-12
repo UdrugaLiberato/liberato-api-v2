@@ -17,23 +17,23 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CityRepository::class),
     ApiResource(collectionOperations: [
-        "get" => [
-            "cache_headers" => ["max_age" => 60, "shared_max_age" => 120],
+        'get' => [
+            'cache_headers' => ['max_age' => 60, 'shared_max_age' => 120],
         ],
         'post' => [
             'security' => "is_granted('ROLE_ADMIN')",
             'security_message' => 'Only admins can add city.',
-        ],], itemOperations: [
-        'get',
-        'delete' => [
-            'security' => "is_granted('ROLE_ADMIN')",
-            'security_message' => 'Only admins can delete cities',
-        ],
-        'put' => [
-            'controller' => UpdateCityController::class,
-            'security' => "is_granted('ROLE_ADMIN')",
-            'security_message' => 'Only admins can update cities',],
-    ], input: CityInput::class, output: CityOutput::class)]
+        ], ], itemOperations: [
+            'get',
+            'delete' => [
+                'security' => "is_granted('ROLE_ADMIN')",
+                'security_message' => 'Only admins can delete cities',
+            ],
+            'put' => [
+                'controller' => UpdateCityController::class,
+                'security' => "is_granted('ROLE_ADMIN')",
+                'security_message' => 'Only admins can update cities', ],
+        ], input: CityInput::class, output: CityOutput::class)]
 class City
 {
     #[
