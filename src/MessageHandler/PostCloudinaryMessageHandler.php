@@ -16,8 +16,7 @@ class PostCloudinaryMessageHandler implements MessageHandlerInterface
         public LiberatoHelperInterface $liberatoHelper,
         public EntityManagerInterface $entityManager,
         public PostRepository $postRepository
-    )
-    {
+    ) {
     }
 
     public function __invoke(PostCloudinaryMessage $message): void
