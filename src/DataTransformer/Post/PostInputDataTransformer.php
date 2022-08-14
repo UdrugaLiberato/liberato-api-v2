@@ -7,20 +7,9 @@ namespace App\DataTransformer\Post;
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\DTO\Post\PostInput;
 use App\Entity\Post;
-use App\Utils\LiberatoHelperInterface;
-use Symfony\Component\Messenger\MessageBusInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class PostInputDataTransformer implements DataTransformerInterface
 {
-    public function __construct(
-        public LiberatoHelperInterface $liberatoHelper,
-        public TokenStorageInterface   $token,
-        public MessageBusInterface     $messenger
-    )
-    {
-    }
-
     /**
      * @param PostInput $object
      * @param array<mixed> $context

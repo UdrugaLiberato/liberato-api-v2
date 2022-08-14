@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Post;
+use App\Message\PostCloudinaryMessage;
 use App\Repository\PostRepository;
 use App\Utils\LiberatoHelperInterface;
 use DateTimeImmutable;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsController;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 #[AsController]
 class UpdatePostController extends AbstractController
@@ -18,6 +20,7 @@ class UpdatePostController extends AbstractController
     public function __construct(
         private LiberatoHelperInterface $liberatoHelper,
         private PostRepository $postRepository,
+        private MessageBusInterface $bus
     ) {
     }
 
@@ -31,6 +34,9 @@ class UpdatePostController extends AbstractController
                 unlink($file);
             }
         });
+
+        $this->bus->dispatch(new PostCloudinaryMessage($id, $postToUpdate->getImages()));
+
         if ($request->get('title') && $request->get('title') !== $postToUpdate->getTitle()) {
             $postToUpdate->setTitle($request->get('title'));
         }

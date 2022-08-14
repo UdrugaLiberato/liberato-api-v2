@@ -22,18 +22,16 @@ class LiberatoHelper implements LiberatoHelperInterface
     public string $uploadDir;
 
     public function __construct(
-        public KernelInterface       $kernel,
-        public ValidatorInterface    $validator,
+        public KernelInterface $kernel,
+        public ValidatorInterface $validator,
         public TokenStorageInterface $token,
-        private string               $cloudinaryApiKey
-    )
-    {
+        private string $cloudinaryApiKey
+    ) {
         $this->uploadDir = $this->kernel->getProjectDir() . '/public/images/';
         self::$cloudinary = new Cloudinary($this->cloudinaryApiKey);
     }
 
-    public
-    static function convertImagesArrayToOutput(ArrayCollection $images, string $entityName): ArrayCollection
+    public static function convertImagesArrayToOutput(ArrayCollection $images, string $entityName): ArrayCollection
     {
         return $images->map(static function ($image) use ($entityName) {
             return [
@@ -41,13 +39,12 @@ class LiberatoHelper implements LiberatoHelperInterface
                 'mime' => $image['mime'],
                 'src' => self::BACKEND_URL_IMAGES . $entityName . $image['path'],
                 'title' => $image['title'],
-                "optimized_image" => $image['optimized_image'],
+                'optimized_image' => $image['optimized_image'],
             ];
         });
     }
 
-    public
-    static function convertImageArrayToOutput(ArrayCollection $image, string $entityName): ArrayCollection
+    public static function convertImageArrayToOutput(ArrayCollection $image, string $entityName): ArrayCollection
     {
         return new ArrayCollection([
             'path' => $image['path'],
@@ -57,8 +54,7 @@ class LiberatoHelper implements LiberatoHelperInterface
         ]);
     }
 
-    public
-    function transformImage(?UploadedFile $file, string $entityName): ArrayCollection
+    public function transformImage(?UploadedFile $file, string $entityName): ArrayCollection
     {
         if (null === $file) {
             return new ArrayCollection();
@@ -75,8 +71,8 @@ class LiberatoHelper implements LiberatoHelperInterface
         // this is needed to safely include the file name as part of the URL
         $safeFilename = self::slugify($originalFilename);
         $newFilename = date('Y-m-d') . '_' . $safeFilename . md5(
-                microtime()
-            ) . '.'
+            microtime()
+        ) . '.'
             . $file->guessExtension();
         $file->move(
             $this->uploadDir . $entityName . '/',
@@ -90,20 +86,18 @@ class LiberatoHelper implements LiberatoHelperInterface
         ]);
     }
 
-    public
-    static function slugify(string $string): string
+    public static function slugify(string $string): string
     {
         $string = preg_replace('~[^\pL\d]+~u', '-', $string);
         $string = iconv('utf-8', 'us-ascii//TRANSLIT', $string);
-        $string = preg_replace('~[^-\w]+~', '', (string)$string);
+        $string = preg_replace('~[^-\w]+~', '', (string) $string);
         $string = trim($string, '-');
         $string = preg_replace('~-+~', '-', $string);
 
         return mb_strtolower($string);
     }
 
-    public
-    function transformImages(array $uploadedFiles, string $entityName): ArrayCollection
+    public function transformImages(array $uploadedFiles, string $entityName): ArrayCollection
     {
         $fileNames = new ArrayCollection();
         foreach ($uploadedFiles as $file) {
@@ -119,8 +113,8 @@ class LiberatoHelper implements LiberatoHelperInterface
             // this is needed to safely include the file name as part of the URL
             $safeFilename = self::slugify($originalFilename);
             $newFilename = date('Y-m-d') . '_' . $safeFilename . md5(
-                    microtime()
-                ) . '.'
+                microtime()
+            ) . '.'
                 . $file->guessExtension();
             $file->move(
                 $this->uploadDir . $entityName,
@@ -137,27 +131,26 @@ class LiberatoHelper implements LiberatoHelperInterface
         return $fileNames;
     }
 
-    public
-    function uploadToCloudinary(ArrayCollection $images, string $entityName): ArrayCollection
+    public function uploadToCloudinary(ArrayCollection $images, string $entityName): ArrayCollection
     {
         $uploadDir = $this->uploadDir . $entityName;
         $newImages = new ArrayCollection();
-        $images->map(static function ($image) use ($entityName, $uploadDir, $newImages) {
-            $fullImagePath = $uploadDir . "/" . $image["path"];
+        $images->map(static function ($image) use ($entityName, $uploadDir, $newImages): void {
+            $fullImagePath = $uploadDir . '/' . $image['path'];
 
             $r = self::$cloudinary->uploadApi()->upload($fullImagePath, [
-                "width" => 600, "height" => 600,
-                "crop" => "scale",
-                "gravity" => "center",
-                "quality" => "auto",
-                "fetch_format" => "jpg",
-                "folder" => $entityName,
+                'width' => 600, 'height' => 600,
+                'crop' => 'fill',
+                'gravity' => 'center',
+                'quality' => 'auto',
+                'fetch_format' => 'jpg',
+                'folder' => $entityName,
             ]);
             $fileObj = [
-                'path' => $image["path"],
-                'title' => $image["title"],
-                'mime' => $image["mime"],
-                "optimized_image" => $r->getArrayCopy()["secure_url"],
+                'path' => $image['path'],
+                'title' => $image['title'],
+                'mime' => $image['mime'],
+                'optimized_image' => $r->getArrayCopy()['secure_url'],
             ];
             $newImages->add($fileObj);
         });
@@ -165,14 +158,12 @@ class LiberatoHelper implements LiberatoHelperInterface
         return $newImages;
     }
 
-    public
-    function getImagePath(string $subdirectoryWithSlash): string
+    public function getImagePath(string $subdirectoryWithSlash): string
     {
         return $this->kernel->getProjectDir() . '/public/images/' . $subdirectoryWithSlash;
     }
 
-    public
-    function transformFiles(array $files, string $entityName): ArrayCollection
+    public function transformFiles(array $files, string $entityName): ArrayCollection
     {
         $fileNames = new ArrayCollection();
         foreach ($files as $file) {
@@ -188,8 +179,8 @@ class LiberatoHelper implements LiberatoHelperInterface
             // this is needed to safely include the file name as part of the URL
             $safeFilename = self::slugify($originalFilename);
             $newFilename = date('Y-m-d') . '_' . $safeFilename . md5(
-                    microtime()
-                ) . '.'
+                microtime()
+            ) . '.'
                 . $file->guessExtension();
             $file->move(
                 $this->uploadDir . $entityName,
@@ -203,7 +194,6 @@ class LiberatoHelper implements LiberatoHelperInterface
             ];
             $fileNames->add($fileObj);
         }
-
 
         return $fileNames;
     }

@@ -1,11 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Message;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
-class CloudinaryMessage
+class PostCloudinaryMessage
 {
     public function __construct(private string $id, private ArrayCollection $images)
     {

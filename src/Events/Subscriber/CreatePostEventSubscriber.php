@@ -23,7 +23,6 @@ final class CreatePostEventSubscriber implements EventSubscriberInterface
     {
         return [
             KernelEvents::VIEW => ['addUserToEntity', EventPriorities::PRE_VALIDATE],
-            ['test', EventPriorities::POST_WRITE],
         ];
     }
 
@@ -38,16 +37,5 @@ final class CreatePostEventSubscriber implements EventSubscriberInterface
         /** @var null|User $user */
         $user = $this->token->getToken()?->getUser();
         $entity->setAuthor($user ?? null);
-    }
-
-    public function test(ViewEvent $event): void
-    {
-        $entity = $event->getControllerResult();
-        $method = $event->getRequest()->getMethod();
-        if (!$entity instanceof Post || Request::METHOD_POST !== $method) {
-            return;
-        }
-
-        $entity->setTitle("kako ti bog promeni");;
     }
 }
