@@ -8,13 +8,15 @@ use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\DTO\Post\PostInput;
 use App\Entity\Post;
 use App\Utils\LiberatoHelperInterface;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class PostInputDataTransformer implements DataTransformerInterface
 {
     public function __construct(
         public LiberatoHelperInterface $liberatoHelper,
-        public TokenStorageInterface   $token
+        public TokenStorageInterface   $token,
+        public MessageBusInterface     $messenger
     )
     {
     }
@@ -29,8 +31,6 @@ class PostInputDataTransformer implements DataTransformerInterface
         $post->setTitle(trim($object->title));
         $post->setBody($object->body);
         $post->setTags(explode(',', $object->tags));
-        $fileNames = $this->liberatoHelper->transformImages($object->images, 'posts');
-        $post->setImages($fileNames);
 
         return $post;
     }

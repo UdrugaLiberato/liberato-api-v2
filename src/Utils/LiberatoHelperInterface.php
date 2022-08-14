@@ -26,4 +26,6 @@ interface LiberatoHelperInterface
 
     /** @param array<UploadedFile> $files */
     public function transformFiles(array $files, string $entityName): ArrayCollection;
+
+    public function uploadToCloudinary(ArrayCollection $images, string $entityName);
 }
