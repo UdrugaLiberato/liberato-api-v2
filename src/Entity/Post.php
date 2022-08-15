@@ -7,6 +7,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Controller\UpdatePostController;
 use App\DTO\Post\PostInput;
+use App\DTO\Post\PostOutput;
 use App\Repository\PostRepository;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -38,7 +39,7 @@ use Symfony\Component\Validator\Constraints as Assert;
             'multipart' => ['multipart/form-data'],
         ],
     ],
-])]
+], output: PostOutput::class)]
 #[ORM\Entity(repositoryClass: PostRepository::class)]
 class Post
 {

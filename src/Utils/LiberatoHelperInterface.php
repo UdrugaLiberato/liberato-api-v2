@@ -17,8 +17,8 @@ interface LiberatoHelperInterface
 
     /**
      * @param array<UploadedFile> $uploadedFiles
+     * public function “transformImages(array $uploadedFiles, string $entityName): ArrayCollection;
      */
-    public function transformImages(array $uploadedFiles, string $entityName): ArrayCollection;
 
     public function transformImage(?UploadedFile $file, string $entityName): ArrayCollection;
 
