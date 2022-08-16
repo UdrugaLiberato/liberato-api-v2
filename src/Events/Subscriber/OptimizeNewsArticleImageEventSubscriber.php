@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Events\Subscriber;
 
 use ApiPlatform\Core\EventListener\EventPriorities;
-use App\Entity\Post;
-use App\Message\PostCloudinaryMessage;
+use App\Entity\NewsArticle;
+use App\Message\NewsArticleCloudinaryMessage;
 use App\Utils\LiberatoHelperInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,7 +14,7 @@ use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Messenger\MessageBusInterface;
 
-final class OptimizePostImagesEventSubscriber implements EventSubscriberInterface
+final class OptimizeNewsArticleImageEventSubscriber implements EventSubscriberInterface
 {
     public function __construct(private MessageBusInterface $bus, private LiberatoHelperInterface $liberatoHelper)
     {
@@ -31,12 +31,12 @@ final class OptimizePostImagesEventSubscriber implements EventSubscriberInterfac
     {
         $entity = $event->getControllerResult();
         $method = $event->getRequest()->getMethod();
-        if (!$entity instanceof Post || Request::METHOD_POST !== $method) {
+        if (!$entity instanceof NewsArticle || Request::METHOD_POST !== $method) {
             return;
         }
 
-        $images = $event->getRequest()->files->get('images');
-        $fileNames = $this->liberatoHelper->transformImages($images, 'posts');
-        $this->bus->dispatch(new PostCloudinaryMessage($entity->getId(), $fileNames));
+        $image = $event->getRequest()->files->get('image');
+        $fileNames = $this->liberatoHelper->transformImage($image, 'news');
+        $this->bus->dispatch(new NewsArticleCloudinaryMessage($entity->getId(), $fileNames));
     }
 }

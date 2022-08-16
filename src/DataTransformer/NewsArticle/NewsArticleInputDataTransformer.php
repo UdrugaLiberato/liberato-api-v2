@@ -21,11 +21,9 @@ class NewsArticleInputDataTransformer implements DataTransformerInterface
      */
     public function transform($object, string $to, array $context = []): NewsArticle
     {
-        $image = $this->liberatoHelper->transformImage($object->image, 'news');
         $article = new NewsArticle();
         $article->setTitle($object->title);
         $article->setUrl($object->url);
-        $article->setImage($image);
 
         return $article;
     }
