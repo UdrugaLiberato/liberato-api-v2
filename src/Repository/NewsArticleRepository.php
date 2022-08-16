@@ -80,6 +80,7 @@ class NewsArticleRepository extends ServiceEntityRepository
 
     public function update(NewsArticle $entity): void
     {
+        $entity->setUpdatedAt(new \DateTimeImmutable("now"));
         $this->_em->persist($entity);
         $this->_em->flush();
     }

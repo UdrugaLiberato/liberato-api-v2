@@ -16,11 +16,10 @@ use Symfony\Component\Messenger\MessageBusInterface;
 class UpdateNewsArticleController
 {
     public function __construct(
-        private NewsArticleRepository   $newsArticleRepository,
+        private NewsArticleRepository $newsArticleRepository,
         private LiberatoHelperInterface $liberatoHelper,
-        private MessageBusInterface     $bus
-    )
-    {
+        private MessageBusInterface $bus
+    ) {
     }
 
     public function __invoke(string $id, Request $request): NewsArticle
@@ -33,7 +32,7 @@ class UpdateNewsArticleController
             }
         });
 
-        $fileNames = $this->liberatoHelper->transformImage($request->files->get("image"), 'news');
+        $fileNames = $this->liberatoHelper->transformImage($request->files->get('image'), 'news');
         $this->bus->dispatch(new NewsArticleCloudinaryMessage($id, $fileNames));
 
         $newsArticleToUpdate->setTitle($request->request->get('title'));

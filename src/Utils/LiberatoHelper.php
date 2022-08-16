@@ -22,12 +22,11 @@ class LiberatoHelper implements LiberatoHelperInterface
     public string $uploadDir;
 
     public function __construct(
-        public KernelInterface       $kernel,
-        public ValidatorInterface    $validator,
+        public KernelInterface $kernel,
+        public ValidatorInterface $validator,
         public TokenStorageInterface $token,
-        private string               $cloudinaryApiKey
-    )
-    {
+        private string $cloudinaryApiKey
+    ) {
         $this->uploadDir = $this->kernel->getProjectDir() . '/public/images/';
         self::$cloudinary = new Cloudinary($this->cloudinaryApiKey);
     }
@@ -61,7 +60,7 @@ class LiberatoHelper implements LiberatoHelperInterface
         if (null === $file) {
             return new ArrayCollection();
         }
-        $isimage = explode("/", $file->getMimeType())[0] === 'image';
+        $isimage = 'image' === explode('/', $file->getMimeType())[0];
         if (!$isimage) {
             throw new ValidationException('Only images can be uploaded!');
         }
@@ -73,8 +72,8 @@ class LiberatoHelper implements LiberatoHelperInterface
         // this is needed to safely include the file name as part of the URL
         $safeFilename = self::slugify($originalFilename);
         $newFilename = date('Y-m-d') . '_' . $safeFilename . md5(
-                microtime()
-            ) . '.'
+            microtime()
+        ) . '.'
             . $file->guessExtension();
         $file->move(
             $this->uploadDir . $entityName . '/',
@@ -92,7 +91,7 @@ class LiberatoHelper implements LiberatoHelperInterface
     {
         $string = preg_replace('~[^\pL\d]+~u', '-', $string);
         $string = iconv('utf-8', 'us-ascii//TRANSLIT', $string);
-        $string = preg_replace('~[^-\w]+~', '', (string)$string);
+        $string = preg_replace('~[^-\w]+~', '', (string) $string);
         $string = trim($string, '-');
         $string = preg_replace('~-+~', '-', $string);
 
@@ -114,8 +113,8 @@ class LiberatoHelper implements LiberatoHelperInterface
             // this is needed to safely include the file name as part of the URL
             $safeFilename = self::slugify($originalFilename);
             $newFilename = date('Y-m-d') . '_' . $safeFilename . md5(
-                    microtime()
-                ) . '.'
+                microtime()
+            ) . '.'
                 . $file->guessExtension();
             $file->move(
                 $this->uploadDir . $entityName,
@@ -164,9 +163,7 @@ class LiberatoHelper implements LiberatoHelperInterface
         return $newImages;
     }
 
-    public
-    function uploadImageToCloudinary(ArrayCollection $image, string $entityName):
-    ArrayCollection
+    public function uploadImageToCloudinary(ArrayCollection $image, string $entityName): ArrayCollection
     {
         $fullImagePath = $this->uploadDir . $entityName . '/' . $image['path'];
         $file = new SymfonyFile($fullImagePath);
@@ -192,14 +189,12 @@ class LiberatoHelper implements LiberatoHelperInterface
         ]);
     }
 
-    public
-    function getImagePath(string $subdirectoryWithSlash): string
+    public function getImagePath(string $subdirectoryWithSlash): string
     {
         return $this->kernel->getProjectDir() . '/public/images/' . $subdirectoryWithSlash;
     }
 
-    public
-    function transformFiles(array $files, string $entityName): ArrayCollection
+    public function transformFiles(array $files, string $entityName): ArrayCollection
     {
         $fileNames = new ArrayCollection();
         foreach ($files as $file) {
@@ -215,8 +210,8 @@ class LiberatoHelper implements LiberatoHelperInterface
             // this is needed to safely include the file name as part of the URL
             $safeFilename = self::slugify($originalFilename);
             $newFilename = date('Y-m-d') . '_' . $safeFilename . md5(
-                    microtime()
-                ) . '.'
+                microtime()
+            ) . '.'
                 . $file->guessExtension();
             $file->move(
                 $this->uploadDir . $entityName,
