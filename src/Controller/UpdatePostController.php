@@ -18,10 +18,9 @@ class UpdatePostController extends AbstractController
 {
     public function __construct(
         private LiberatoHelperInterface $liberatoHelper,
-        private PostRepository          $postRepository,
-        private MessageBusInterface     $bus
-    )
-    {
+        private PostRepository $postRepository,
+        private MessageBusInterface $bus
+    ) {
     }
 
     public function __invoke(string $id, Request $request): Post
@@ -45,6 +44,7 @@ class UpdatePostController extends AbstractController
         $fileNames = $this->liberatoHelper->transformImages($request->files->get('images'), 'posts');
         $this->bus->dispatch(new PostCloudinaryMessage($id, $fileNames));
         $this->postRepository->update($postToUpdate);
+
         return $postToUpdate;
     }
 }

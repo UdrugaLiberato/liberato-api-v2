@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Utils;
 
-
 use ApiPlatform\Core\Validator\Exception\ValidationException;
 use Cloudinary\Cloudinary;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -16,7 +15,6 @@ use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-
 class LiberatoHelper implements LiberatoHelperInterface
 {
     public const BACKEND_URL = 'https://dev.udruga-liberato.hr';
@@ -25,12 +23,11 @@ class LiberatoHelper implements LiberatoHelperInterface
     public string $uploadDir;
 
     public function __construct(
-        public KernelInterface       $kernel,
-        public ValidatorInterface    $validator,
+        public KernelInterface $kernel,
+        public ValidatorInterface $validator,
         public TokenStorageInterface $token,
-        private string               $cloudinaryApiKey
-    )
-    {
+        private string $cloudinaryApiKey
+    ) {
         $this->uploadDir = $this->kernel->getProjectDir() . '/public/images/';
         self::$cloudinary = new Cloudinary($this->cloudinaryApiKey);
     }
@@ -76,8 +73,8 @@ class LiberatoHelper implements LiberatoHelperInterface
         // this is needed to safely include the file name as part of the URL
         $safeFilename = self::slugify($originalFilename);
         $newFilename = date('Y-m-d') . '_' . $safeFilename . md5(
-                microtime()
-            ) . '.'
+            microtime()
+        ) . '.'
             . $file->guessExtension();
         $file->move(
             $this->uploadDir . $entityName . '/',
@@ -95,7 +92,7 @@ class LiberatoHelper implements LiberatoHelperInterface
     {
         $string = preg_replace('~[^\pL\d]+~u', '-', $string);
         $string = iconv('utf-8', 'us-ascii//TRANSLIT', $string);
-        $string = preg_replace('~[^-\w]+~', '', (string)$string);
+        $string = preg_replace('~[^-\w]+~', '', (string) $string);
         $string = trim($string, '-');
         $string = preg_replace('~-+~', '-', $string);
 
@@ -107,7 +104,7 @@ class LiberatoHelper implements LiberatoHelperInterface
         $fileNames = new ArrayCollection();
         foreach ($uploadedFiles as $file) {
             $mime = $file->getMimeType();
-            if ($mime == "text/html") {
+            if ('text/html' === $mime) {
                 continue;
             }
             $originalFilename = pathinfo(
@@ -117,8 +114,8 @@ class LiberatoHelper implements LiberatoHelperInterface
             // this is needed to safely include the file name as part of the URL
             $safeFilename = self::slugify($originalFilename);
             $newFilename = date('Y-m-d') . '_' . $safeFilename . md5(
-                    microtime()
-                ) . '.'
+                microtime()
+            ) . '.'
                 . $file->guessExtension();
             $file->move(
                 $this->uploadDir . $entityName,
@@ -141,9 +138,9 @@ class LiberatoHelper implements LiberatoHelperInterface
         $newImages = new ArrayCollection();
         foreach ($images as $image) {
             $fullImagePath = $uploadDir . '/' . $image['path'];
-            $file = new SymfonyFile($fullImagePath);;
+            $file = new SymfonyFile($fullImagePath);
 
-            if (explode("/", $file->getMimeType())[0] != "image") {
+            if ('image' !== explode('/', $file->getMimeType())[0]) {
                 throw new ValidationException('This is not image!');
             }
 
@@ -163,6 +160,7 @@ class LiberatoHelper implements LiberatoHelperInterface
             ];
             $newImages->add($fileObj);
         }
+
         return $newImages;
     }
 
@@ -187,8 +185,8 @@ class LiberatoHelper implements LiberatoHelperInterface
             // this is needed to safely include the file name as part of the URL
             $safeFilename = self::slugify($originalFilename);
             $newFilename = date('Y-m-d') . '_' . $safeFilename . md5(
-                    microtime()
-                ) . '.'
+                microtime()
+            ) . '.'
                 . $file->guessExtension();
             $file->move(
                 $this->uploadDir . $entityName,

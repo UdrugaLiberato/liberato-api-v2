@@ -15,11 +15,6 @@ interface LiberatoHelperInterface
 
     public static function convertImagesArrayToOutput(ArrayCollection $images, string $entityName): ArrayCollection;
 
-    /**
-     * @param array<UploadedFile> $uploadedFiles
-     * public function “transformImages(array $uploadedFiles, string $entityName): ArrayCollection;
-     */
-
     public function transformImage(?UploadedFile $file, string $entityName): ArrayCollection;
 
     public function getImagePath(string $subdirectoryWithSlash): string;
