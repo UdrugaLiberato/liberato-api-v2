@@ -14,10 +14,9 @@ class NewsArticleCloudinaryMessageHandler implements MessageHandlerInterface
 {
     public function __construct(
         public LiberatoHelperInterface $liberatoHelper,
-        public EntityManagerInterface  $entityManager,
-        public NewsArticleRepository   $newsArticleRepository,
-    )
-    {
+        public EntityManagerInterface $entityManager,
+        public NewsArticleRepository $newsArticleRepository,
+    ) {
     }
 
     public function __invoke(NewsArticleCloudinaryMessage $message): void
