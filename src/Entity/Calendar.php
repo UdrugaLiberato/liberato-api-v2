@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use App\DTO\Event\EventInput;
 use App\DTO\Event\EventOutput;
 use App\Repository\CalendarRepository;

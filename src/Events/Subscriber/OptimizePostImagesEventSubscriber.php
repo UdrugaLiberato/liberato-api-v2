@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Events\Subscriber;
 
-use ApiPlatform\Core\EventListener\EventPriorities;
+use ApiPlatform\Symfony\EventListener\EventPriorities;
 use App\Entity\Post;
 use App\Message\PostCloudinaryMessage;
 use App\Utils\LiberatoHelperInterface;

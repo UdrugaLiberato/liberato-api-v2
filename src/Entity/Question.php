@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
 use App\DTO\Question\QuestionInput;
 use App\DTO\Question\QuestionOutput;
 use App\Repository\QuestionRepository;
@@ -13,17 +14,13 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: QuestionRepository::class),
-    ApiResource(
-        collectionOperations: [
-            'get',
-            'post' => [
-                'security' => "is_granted('ROLE_ADMIN')",
-                'security_message' => 'Only admins can add questions.',
-            ],
-        ],
-        input: QuestionInput::class,
-        output: QuestionOutput::class
-    )]
+    ApiResource(input: QuestionInput::class, output: QuestionOutput::class),
+    GetCollection(),
+    \ApiPlatform\Metadata\Post(
+        security: 'is_granted("ROLE_ADMIN")',
+        securityMessage: "Only admins can create questions",
+    ),
+]
 class Question
 {
     #[

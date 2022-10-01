@@ -5,8 +5,12 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
-use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Put;
 use App\Controller\UpdateUserController;
 use App\DTO\User\UserInput;
 use App\DTO\User\UserOutput;
@@ -21,29 +25,26 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[
     ORM\Entity(repositoryClass: UserRepository::class),
-    ApiResource(collectionOperations: [
-        'get' => [
-            'security' => "is_granted('ROLE_ADMIN')",
-            'security_message' => 'Only admin users are allowed to list users.',
-        ],
-        'post' => [
-            'input' => UserInput::class,
-            'input_formats' => [
-                'multipart' => ['multipart/form-data'],
-            ],
-        ],
-    ], itemOperations: ['get', 'put' => [
-        'controller' => UpdateUserController::class,
-        'security' => "is_granted('ROLE_ADMIN') or object == user",
-        'security_message' => 'Only admin users are allowed to update users.',
-        'input_formats' => [
-            'multipart' => ['multipart/form-data'],
-        ],
-        'delete' => [
-            'security' => "is_granted('ROLE_ADMIN') or object.getUsername() == user.getUsername()",
-            'security_message' => 'Only admin users are allowed to delete users.',
-        ],
-    ]], output: UserOutput::class)]
+    ApiResource(output: UserOutput::class),
+    GetCollection(
+        security: 'is_granted("ROLE_ADMIN")',
+        securityMessage: "Only admins can list users",
+    ),
+    \ApiPlatform\Metadata\Post(
+        inputFormats: ["multipart" => ["multipart/form-data"]],
+        input: UserInput::class,
+    ),
+    Get(),
+    Put(
+        inputFormats: ["multipart" => ["multipart/form-data"]],
+        controller: UpdateUserController::class,
+        security: 'is_granted("ROLE_ADMIN") or object == user',
+        securityMessage: "Only admins can update other users",
+    ),
+    Delete(
+        security: 'is_granted("ROLE_ADMIN") or object == user',
+        securityMessage: "Only admins can delete other users",
+    )]
 class User implements PasswordAuthenticatedUserInterface, UserInterface
 {
     public const ROLE_ADMIN = 'ROLE_ADMIN';
@@ -146,7 +147,7 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
 
     public function getUserIdentifier(): string
     {
-        return (string) $this->email;
+        return (string)$this->email;
     }
 
     public function getRoles(): array

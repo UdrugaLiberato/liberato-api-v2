@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Put;
 use App\Controller\UpdateCategoryController;
 use App\DTO\Category\CategoryInput;
 use App\DTO\Category\CategoryOutput;
@@ -16,32 +20,22 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class),
-    ApiResource(collectionOperations: [
-        'get',
-        'post' => [
-            'input' => CategoryInput::class,
-            'security' => "is_granted('ROLE_ADMIN')",
-            'security_message' => 'Only admins can add posts.',
-            'input_formats' => [
-                'multipart' => ['multipart/form-data'],
-            ],
-        ],
-    ], itemOperations: [
-        'get',
-        'delete' => [
-            'security' => "is_granted('ROLE_ADMIN')",
-            'security_message' => 'Only admins can delete posts.',
-        ],
-        'put' => [
-            'controller' => UpdateCategoryController::class,
-            'deserialize' => false,
-            'security' => "is_granted('ROLE_ADMIN')",
-            'security_message' => 'Only admins can update posts.',
-            'input_formats' => [
-                'multipart' => ['multipart/form-data'],
-            ],
-        ],
-    ], output: CategoryOutput::class)]
+    ApiResource(output: CategoryOutput::class),
+    GetCollection(),
+    \ApiPlatform\Metadata\Post(inputFormats: ["multipart" => ["multipart/form-data"]], security: 'is_granted
+    ("ROLE_ADMIN")',
+        securityMessage: 'Only admins can access this resource',
+        input: CategoryInput::class,
+    ),
+    Get(),
+    Delete(security: "is_granted('ROLE_ADMIN')", securityMessage: 'Only admins can delete posts.',),
+    Put(
+        inputFormats: ["multipart" => ["multipart/form-data"]],
+        controller: UpdateCategoryController::class,
+        security: "is_granted('ROLE_ADMIN')",
+        securityMessage: 'Only admins can update posts.',
+        deserialize: false
+    )]
 class Category
 {
     #[

@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
 use App\DTO\BankAccount\BankAccountInput;
 use App\DTO\BankAccount\BankAccountOutput;
 use App\Repository\BankAccountRepository;
@@ -13,20 +15,10 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[
     ORM\Entity(repositoryClass: BankAccountRepository::class),
-    ApiResource(
-        collectionOperations: [
-            'get' => [
-                'security' => "is_granted('ROLE_ADMIN')",
-                'security_message' => 'Only admin users are allowed to list users.',
-            ],
-            'post' => [
-                'security' => "is_granted('ROLE_ADMIN')",
-                'security_message' => 'Only admin users are allowed to list users.',
-            ],
-        ],
-        input: BankAccountInput::class,
-        output: BankAccountOutput::class
-    )]
+    ApiResource(),
+    GetCollection(security: 'is_granted("ROLE_ADMIN")', securityMessage: 'Only admins can access this resource'),
+    Post(security: 'is_granted("ROLE_ADMIN")', securityMessage: 'Only admins can access this resource'),
+]
 class BankAccount
 {
     #[

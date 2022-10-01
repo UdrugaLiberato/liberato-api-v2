@@ -100,9 +100,6 @@
     "egulias/email-validator": {
         "version": "3.2"
     },
-    "fig/link-util": {
-        "version": "1.2.0"
-    },
     "friendsofphp/php-cs-fixer": {
         "version": "3.9",
         "recipe": {
@@ -159,9 +156,6 @@
     },
     "nikic/php-parser": {
         "version": "v4.13.2"
-    },
-    "php-cs-fixer/diff": {
-        "version": "v2.0.2"
     },
     "phpdocumentor/reflection-common": {
         "version": "2.2.0"

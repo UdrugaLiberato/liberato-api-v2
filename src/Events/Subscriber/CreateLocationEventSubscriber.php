@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Events\Subscriber;
 
-use ApiPlatform\Core\EventListener\EventPriorities;
+use ApiPlatform\Symfony\EventListener\EventPriorities;
 use App\Entity\Location;
 use App\Entity\User;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;

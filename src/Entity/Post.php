@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Put;
 use App\Controller\UpdatePostController;
 use App\DTO\Post\PostInput;
 use App\DTO\Post\PostOutput;
@@ -14,33 +18,27 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[ApiResource(collectionOperations: [
-    'get',
-    'post' => [
-        'input' => PostInput::class,
-        'security' => "is_granted('ROLE_ADMIN')",
-        'security_message' => 'Only admins can add posts.',
-        'input_formats' => [
-            'multipart' => ['multipart/form-data'],
-        ],
-    ],
-], itemOperations: [
-    'get',
-    'delete' => [
-        'security' => "is_granted('ROLE_ADMIN')",
-        'security_message' => 'Only admins can delete posts.',
-    ],
-    'put' => [
-        'controller' => UpdatePostController::class,
-        'deserialize' => false,
-        'security' => "is_granted('ROLE_ADMIN')",
-        'security_message' => 'Only admins can update posts.',
-        'input_formats' => [
-            'multipart' => ['multipart/form-data'],
-        ],
-    ],
-], output: PostOutput::class)]
-#[ORM\Entity(repositoryClass: PostRepository::class)]
+#[ApiResource(output: PostOutput::class),
+    GetCollection(),
+    \ApiPlatform\Metadata\Post(
+        inputFormats: ["multipart" => ["multipart/form-data"]],
+        security: "is_granted('ROLE_ADMIN')",
+        securityMessage: "Only admins can create posts",
+        input: PostInput::class,
+    ),
+    Get(),
+    Put(
+        inputFormats: ["multipart" => ["multipart/form-data"]],
+        controller: UpdatePostController::class,
+        security: "is_granted('ROLE_ADMIN')",
+        securityMessage: "Only admins can edit posts",
+        deserialize: false
+    ),
+    Delete(
+        security: "is_granted('ROLE_ADMIN')",
+        securityMessage: "Only admins can delete posts",
+    ),
+    ORM\Entity(repositoryClass: PostRepository::class)]
 class Post
 {
     #[

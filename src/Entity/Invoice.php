@@ -4,7 +4,12 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use App\Controller\UpdateInvoiceController;
 use App\DTO\Invoice\InvoiceInput;
 use App\DTO\Invoice\InvoiceOutput;
@@ -13,33 +18,28 @@ use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: InvoiceRepository::class)]
-#[ApiResource(
-    collectionOperations: [
-        'get',
-        'post' => [
-            'input' => InvoiceInput::class,
-            'security' => "is_granted('ROLE_ADMIN')",
-            'security_message' => 'Only admin users are allowed to add invoices.',
-            'input_formats' => [
-                'multipart' => ['multipart/form-data'],
-            ],
-        ],
-    ],
-    itemOperations: ['get', 'delete' => [
-        'security' => "is_granted('ROLE_ADMIN')",
-        'security_message' => 'Only admin users are allowed to delete invoices.',
-    ], 'put' => [
-        'security' => "is_granted('ROLE_ADMIN')",
-        'security_message' => 'Only admin users are allowed to edit invoices.',
-        'deserialize' => false,
-        'controller' => UpdateInvoiceController::class,
-        'input_formats' => [
-            'multipart' => ['multipart/form-data'],
-        ],
-    ]],
-    output: InvoiceOutput::class
-)]
+#[ORM\Entity(repositoryClass: InvoiceRepository::class),
+    ApiResource(output: InvoiceOutput::class),
+    GetCollection(),
+    Post(
+        inputFormats: ["multipart" => ["multipart/form-data"]],
+        security: "is_granted('ROLE_ADMIN')",
+        securityMessage: "Only admins can create invoices",
+        input: InvoiceInput::class
+    ),
+    Get(),
+    Delete(
+        security: "is_granted('ROLE_ADMIN')",
+        securityMessage: "Only admins can delete invoices"
+    ),
+    Put(
+        inputFormats: ["multipart" => ["multipart/form-data"]],
+        controller: UpdateInvoiceController::class,
+        security: "is_granted('ROLE_ADMIN')",
+        securityMessage: "Only admins can update invoices",
+        input: InvoiceInput::class,
+        deserialize: false
+    )]
 class Invoice
 {
     #[

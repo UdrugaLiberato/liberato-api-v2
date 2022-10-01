@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Put;
 use App\Controller\UpdateNewsArticleController;
 use App\DTO\NewsArticle\NewsArticleInput;
 use App\DTO\NewsArticle\NewsArticleOutput;
@@ -16,24 +20,22 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[
     ORM\Entity(repositoryClass: NewsArticleRepository::class),
-    ApiResource(collectionOperations: [
-        'get',
-        'post' => [
-            'security' => "is_granted('ROLE_ADMIN')",
-            'security_message' => 'Only admin users are allowed to add news articles.',
-            'input_formats' => [
-                'multipart' => ['multipart/form-data'],
-            ],
-        ],
-    ], itemOperations: ['get', 'put' => [
-        'security' => "is_granted('ROLE_ADMIN')",
-        'deserialize' => false,
-        'controller' => UpdateNewsArticleController::class,
-        'security_message' => 'Only admin users are allowed to edit news articles.',
-        'input_formats' => [
-            'multipart' => ['multipart/form-data'],
-        ],
-    ]], input: NewsArticleInput::class, output: NewsArticleOutput::class)]
+    ApiResource(input: NewsArticleInput::class, output: NewsArticleOutput::class),
+    GetCollection(),
+    Post(
+        inputFormats: ["multipart" => ["multipart/form-data"]],
+        security: "is_granted('ROLE_ADMIN')",
+        securityMessage: "Only admins can create news articles",
+    ),
+    Get(),
+    Put(
+        inputFormats: ["multipart" => ["multipart/form-data"]],
+        controller: UpdateNewsArticleController::class,
+        security: "is_granted('ROLE_ADMIN')",
+        securityMessage: "Only admins can edit news articles",
+        deserialize: false
+    ),
+    ]
 class NewsArticle
 {
     #[

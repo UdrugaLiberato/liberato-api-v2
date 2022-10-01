@@ -4,7 +4,12 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use App\Controller\UpdateCityController;
 use App\DTO\City\CityInput;
 use App\DTO\City\CityOutput;
@@ -16,24 +21,16 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CityRepository::class),
-    ApiResource(collectionOperations: [
-        'get' => [
-            'cache_headers' => ['max_age' => 60, 'shared_max_age' => 120],
-        ],
-        'post' => [
-            'security' => "is_granted('ROLE_ADMIN')",
-            'security_message' => 'Only admins can add city.',
-        ], ], itemOperations: [
-            'get',
-            'delete' => [
-                'security' => "is_granted('ROLE_ADMIN')",
-                'security_message' => 'Only admins can delete cities',
-            ],
-            'put' => [
-                'controller' => UpdateCityController::class,
-                'security' => "is_granted('ROLE_ADMIN')",
-                'security_message' => 'Only admins can update cities', ],
-        ], input: CityInput::class, output: CityOutput::class)]
+    ApiResource(input: CityInput::class, output: CityOutput::class),
+    GetCollection(),
+    Get(),
+    Post(security: "is_granted('ROLE_ADMIN')", securityMessage: "Only admins can create cities"),
+    Delete(security: "is_granted('ROLE_ADMIN')", securityMessage: "Only admins can delete cities"),
+    Put(
+        controller: UpdateCityController::class,
+        security: "is_granted('ROLE_ADMIN')",
+        securityMessage: "Only admins can update cities"
+    )]
 class City
 {
     #[
