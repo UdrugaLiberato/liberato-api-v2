@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
@@ -11,20 +12,22 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Controller\UpdateCityController;
-use App\DTO\City\CityInput;
-use App\DTO\City\CityOutput;
 use App\Repository\CityRepository;
+use App\State\CityProcessor;
+use App\State\CityProvider;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CityRepository::class),
-    ApiResource(input: CityInput::class, output: CityOutput::class),
+    ApiResource(provider: CityProvider::class),
     GetCollection(),
     Get(),
-    Post(security: "is_granted('ROLE_ADMIN')", securityMessage: "Only admins can create cities"),
+    Post(security: "is_granted('ROLE_ADMIN')", securityMessage: "Only admins can create cities",
+        processor: CityProcessor::class),
     Delete(security: "is_granted('ROLE_ADMIN')", securityMessage: "Only admins can delete cities"),
     Put(
         controller: UpdateCityController::class,
@@ -34,12 +37,13 @@ use Symfony\Component\Validator\Constraints as Assert;
 class City
 {
     #[
+        ApiProperty(identifier: true),
         ORM\Id,
         ORM\Column(type: 'string', unique: true),
         ORM\GeneratedValue(strategy: 'CUSTOM'),
         ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')
     ]
-    private string $id;
+    private ?string $id = null;
 
     #[
         ORM\Column(type: 'string', length: 255, unique: true, nullable: false),
@@ -84,6 +88,7 @@ class City
 
     public function __construct()
     {
+        $this->id = (string)Uuid::v4();
         $this->locations = new ArrayCollection();
         $this->createdAt = new DateTimeImmutable('now');
     }
