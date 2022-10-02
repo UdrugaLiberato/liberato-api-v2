@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Events\Subscriber;
 
-
 use ApiPlatform\Symfony\EventListener\EventPriorities;
 use App\Entity\Category;
 use App\Entity\Question;

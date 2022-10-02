@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
-use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
@@ -26,14 +26,14 @@ use Symfony\Component\Validator\Constraints as Assert;
     ApiResource(output: LocationOutput::class),
     GetCollection(),
     Post(
-        inputFormats: ["multipart" => ["multipart/form-data"]],
+        inputFormats: ['multipart' => ['multipart/form-data']],
         security: "is_granted('ROLE_ADMIN')",
-        securityMessage: "Only admins can create locations",
+        securityMessage: 'Only admins can create locations',
         input: LocationInput::class,
     ),
     Get(),
-    Put(security: "is_granted('ROLE_ADMIN')", securityMessage: "Only admins can edit locations"),
-    Delete(security: "is_granted('ROLE_ADMIN')", securityMessage: "Only admins can delete locations"),]
+    Put(security: "is_granted('ROLE_ADMIN')", securityMessage: 'Only admins can edit locations'),
+    Delete(security: "is_granted('ROLE_ADMIN')", securityMessage: 'Only admins can delete locations'),]
 class Location
 {
     #[

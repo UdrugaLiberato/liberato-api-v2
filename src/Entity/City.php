@@ -26,13 +26,16 @@ use Symfony\Component\Validator\Constraints as Assert;
     ApiResource(provider: CityProvider::class),
     GetCollection(),
     Get(),
-    Post(security: "is_granted('ROLE_ADMIN')", securityMessage: "Only admins can create cities",
-        processor: CityProcessor::class),
-    Delete(security: "is_granted('ROLE_ADMIN')", securityMessage: "Only admins can delete cities"),
+    Post(
+        security: "is_granted('ROLE_ADMIN')",
+        securityMessage: 'Only admins can create cities',
+        processor: CityProcessor::class
+    ),
+    Delete(security: "is_granted('ROLE_ADMIN')", securityMessage: 'Only admins can delete cities'),
     Put(
         controller: UpdateCityController::class,
         security: "is_granted('ROLE_ADMIN')",
-        securityMessage: "Only admins can update cities"
+        securityMessage: 'Only admins can update cities'
     )]
 class City
 {
@@ -88,7 +91,7 @@ class City
 
     public function __construct()
     {
-        $this->id = (string)Uuid::v4();
+        $this->id = (string) Uuid::v4();
         $this->locations = new ArrayCollection();
         $this->createdAt = new DateTimeImmutable('now');
     }

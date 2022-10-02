@@ -22,15 +22,17 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: CategoryRepository::class),
     ApiResource(output: CategoryOutput::class),
     GetCollection(),
-    \ApiPlatform\Metadata\Post(inputFormats: ["multipart" => ["multipart/form-data"]], security: 'is_granted
+    \ApiPlatform\Metadata\Post(
+        inputFormats: ['multipart' => ['multipart/form-data']],
+        security: 'is_granted
     ("ROLE_ADMIN")',
         securityMessage: 'Only admins can access this resource',
         input: CategoryInput::class,
     ),
     Get(),
-    Delete(security: "is_granted('ROLE_ADMIN')", securityMessage: 'Only admins can delete posts.',),
+    Delete(security: "is_granted('ROLE_ADMIN')", securityMessage: 'Only admins can delete posts.', ),
     Put(
-        inputFormats: ["multipart" => ["multipart/form-data"]],
+        inputFormats: ['multipart' => ['multipart/form-data']],
         controller: UpdateCategoryController::class,
         security: "is_granted('ROLE_ADMIN')",
         securityMessage: 'Only admins can update posts.',

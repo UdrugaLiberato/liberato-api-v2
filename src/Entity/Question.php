@@ -18,7 +18,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     GetCollection(),
     \ApiPlatform\Metadata\Post(
         security: 'is_granted("ROLE_ADMIN")',
-        securityMessage: "Only admins can create questions",
+        securityMessage: 'Only admins can create questions',
     ),
 ]
 class Question

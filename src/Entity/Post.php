@@ -21,22 +21,22 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource(output: PostOutput::class),
     GetCollection(),
     \ApiPlatform\Metadata\Post(
-        inputFormats: ["multipart" => ["multipart/form-data"]],
+        inputFormats: ['multipart' => ['multipart/form-data']],
         security: "is_granted('ROLE_ADMIN')",
-        securityMessage: "Only admins can create posts",
+        securityMessage: 'Only admins can create posts',
         input: PostInput::class,
     ),
     Get(),
     Put(
-        inputFormats: ["multipart" => ["multipart/form-data"]],
+        inputFormats: ['multipart' => ['multipart/form-data']],
         controller: UpdatePostController::class,
         security: "is_granted('ROLE_ADMIN')",
-        securityMessage: "Only admins can edit posts",
+        securityMessage: 'Only admins can edit posts',
         deserialize: false
     ),
     Delete(
         security: "is_granted('ROLE_ADMIN')",
-        securityMessage: "Only admins can delete posts",
+        securityMessage: 'Only admins can delete posts',
     ),
     ORM\Entity(repositoryClass: PostRepository::class)]
 class Post

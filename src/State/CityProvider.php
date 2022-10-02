@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\State;
 
 use ApiPlatform\Exception\RuntimeException;
@@ -13,10 +15,9 @@ use Exception;
 class CityProvider implements ProviderInterface
 {
     public function __construct(
-        private CityRepository               $repository,
+        private CityRepository $repository,
         private PaginationExtensionInterface $paginationExtension
-    )
-    {
+    ) {
     }
 
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
@@ -33,8 +34,10 @@ class CityProvider implements ProviderInterface
             if (!$this->paginationExtension->isEnabled($resourceClass, $operation, $context)) {
                 return $collection;
             }
+
             return $this->paginationExtension->getResult($collection, $resourceClass, $operation, $context);
         }
+
         return $this->repository->find($uriVariables['id']);
     }
 }

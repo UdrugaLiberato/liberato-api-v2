@@ -6,8 +6,8 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Controller\UpdateNewsArticleController;
 use App\DTO\NewsArticle\NewsArticleInput;
@@ -23,19 +23,19 @@ use Symfony\Component\Validator\Constraints as Assert;
     ApiResource(input: NewsArticleInput::class, output: NewsArticleOutput::class),
     GetCollection(),
     Post(
-        inputFormats: ["multipart" => ["multipart/form-data"]],
+        inputFormats: ['multipart' => ['multipart/form-data']],
         security: "is_granted('ROLE_ADMIN')",
-        securityMessage: "Only admins can create news articles",
+        securityMessage: 'Only admins can create news articles',
     ),
     Get(),
     Put(
-        inputFormats: ["multipart" => ["multipart/form-data"]],
+        inputFormats: ['multipart' => ['multipart/form-data']],
         controller: UpdateNewsArticleController::class,
         security: "is_granted('ROLE_ADMIN')",
-        securityMessage: "Only admins can edit news articles",
+        securityMessage: 'Only admins can edit news articles',
         deserialize: false
     ),
-    ]
+]
 class NewsArticle
 {
     #[

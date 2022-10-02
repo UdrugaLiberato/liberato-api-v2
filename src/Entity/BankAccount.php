@@ -7,8 +7,6 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
-use App\DTO\BankAccount\BankAccountInput;
-use App\DTO\BankAccount\BankAccountOutput;
 use App\Repository\BankAccountRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;

@@ -28,22 +28,22 @@ use Symfony\Component\Validator\Constraints as Assert;
     ApiResource(output: UserOutput::class),
     GetCollection(
         security: 'is_granted("ROLE_ADMIN")',
-        securityMessage: "Only admins can list users",
+        securityMessage: 'Only admins can list users',
     ),
     \ApiPlatform\Metadata\Post(
-        inputFormats: ["multipart" => ["multipart/form-data"]],
+        inputFormats: ['multipart' => ['multipart/form-data']],
         input: UserInput::class,
     ),
     Get(),
     Put(
-        inputFormats: ["multipart" => ["multipart/form-data"]],
+        inputFormats: ['multipart' => ['multipart/form-data']],
         controller: UpdateUserController::class,
         security: 'is_granted("ROLE_ADMIN") or object == user',
-        securityMessage: "Only admins can update other users",
+        securityMessage: 'Only admins can update other users',
     ),
     Delete(
         security: 'is_granted("ROLE_ADMIN") or object == user',
-        securityMessage: "Only admins can delete other users",
+        securityMessage: 'Only admins can delete other users',
     )]
 class User implements PasswordAuthenticatedUserInterface, UserInterface
 {
@@ -147,7 +147,7 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
 
     public function getUserIdentifier(): string
     {
-        return (string)$this->email;
+        return (string) $this->email;
     }
 
     public function getRoles(): array

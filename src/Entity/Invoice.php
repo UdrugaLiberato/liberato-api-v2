@@ -22,21 +22,21 @@ use Doctrine\ORM\Mapping as ORM;
     ApiResource(output: InvoiceOutput::class),
     GetCollection(),
     Post(
-        inputFormats: ["multipart" => ["multipart/form-data"]],
+        inputFormats: ['multipart' => ['multipart/form-data']],
         security: "is_granted('ROLE_ADMIN')",
-        securityMessage: "Only admins can create invoices",
+        securityMessage: 'Only admins can create invoices',
         input: InvoiceInput::class
     ),
     Get(),
     Delete(
         security: "is_granted('ROLE_ADMIN')",
-        securityMessage: "Only admins can delete invoices"
+        securityMessage: 'Only admins can delete invoices'
     ),
     Put(
-        inputFormats: ["multipart" => ["multipart/form-data"]],
+        inputFormats: ['multipart' => ['multipart/form-data']],
         controller: UpdateInvoiceController::class,
         security: "is_granted('ROLE_ADMIN')",
-        securityMessage: "Only admins can update invoices",
+        securityMessage: 'Only admins can update invoices',
         input: InvoiceInput::class,
         deserialize: false
     )]
