@@ -12,6 +12,8 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Controller\UpdateCityController;
+use App\DTO\City\CityInput;
+use App\DTO\City\CityOutput;
 use App\Repository\CityRepository;
 use App\State\CityProcessor;
 use App\State\CityProvider;
@@ -23,13 +25,15 @@ use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CityRepository::class),
-    ApiResource(provider: CityProvider::class),
+    ApiResource(normalizationContext: ['groups' => ['read']],
+        denormalizationContext: ['groups' => ['write'],
+    provider: CityProvider::class),
     GetCollection(),
     Get(),
     Post(
         security: "is_granted('ROLE_ADMIN')",
         securityMessage: 'Only admins can create cities',
-        processor: CityProcessor::class
+        processor: CityProcessor::class,
     ),
     Delete(security: "is_granted('ROLE_ADMIN')", securityMessage: 'Only admins can delete cities'),
     Put(
@@ -91,7 +95,6 @@ class City
 
     public function __construct()
     {
-        $this->id = (string) Uuid::v4();
         $this->locations = new ArrayCollection();
         $this->createdAt = new DateTimeImmutable('now');
     }
@@ -137,9 +140,9 @@ class City
         return $this;
     }
 
-    public function getCreatedAt(): DateTimeImmutable
+    public function getCreatedAt(): string
     {
-        return $this->createdAt;
+        return $this->createdAt->format('Y-m-d H:i:s');
     }
 
     public function setCreatedAt(DateTimeImmutable $createdAt): void
