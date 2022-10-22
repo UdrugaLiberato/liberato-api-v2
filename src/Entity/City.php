@@ -12,8 +12,6 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Controller\UpdateCityController;
-use App\DTO\City\CityInput;
-use App\DTO\City\CityOutput;
 use App\Repository\CityRepository;
 use App\State\CityProcessor;
 use App\State\CityProvider;
@@ -21,13 +19,14 @@ use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CityRepository::class),
-    ApiResource(normalizationContext: ['groups' => ['read']],
-        denormalizationContext: ['groups' => ['write'],
-    provider: CityProvider::class),
+    ApiResource(normalizationContext: ['groups' => ['city:read']],
+        denormalizationContext: ['groups' => ['city:write']],
+        provider: CityProvider::class),
     GetCollection(),
     Get(),
     Post(
@@ -48,7 +47,8 @@ class City
         ORM\Id,
         ORM\Column(type: 'string', unique: true),
         ORM\GeneratedValue(strategy: 'CUSTOM'),
-        ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')
+        ORM\CustomIdGenerator(class: 'doctrine.uuid_generator'),
+        Groups(['city:read'])
     ]
     private ?string $id = null;
 
@@ -57,7 +57,8 @@ class City
         Assert\Length(
             min: 3,
             minMessage: 'Name field must be at {{ limit }} characters long!'
-        )
+        ),
+        Groups(['city:read', 'city:write'])
     ]
     private string $name;
 
@@ -67,7 +68,8 @@ class City
             notInRangeMessage: 'Your latitude must be between {{ min }} and {{ max }} deg.',
             min: -90,
             max: 90,
-        )
+        ),
+        Groups(['city:read'])
     ]
     private float $latitude;
 
@@ -77,20 +79,33 @@ class City
             notInRangeMessage: 'Your longitude must be between {{ min }} and {{ max }} deg.',
             min: -180,
             max: 180,
-        )
+        ),
+        Groups(['city:read'])
     ]
     private float $longitude;
 
-    #[ORM\Column(type: 'datetime_immutable')]
+    #[
+        ORM\Column(type: 'datetime_immutable'),
+        Groups(['city:read'])
+    ]
     private DateTimeImmutable $createdAt;
 
-    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    #[
+        ORM\Column(type: 'datetime_immutable', nullable: true),
+        Groups(['city:read'])
+    ]
     private ?DateTimeImmutable $updatedAt = null;
 
-    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    #[
+        ORM\Column(type: 'datetime_immutable', nullable: true),
+        Groups(['city:read'])
+    ]
     private ?DateTimeImmutable $deletedAt = null;
 
-    #[ORM\OneToMany(mappedBy: 'city', targetEntity: Location::class, orphanRemoval: true)]
+    #[
+        ORM\OneToMany(mappedBy: 'city', targetEntity: Location::class, orphanRemoval: true),
+        Groups(['city:read'])
+    ]
     private Collection $locations;
 
     public function __construct()
