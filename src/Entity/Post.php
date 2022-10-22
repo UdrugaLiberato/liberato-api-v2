@@ -9,6 +9,7 @@ use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Put;
+use App\Controller\CreatePostController;
 use App\Controller\UpdatePostController;
 use App\DTO\Post\PostInput;
 use App\DTO\Post\PostOutput;
@@ -16,15 +17,17 @@ use App\Repository\PostRepository;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[ApiResource(output: PostOutput::class),
+#[ApiResource(normalizationContext: ['groups' => ['post:read']],),
     GetCollection(),
     \ApiPlatform\Metadata\Post(
         inputFormats: ['multipart' => ['multipart/form-data']],
+        controller: CreatePostController::class,
         security: "is_granted('ROLE_ADMIN')",
         securityMessage: 'Only admins can create posts',
-        input: PostInput::class,
+        deserialize: false
     ),
     Get(),
     Put(
@@ -45,47 +48,52 @@ class Post
         ORM\Id,
         ORM\Column(type: 'string', unique: true),
         ORM\GeneratedValue(strategy: 'CUSTOM'),
-        ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')
+        ORM\CustomIdGenerator(class: 'doctrine.uuid_generator'),
+        Groups(['post:read'])
     ]
     private string $id;
 
     #[
         ORM\ManyToOne(targetEntity: User::class, cascade: ['remove'], inversedBy: 'posts'),
         ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE'),
-        Assert\NotNull
+        Assert\NotNull,
+        Groups(['post:read'])
     ]
     private User $author;
 
     #[
         ORM\Column(type: 'string', length: 255, unique: true),
-        Assert\Length(min: 10, minMessage: 'Title must be at least {{ limit }} characters long!')
+        Assert\Length(min: 10, minMessage: 'Title must be at least {{ limit }} characters long!'),
+        Groups(['post:read'])
     ]
     private string $title;
 
     #[
         ORM\Column(type: 'text'),
-        Assert\Length(min: 125, minMessage: 'Body should be at least {{ limit }} characters long!')
+        Assert\Length(min: 125, minMessage: 'Body should be at least {{ limit }} characters long!'),
+        Groups(['post:read'])
     ]
     private string $body;
 
     /**
      * @var string[]
      */
-    #[ORM\Column(type: 'array')]
+    #[ORM\Column(type: 'array'), Groups(['post:read'])]
     private array $tags;
 
-    #[ORM\Column(type: 'array')]
+    #[ORM\Column(type: 'array'), Groups(['post:read'])]
     private ArrayCollection $images;
 
     #[
         ORM\Column(type: 'datetime_immutable'),
+        Groups(['post:read'])
     ]
     private DateTimeImmutable $createdAt;
 
-    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true), Groups(['post:read'])]
     private ?DateTimeImmutable $updatedAt;
 
-    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true), Groups(['post:read'])]
     private ?DateTimeImmutable $deletedAt;
 
     public function __construct()
