@@ -10,11 +10,13 @@ use App\DTO\Question\QuestionInput;
 use App\DTO\Question\QuestionOutput;
 use App\Repository\QuestionRepository;
 use DateTimeImmutable;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: QuestionRepository::class),
-    ApiResource(input: QuestionInput::class, output: QuestionOutput::class),
+    ApiResource(),
     GetCollection(),
     \ApiPlatform\Metadata\Post(
         security: 'is_granted("ROLE_ADMIN")',
@@ -27,27 +29,35 @@ class Question
         ORM\Id,
         ORM\Column(type: 'string', unique: true),
         ORM\GeneratedValue(strategy: 'CUSTOM'),
-        ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')
+        ORM\CustomIdGenerator(class: 'doctrine.uuid_generator'),
+        Groups(['category:read'])
     ]
     private string $id;
 
     #[
-        ORM\ManyToOne(targetEntity: Category::class, cascade: ['remove'], inversedBy: 'questions'),
+        ORM\ManyToOne(targetEntity: Category::class, cascade: ['remove', 'persist'], inversedBy: 'questions'),
         ORM\JoinColumn(
             name: 'category_id',
             referencedColumnName: 'id',
             nullable: false,
             onDelete: 'CASCADE'
         ),
-        Assert\NotNull
+        Assert\NotNull,
     ]
     private Category $category;
 
     #[
         ORM\Column(type: 'string', length: 255),
-        Assert\Length(min: 5, minMessage: 'Question must be at least {{ limit }} characters long!')
+        Assert\Length(min: 5, minMessage: 'Question must be at least {{ limit }} characters long!'),
+        Groups(['category:read'])
     ]
     private string $question;
+
+#[
+        ORM\OneToMany(mappedBy: 'answer', targetEntity: Answer::class, cascade: ['remove']),
+        ORM\JoinColumn(name: 'answer_id', referencedColumnName: 'id', onDelete: 'CASCADE'),
+    ]
+    private ?Collection $answer;
 
     #[ORM\Column(type: 'datetime_immutable')]
     private DateTimeImmutable $createdAt;

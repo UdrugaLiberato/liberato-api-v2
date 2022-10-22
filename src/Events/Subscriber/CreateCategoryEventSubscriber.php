@@ -42,15 +42,6 @@ class CreateCategoryEventSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $questions = explode(',', $event->getRequest()->get('questions'));
-        $category = $this->categoryRepository->findOneBy(['name' => $event->getRequest()->get('name')]);
 
-        foreach ($questions as $question) {
-            $addQuestion = new Question();
-            $addQuestion->setCategory($category);
-            $addQuestion->setQuestion($question);
-            $this->questionRepository->add($addQuestion);
-            $category->addQuestion($addQuestion);
-        }
     }
 }

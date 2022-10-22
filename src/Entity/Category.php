@@ -4,33 +4,41 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Put;
+use App\Controller\CreateCategoryController;
 use App\Controller\UpdateCategoryController;
 use App\DTO\Category\CategoryInput;
-use App\DTO\Category\CategoryOutput;
 use App\Repository\CategoryRepository;
+use App\State\CategoryProcessor;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class),
-    ApiResource(output: CategoryOutput::class),
+    ApiResource(normalizationContext: ['groups' => ['category:read', 'location:read']],
+        denormalizationContext: ['groups' => ['category:write']]),
     GetCollection(),
-    \ApiPlatform\Metadata\Post(
-        inputFormats: ['multipart' => ['multipart/form-data']],
-        security: 'is_granted
-    ("ROLE_ADMIN")',
-        securityMessage: 'Only admins can access this resource',
-        input: CategoryInput::class,
+\ApiPlatform\Metadata\Post(
+    uriTemplate: '/categories',
+    inputFormats: ['multipart' => ['multipart/form-data']],
+    controller: CreateCategoryController::class,
+    security: 'is_granted
+("ROLE_ADMIN")',
+    securityMessage: 'Only admins can access this resource',
+    deserialize: false,
+    name: "category",
     ),
     Get(),
-    Delete(security: "is_granted('ROLE_ADMIN')", securityMessage: 'Only admins can delete posts.', ),
+    Delete(security: "is_granted('ROLE_ADMIN')", securityMessage: 'Only admins can delete posts.',),
     Put(
         inputFormats: ['multipart' => ['multipart/form-data']],
         controller: UpdateCategoryController::class,
@@ -41,41 +49,52 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Category
 {
     #[
+        ApiProperty(identifier: true),
         ORM\Id,
         ORM\Column(type: 'string', unique: true),
         ORM\GeneratedValue(strategy: 'CUSTOM'),
-        ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')
+        ORM\CustomIdGenerator(class: 'doctrine.uuid_generator'),
+        Groups(['category:read', 'category:write'])
     ]
     private string $id;
 
     #[
         ORM\Column(type: 'string', length: 255, unique: true),
-        Assert\Length(min: 3, minMessage: 'Name must be at least {{ limit }} characters long!')
+        Assert\Length(min: 3, minMessage: 'Name must be at least {{ limit }} characters long!'),
+        Groups(['category:read', 'category:write'])
     ]
     private string $name;
 
-    #[ORM\Column(type: 'array', nullable: true)]
-    private ?ArrayCollection $icon;
+    #[
+        ORM\Column(type: 'object', nullable: true),
+        Groups(['category:read', 'category:write'])
+    ]
+    private ArrayCollection $icon;
 
     #[
         ORM\Column(type: 'text', nullable: true),
-        Assert\Length(min: 5, minMessage: 'Description must be at least {{ limit }} characters long!')
+        Assert\NotNull,
+        Assert\Length(min: 5, minMessage: 'Description must be at least {{ limit }} characters long!'),
+        Groups(['category:read', 'category:write'])
     ]
     private ?string $description;
 
-    #[ORM\Column(type: 'datetime_immutable')]
+    #[ORM\Column(type: 'datetime_immutable'), Groups(['category:read'])]
     private DateTimeImmutable $createdAt;
 
-    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true), Groups(['category:read'])]
     private ?DateTimeImmutable $updatedAt = null;
 
-    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true), Groups(['category:read'])]
     private ?DateTimeImmutable $deletedAt = null;
 
-    #[ORM\OneToMany(mappedBy: 'Category', targetEntity: Question::class, cascade: ['remove'])]
-    private Collection $questions;
+    #[
+        ORM\OneToMany(mappedBy: 'category', targetEntity: Question::class, cascade: ['remove']),
+        Groups(['category:read'])]
+    private ?Collection $questions;
 
-    #[ORM\OneToMany(mappedBy: 'category', targetEntity: Location::class)]
+    #[ORM\OneToMany(mappedBy: 'category', targetEntity: Location::class),
+        Groups(['category:read'])]
     private Collection $locations;
 
     public function __construct()
