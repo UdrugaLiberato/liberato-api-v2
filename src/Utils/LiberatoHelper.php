@@ -102,20 +102,14 @@ class LiberatoHelper implements LiberatoHelperInterface
     {
         $fileNames = new ArrayCollection();
         foreach ($uploadedFiles as $file) {
-            $mime = $file->getMimeType();
             $ext = $file->guessExtension();
-            if ('text/html' === $mime) {
-                continue;
-            }
             $originalFilename = pathinfo(
                 $file->getClientOriginalName(),
                 PATHINFO_FILENAME
             );
             // this is needed to safely include the file name as part of the URL
             $safeFilename = self::slugify($originalFilename);
-            $newFilename = date('Y-m-d') . '_' . $safeFilename . md5(
-                microtime()
-            ) . '.'
+            $newFilename = date('Y-m-d') . '_' . $safeFilename . '.'
                 . $ext;
             $file->move(
                 $this->uploadDir . $entityName,
@@ -124,7 +118,6 @@ class LiberatoHelper implements LiberatoHelperInterface
             $fileObj = [
                 'path' => $newFilename,
                 'title' => $file->getClientOriginalName(),
-                'mime' => $mime,
             ];
             $fileNames->add($fileObj);
         }
