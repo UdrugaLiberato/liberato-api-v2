@@ -11,17 +11,19 @@ use App\Entity\Question;
 use App\Repository\QuestionRepository;
 use App\Utils\LiberatoHelperInterface;
 use Doctrine\Common\Collections\ArrayCollection;
+use function count;
 
 class CategoryOutputDataTransformer implements DataTransformerInterface
 {
     public function __construct(
-        public QuestionRepository $questionRepository,
+        public QuestionRepository      $questionRepository,
         public LiberatoHelperInterface $liberatoHelper
-    ) {
+    )
+    {
     }
 
     /**
-     * @param Category     $object
+     * @param Category $object
      * @param array<mixed> $context
      */
     public function transform($object, string $to, array $context = []): CategoryOutput
@@ -34,17 +36,8 @@ class CategoryOutputDataTransformer implements DataTransformerInterface
             $object->getCreatedAt()->format('Y-m-d H:i:s'),
             $object->getDeletedAt()?->format('Y-m-d H:i:s"') ?? null,
             $this->liberatoHelper->convertImageArrayToOutput($object->getIcon(), 'category/'),
-            \count($object->getLocations()->toArray())
+            count($object->getLocations()->toArray())
         );
-    }
-
-    /**
-     * @param object       $data
-     * @param array<mixed> $context
-     */
-    public function supportsTransformation($data, string $to, array $context = []): bool
-    {
-        return CategoryOutput::class === $to && $data instanceof Category;
     }
 
     private function getQuestionAndAnswerArr(string $id): ArrayCollection
@@ -59,5 +52,14 @@ class CategoryOutputDataTransformer implements DataTransformerInterface
         }, $questions);
 
         return $qAC;
+    }
+
+    /**
+     * @param object $data
+     * @param array<mixed> $context
+     */
+    public function supportsTransformation($data, string $to, array $context = []): bool
+    {
+        return CategoryOutput::class === $to && $data instanceof Category;
     }
 }

@@ -9,17 +9,16 @@ use ApiPlatform\State\ProcessorInterface;
 use App\Entity\Post;
 use App\Repository\PostRepository;
 use App\Utils\LiberatoHelperInterface;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class PostProcessor implements ProcessorInterface
 {
     public function __construct(
         private LiberatoHelperInterface $liberatoHelper,
-        private PostRepository $postRepository,
-        private MessageBusInterface $bus,
-        private TokenStorageInterface $token
-    ) {
+        private PostRepository          $postRepository,
+        private TokenStorageInterface   $token
+    )
+    {
     }
 
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = [])

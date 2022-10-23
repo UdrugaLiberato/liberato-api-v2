@@ -16,9 +16,10 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class UpdateUserController extends AbstractController
 {
     public function __construct(
-        private UserRepository $userRepository,
+        private UserRepository          $userRepository,
         private LiberatoHelperInterface $liberatoHelper
-    ) {
+    )
+    {
     }
 
     public function __invoke(string $id, Request $request): UserInterface

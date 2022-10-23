@@ -7,7 +7,6 @@ namespace App\Events\Subscriber;
 use ApiPlatform\Symfony\EventListener\EventPriorities;
 use App\Entity\Post;
 use App\Message\PostCloudinaryMessage;
-use App\Utils\LiberatoHelperInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
@@ -16,7 +15,7 @@ use Symfony\Component\Messenger\MessageBusInterface;
 
 final class OptimizePostImagesEventSubscriber implements EventSubscriberInterface
 {
-    public function __construct(private MessageBusInterface $bus, private LiberatoHelperInterface $liberatoHelper)
+    public function __construct(private MessageBusInterface $busx)
     {
     }
 

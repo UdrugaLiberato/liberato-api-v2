@@ -17,7 +17,7 @@ class UserInputDataTransformer implements DataTransformerInterface
     }
 
     /**
-     * @param UserInput    $object
+     * @param UserInput $object
      * @param array<mixed> $context
      */
     public function transform($object, string $to, array $context = []): User
@@ -25,10 +25,10 @@ class UserInputDataTransformer implements DataTransformerInterface
         $user = new User();
 
         $avatar = null === $object->file ? $this->createAnonymousAvatar() :
-        $this->liberatoHelper->transformImage(
-            $object->file,
-            'avatar'
-        );
+            $this->liberatoHelper->transformImage(
+                $object->file,
+                'avatar'
+            );
         $user->setUsername($object->username);
         $user->setPassword($object->password);
         $user->setEmail($object->email);
@@ -36,19 +36,6 @@ class UserInputDataTransformer implements DataTransformerInterface
         $user->setAvatar($avatar);
 
         return $user;
-    }
-
-    /**
-     * @param object       $data
-     * @param array<mixed> $context
-     */
-    public function supportsTransformation($data, string $to, array $context = []): bool
-    {
-        if ($data instanceof User) {
-            return false;
-        }
-
-        return User::class === $to && null !== ($context['input']['class'] ?? null);
     }
 
     private function createAnonymousAvatar(): ArrayCollection
@@ -59,5 +46,18 @@ class UserInputDataTransformer implements DataTransformerInterface
             'path' => 'anonymous-user.png',
             'mime' => 'image/png',
         ]);
+    }
+
+    /**
+     * @param object $data
+     * @param array<mixed> $context
+     */
+    public function supportsTransformation($data, string $to, array $context = []): bool
+    {
+        if ($data instanceof User) {
+            return false;
+        }
+
+        return User::class === $to && null !== ($context['input']['class'] ?? null);
     }
 }

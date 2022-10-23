@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\Entity\Category;
 use App\Repository\CategoryRepository;
 use App\Utils\LiberatoHelperInterface;
+use DateTimeImmutable;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 
@@ -15,8 +16,9 @@ class UpdateCategoryController
 {
     public function __construct(
         private LiberatoHelperInterface $liberatoHelper,
-        private CategoryRepository $categoryRepository,
-    ) {
+        private CategoryRepository      $categoryRepository,
+    )
+    {
     }
 
     public function __invoke(string $id, Request $request): Category
@@ -37,7 +39,7 @@ class UpdateCategoryController
         }
         $icon = $this->liberatoHelper->transformImage($request->files->get('file'), 'category');
         $categoryToUpdate->setIcon($icon);
-        $categoryToUpdate->setUpdatedAt(new \DateTimeImmutable('now'));
+        $categoryToUpdate->setUpdatedAt(new DateTimeImmutable('now'));
         $this->categoryRepository->update($categoryToUpdate);
 
         return $categoryToUpdate;

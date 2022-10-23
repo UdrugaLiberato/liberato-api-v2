@@ -10,7 +10,7 @@ use ApiPlatform\State\Pagination\ArrayPaginator;
 interface PaginationExtensionInterface
 {
     public function getResult(array $collection, string $resourceClass, ?Operation $operation =
-    null, array $context = []): ArrayPaginator;
+    null, array                     $context = []): ArrayPaginator;
 
     public function isEnabled(string $resourceClass = null, ?Operation $operation = null, array $context = []): bool;
 }

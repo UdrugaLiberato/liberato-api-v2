@@ -14,9 +14,10 @@ class PostCloudinaryMessageHandler implements MessageHandlerInterface
 {
     public function __construct(
         public LiberatoHelperInterface $liberatoHelper,
-        public EntityManagerInterface $entityManager,
-        public PostRepository $postRepository
-    ) {
+        public EntityManagerInterface  $entityManager,
+        public PostRepository          $postRepository
+    )
+    {
     }
 
     public function __invoke(PostCloudinaryMessage $message): void

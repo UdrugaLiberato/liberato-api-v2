@@ -8,6 +8,7 @@ use App\Entity\Post;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\User\UserInterface;
+use function in_array;
 
 class PostVoter extends Voter
 {
@@ -21,7 +22,7 @@ class PostVoter extends Voter
     {
         // replace with your own logic
         // https://symfony.com/doc/current/security/voters.html
-        return \in_array($attribute, [self::EDIT, self::VIEW], true)
+        return in_array($attribute, [self::EDIT, self::VIEW], true)
             && $subject instanceof Post;
     }
 

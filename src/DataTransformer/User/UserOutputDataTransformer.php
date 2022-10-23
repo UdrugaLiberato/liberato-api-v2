@@ -10,11 +10,12 @@ use App\Entity\User;
 use App\Utils\LiberatoHelper;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use function count;
 
 class UserOutputDataTransformer implements DataTransformerInterface
 {
     /**
-     * @param User         $object
+     * @param User $object
      * @param array<mixed> $context
      */
     public function transform($object, string $to, array $context = []): UserOutput
@@ -35,18 +36,9 @@ class UserOutputDataTransformer implements DataTransformerInterface
         );
     }
 
-    /**
-     * @param object       $data
-     * @param array<mixed> $context
-     */
-    public function supportsTransformation($data, string $to, array $context = []): bool
-    {
-        return UserOutput::class === $to && $data instanceof User;
-    }
-
     private function getPostsFromUser(Collection $posts): ArrayCollection
     {
-        if (0 === \count($posts->getValues())) {
+        if (0 === count($posts->getValues())) {
             return new ArrayCollection();
         }
 
@@ -63,5 +55,14 @@ class UserOutputDataTransformer implements DataTransformerInterface
         });
 
         return new ArrayCollection($filteredPostOutput->toArray());
+    }
+
+    /**
+     * @param object $data
+     * @param array<mixed> $context
+     */
+    public function supportsTransformation($data, string $to, array $context = []): bool
+    {
+        return UserOutput::class === $to && $data instanceof User;
     }
 }

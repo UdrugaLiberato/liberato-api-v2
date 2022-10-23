@@ -33,7 +33,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     ),
     Get(),
     Put(security: "is_granted('ROLE_ADMIN')", securityMessage: 'Only admins can edit locations'),
-    Delete(security: "is_granted('ROLE_ADMIN')", securityMessage: 'Only admins can delete locations'),]
+    Delete(security: "is_granted('ROLE_ADMIN')", securityMessage: 'Only admins can delete locations'), ]
 class Location
 {
     #[

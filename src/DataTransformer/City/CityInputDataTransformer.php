@@ -16,7 +16,7 @@ class CityInputDataTransformer implements DataTransformerInterface
     }
 
     /**
-     * @param CityInput    $object
+     * @param CityInput $object
      * @param array<mixed> $context
      */
     public function transform($object, string $to, array $context = []): City
@@ -32,7 +32,7 @@ class CityInputDataTransformer implements DataTransformerInterface
     }
 
     /**
-     * @param object       $data
+     * @param object $data
      * @param array<mixed> $context
      */
     public function supportsTransformation($data, string $to, array $context = []): bool

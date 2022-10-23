@@ -9,20 +9,23 @@ use App\DTO\Invoice\InvoiceInput;
 use App\Entity\Invoice;
 use App\Repository\ProjectRepository;
 use App\Utils\LiberatoHelperInterface;
+use DateTimeImmutable;
+use Exception;
 
 class InvoiceInputDataTranaformer implements DataTransformerInterface
 {
     public function __construct(
         private LiberatoHelperInterface $liberatoHelper,
-        private ProjectRepository $projectRepository
-    ) {
+        private ProjectRepository       $projectRepository
+    )
+    {
     }
 
     /**
      * @param InvoiceInput $object
      * @param array<mixed> $context
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function transform($object, string $to, array $context = []): Invoice
     {
@@ -33,7 +36,7 @@ class InvoiceInputDataTranaformer implements DataTransformerInterface
         $invoice->setAmount($object->amount);
         $invoice->setCurrency($object->currency);
         $invoice->setInvoiceNumber($object->invoiceNumber);
-        $invoice->setPayedAt(new \DateTimeImmutable($object->payedAt));
+        $invoice->setPayedAt(new DateTimeImmutable($object->payedAt));
         $invoice->setProject($project);
         $fileNames = $this->liberatoHelper->transformFiles($object->files, 'invoices/');
         $invoice->setFiles($fileNames);
@@ -42,7 +45,7 @@ class InvoiceInputDataTranaformer implements DataTransformerInterface
     }
 
     /**
-     * @param object       $data
+     * @param object $data
      * @param array<mixed> $context
      */
     public function supportsTransformation($data, string $to, array $context = []): bool

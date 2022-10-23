@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\NewsArticle;
+use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -80,7 +81,7 @@ class NewsArticleRepository extends ServiceEntityRepository
 
     public function update(NewsArticle $entity): void
     {
-        $entity->setUpdatedAt(new \DateTimeImmutable('now'));
+        $entity->setUpdatedAt(new DateTimeImmutable('now'));
         $this->_em->persist($entity);
         $this->_em->flush();
     }

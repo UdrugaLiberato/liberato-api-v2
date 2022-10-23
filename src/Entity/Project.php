@@ -48,13 +48,13 @@ class Project
         ORM\Column(type: 'date'),
         Groups(['write'])
     ]
-    private \DateTimeImmutable $start;
+    private DateTimeImmutable $start;
 
     #[
         ORM\Column(type: 'date'),
         Groups(['write'])
     ]
-    private \DateTimeImmutable $end;
+    private DateTimeImmutable $end;
 
     #[
         ORM\Column(type: 'float'),

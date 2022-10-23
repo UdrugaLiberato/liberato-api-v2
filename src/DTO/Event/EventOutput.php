@@ -10,6 +10,7 @@ class EventOutput
         public string $id,
         public string $Subject,
         public string $StartTime
-    ) {
+    )
+    {
     }
 }

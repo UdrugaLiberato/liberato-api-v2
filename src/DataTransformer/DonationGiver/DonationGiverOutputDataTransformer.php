@@ -12,7 +12,7 @@ class DonationGiverOutputDataTransformer implements DataTransformerInterface
 {
     /**
      * @param DonationGiver $object
-     * @param array<mixed>  $context
+     * @param array<mixed> $context
      */
     public function transform($object, string $to, array $context = []): DonationGiverOutput
     {
@@ -30,7 +30,7 @@ class DonationGiverOutputDataTransformer implements DataTransformerInterface
     }
 
     /**
-     * @param object       $data
+     * @param object $data
      * @param array<mixed> $context
      */
     public function supportsTransformation($data, string $to, array $context = []): bool

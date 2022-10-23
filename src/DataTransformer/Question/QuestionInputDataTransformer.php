@@ -12,7 +12,7 @@ class QuestionInputDataTransformer implements DataTransformerInterface
 {
     /**
      * @param QuestionInput $object
-     * @param array<mixed>  $context
+     * @param array<mixed> $context
      */
     public function transform($object, string $to, array $context = []): Question
     {
@@ -24,7 +24,7 @@ class QuestionInputDataTransformer implements DataTransformerInterface
     }
 
     /**
-     * @param object       $data
+     * @param object $data
      * @param array<mixed> $context
      */
     public function supportsTransformation($data, string $to, array $context = []): bool

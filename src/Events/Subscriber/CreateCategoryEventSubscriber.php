@@ -8,6 +8,8 @@ use ApiPlatform\Symfony\EventListener\EventPriorities;
 use App\Entity\Category;
 use App\Repository\CategoryRepository;
 use App\Repository\QuestionRepository;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
@@ -18,7 +20,8 @@ class CreateCategoryEventSubscriber implements EventSubscriberInterface
     public function __construct(
         public CategoryRepository $categoryRepository,
         public QuestionRepository $questionRepository,
-    ) {
+    )
+    {
     }
 
     public static function getSubscribedEvents(): array
@@ -29,8 +32,8 @@ class CreateCategoryEventSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Doctrine\ORM\ORMException
+     * @throws OptimisticLockException
+     * @throws ORMException
      */
     public function addQuestionsToCategory(ViewEvent $event): void
     {

@@ -12,25 +12,27 @@ use App\Utils\LiberatoHelperInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsController;
+use function mb_strlen;
 
 #[AsController]
 class CreateCategoryController extends AbstractController
 {
     public function __construct(
         private LiberatoHelperInterface $liberatoHelper,
-        private CategoryRepository $categoryRepository,
-        private QuestionRepository $questionRepository,
-    ) {
+        private CategoryRepository      $categoryRepository,
+        private QuestionRepository      $questionRepository,
+    )
+    {
     }
 
     public function __invoke(Request $request)
     {
         $icon = $this->liberatoHelper->transformImage($request->files->get('icon'), 'category');
-        if (null === $request->get('name') || \mb_strlen($request->get('name')) < 5) {
+        if (null === $request->get('name') || mb_strlen($request->get('name')) < 5) {
             return $this->json(['message' => 'Name is required and must be at least 5 characters long'], 400);
         }
 
-        if (null === $request->get('description') || \mb_strlen($request->get('description')) < 5) {
+        if (null === $request->get('description') || mb_strlen($request->get('description')) < 5) {
             return $this->json(['message' => 'Description is required and must be at least 5 characters long'], 400);
         }
         $category = new Category();

@@ -37,7 +37,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         name: 'category',
     ),
     Get(),
-    Delete(security: "is_granted('ROLE_ADMIN')", securityMessage: 'Only admins can delete posts.', ),
+    Delete(security: "is_granted('ROLE_ADMIN')", securityMessage: 'Only admins can delete posts.',),
     Put(
         inputFormats: ['multipart' => ['multipart/form-data']],
         controller: UpdateCategoryController::class,

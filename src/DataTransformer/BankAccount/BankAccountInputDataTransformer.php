@@ -12,7 +12,7 @@ class BankAccountInputDataTransformer implements DataTransformerInterface
 {
     /**
      * @param BankAccountInput $object
-     * @param array<mixed>     $context
+     * @param array<mixed> $context
      */
     public function transform($object, string $to, array $context = []): BankAccount
     {
@@ -25,7 +25,7 @@ class BankAccountInputDataTransformer implements DataTransformerInterface
     }
 
     /**
-     * @param object       $data
+     * @param object $data
      * @param array<mixed> $context
      */
     public function supportsTransformation($data, string $to, array $context = []): bool

@@ -16,7 +16,7 @@ class NewsArticleOutputDataTransformer implements DataTransformerInterface
     }
 
     /**
-     * @param NewsArticle  $object
+     * @param NewsArticle $object
      * @param array<mixed> $context
      */
     public function transform($object, string $to, array $context = []): NewsArticleOutput
@@ -33,7 +33,7 @@ class NewsArticleOutputDataTransformer implements DataTransformerInterface
     }
 
     /**
-     * @param object       $data
+     * @param object $data
      * @param array<mixed> $context
      */
     public function supportsTransformation($data, string $to, array $context = []): bool

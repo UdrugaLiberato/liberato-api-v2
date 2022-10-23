@@ -9,6 +9,8 @@ use App\DTO\DonationGiver\DonationGiverInput;
 use App\Entity\DonationGiver;
 use App\Repository\BankAccountRepository;
 use DateTimeImmutable;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 
 class DonationGiverInputDataTransformer implements DataTransformerInterface
 {
@@ -18,10 +20,10 @@ class DonationGiverInputDataTransformer implements DataTransformerInterface
 
     /**
      * @param DonationGiverInput $object
-     * @param array<mixed>       $context
+     * @param array<mixed> $context
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function transform($object, string $to, array $context = []): DonationGiver
     {
@@ -38,14 +40,14 @@ class DonationGiverInputDataTransformer implements DataTransformerInterface
         $donationGiver->setMoneyRequested($object->moneyRequested);
         null !== $object->moneyGiven ? $donationGiver->setMoneyGiven($object->moneyGiven) :
             $donationGiver->setMoneyGiven(0);
-        $donationGiver->setDateOfApplication(new \DateTimeImmutable($object->dateOfApplication));
-        $donationGiver->setDateOfApproval(new \DateTimeImmutable($object->dateOfApproval));
+        $donationGiver->setDateOfApplication(new DateTimeImmutable($object->dateOfApplication));
+        $donationGiver->setDateOfApproval(new DateTimeImmutable($object->dateOfApproval));
 
         return $donationGiver;
     }
 
     /**
-     * @param object       $data
+     * @param object $data
      * @param array<mixed> $context
      */
     public function supportsTransformation($data, string $to, array $context = []): bool

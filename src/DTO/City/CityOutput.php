@@ -9,10 +9,11 @@ class CityOutput
     public function __construct(
         public string $id,
         public string $name,
-        public float $latitude,
-        public float $longitude,
+        public float  $latitude,
+        public float  $longitude,
         public string $createdAt,
-        public int $numberOfLocationsInCity
-    ) {
+        public int    $numberOfLocationsInCity
+    )
+    {
     }
 }

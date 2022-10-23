@@ -11,7 +11,7 @@ use App\Entity\Calendar;
 class EventOutputDataTransformer implements DataTransformerInterface
 {
     /**
-     * @param Calendar     $object
+     * @param Calendar $object
      * @param array<mixed> $context
      */
     public function transform($object, string $to, array $context = []): EventOutput
@@ -24,7 +24,7 @@ class EventOutputDataTransformer implements DataTransformerInterface
     }
 
     /**
-     * @param object       $data
+     * @param object $data
      * @param array<mixed> $context
      */
     public function supportsTransformation($data, string $to, array $context = []): bool

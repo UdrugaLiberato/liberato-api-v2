@@ -34,13 +34,13 @@ class DonationGiver
     private string $name;
 
     #[ORM\Column(type: 'date')]
-    private \DateTimeImmutable $dateOfApplication;
+    private DateTimeImmutable $dateOfApplication;
 
     #[ORM\Column(type: 'boolean')]
     private bool $approved;
 
     #[ORM\Column(type: 'date', nullable: true)]
-    private ?\DateTimeImmutable $dateOfApproval = null;
+    private ?DateTimeImmutable $dateOfApproval = null;
 
     #[ORM\Column(type: 'float')]
     private float $moneyRequested;

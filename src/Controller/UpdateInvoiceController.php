@@ -14,9 +14,10 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 class UpdateInvoiceController
 {
     public function __construct(
-        private InvoiceRepository $invoiceRepository,
+        private InvoiceRepository       $invoiceRepository,
         private LiberatoHelperInterface $liberatoHelper
-    ) {
+    )
+    {
     }
 
     public function __invoke(string $id, Request $request): Invoice

@@ -9,9 +9,10 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 class GoogleMaps implements GoogleMapsInterface
 {
     public function __construct(
-        public string $apiKey,
+        public string               $apiKey,
         private HttpClientInterface $client
-    ) {
+    )
+    {
     }
 
     public function getCoordinateForCity(string $city): array

@@ -18,9 +18,10 @@ class UpdatePostController extends AbstractController
 {
     public function __construct(
         private LiberatoHelperInterface $liberatoHelper,
-        private PostRepository $postRepository,
-        private MessageBusInterface $bus
-    ) {
+        private PostRepository          $postRepository,
+        private MessageBusInterface     $bus
+    )
+    {
     }
 
     public function __invoke(string $id, Request $request): Post

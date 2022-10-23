@@ -15,9 +15,10 @@ use Exception;
 class CityProvider implements ProviderInterface
 {
     public function __construct(
-        private CityRepository $repository,
+        private CityRepository               $repository,
         private PaginationExtensionInterface $paginationExtension
-    ) {
+    )
+    {
     }
 
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null

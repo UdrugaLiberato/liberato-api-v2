@@ -11,7 +11,7 @@ use App\Entity\Project;
 class ProjectOutputDataTransformer implements DataTransformerInterface
 {
     /**
-     * @param Project      $object
+     * @param Project $object
      * @param array<mixed> $context
      */
     public function transform($object, string $to, array $context = []): ProjectOutput
@@ -38,7 +38,7 @@ class ProjectOutputDataTransformer implements DataTransformerInterface
     }
 
     /**
-     * @param object       $data
+     * @param object $data
      * @param array<mixed> $context
      */
     public function supportsTransformation($data, string $to, array $context = []): bool
