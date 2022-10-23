@@ -30,10 +30,10 @@ final class CreatePostEventSubscriber implements EventSubscriberInterface
     {
         $entity = $event->getControllerResult();
         $method = $event->getRequest()->getMethod();
+
         if (!$entity instanceof Post || Request::METHOD_POST !== $method) {
             return;
         }
-
         /** @var null|User $user */
         $user = $this->token->getToken()?->getUser();
         $entity->setAuthor($user ?? null);

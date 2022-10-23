@@ -14,6 +14,7 @@ use App\Controller\UpdatePostController;
 use App\DTO\Post\PostInput;
 use App\DTO\Post\PostOutput;
 use App\Repository\PostRepository;
+use App\State\PostProcessor;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -24,10 +25,10 @@ use Symfony\Component\Validator\Constraints as Assert;
     GetCollection(),
     \ApiPlatform\Metadata\Post(
         inputFormats: ['multipart' => ['multipart/form-data']],
-        controller: CreatePostController::class,
         security: "is_granted('ROLE_ADMIN')",
         securityMessage: 'Only admins can create posts',
-        deserialize: false
+        input: PostInput::class,
+        processor: PostProcessor::class
     ),
     Get(),
     Put(
