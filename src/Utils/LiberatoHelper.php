@@ -103,6 +103,10 @@ class LiberatoHelper implements LiberatoHelperInterface
         $fileNames = new ArrayCollection();
         foreach ($uploadedFiles as $file) {
             $ext = $file->guessExtension();
+            $mime = $file->getMimeType();
+            if ('text/html' === $mime) {
+                continue;
+            }
             $originalFilename = pathinfo(
                 $file->getClientOriginalName(),
                 PATHINFO_FILENAME
@@ -118,6 +122,7 @@ class LiberatoHelper implements LiberatoHelperInterface
             $fileObj = [
                 'path' => $newFilename,
                 'title' => $file->getClientOriginalName(),
+                'mime' => $mime,
             ];
             $fileNames->add($fileObj);
         }
