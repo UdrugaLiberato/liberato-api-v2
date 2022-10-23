@@ -103,6 +103,7 @@ class LiberatoHelper implements LiberatoHelperInterface
         $fileNames = new ArrayCollection();
         foreach ($uploadedFiles as $file) {
             $mime = $file->getMimeType();
+            $ext = $file->guessExtension();
             if ('text/html' === $mime) {
                 continue;
             }
@@ -115,7 +116,7 @@ class LiberatoHelper implements LiberatoHelperInterface
             $newFilename = date('Y-m-d') . '_' . $safeFilename . md5(
                 microtime()
             ) . '.'
-                . $file->guessExtension();
+                . $ext;
             $file->move(
                 $this->uploadDir . $entityName,
                 $newFilename
