@@ -35,8 +35,6 @@ final class OptimizeNewsArticleImageEventSubscriber implements EventSubscriberIn
             return;
         }
 
-        $image = $event->getRequest()->files->get('image');
-        $fileNames = $this->liberatoHelper->transformImage($image, 'news');
-        $this->bus->dispatch(new NewsArticleCloudinaryMessage($entity->getId(), $fileNames));
+        $this->bus->dispatch(new NewsArticleCloudinaryMessage($entity->getId(), $entity->getImage()));
     }
 }
