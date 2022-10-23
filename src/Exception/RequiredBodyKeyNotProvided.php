@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Exception;
 
 class RequiredBodyKeyNotProvided extends \Exception
@@ -8,7 +10,4 @@ class RequiredBodyKeyNotProvided extends \Exception
     {
         parent::__construct(sprintf('The key "%s" is required in the request body', $key), 422);
     }
-}
-{
-
 }

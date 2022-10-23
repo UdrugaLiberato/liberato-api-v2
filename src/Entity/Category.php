@@ -12,33 +12,32 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Put;
 use App\Controller\CreateCategoryController;
 use App\Controller\UpdateCategoryController;
-use App\DTO\Category\CategoryInput;
 use App\Repository\CategoryRepository;
-use App\State\CategoryProcessor;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class),
-    ApiResource(normalizationContext: ['groups' => ['category:read', 'location:read']],
-        denormalizationContext: ['groups' => ['category:write']]),
+    ApiResource(
+        normalizationContext: ['groups' => ['category:read', 'location:read']],
+        denormalizationContext: ['groups' => ['category:write']]
+    ),
     GetCollection(),
-\ApiPlatform\Metadata\Post(
-    uriTemplate: '/categories',
-    inputFormats: ['multipart' => ['multipart/form-data']],
-    controller: CreateCategoryController::class,
-    security: 'is_granted
+    \ApiPlatform\Metadata\Post(
+        uriTemplate: '/categories',
+        inputFormats: ['multipart' => ['multipart/form-data']],
+        controller: CreateCategoryController::class,
+        security: 'is_granted
 ("ROLE_ADMIN")',
-    securityMessage: 'Only admins can access this resource',
-    deserialize: false,
-    name: "category",
+        securityMessage: 'Only admins can access this resource',
+        deserialize: false,
+        name: 'category',
     ),
     Get(),
-    Delete(security: "is_granted('ROLE_ADMIN')", securityMessage: 'Only admins can delete posts.',),
+    Delete(security: "is_granted('ROLE_ADMIN')", securityMessage: 'Only admins can delete posts.', ),
     Put(
         inputFormats: ['multipart' => ['multipart/form-data']],
         controller: UpdateCategoryController::class,

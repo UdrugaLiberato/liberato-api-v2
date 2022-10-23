@@ -15,8 +15,10 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: AnswerRepository::class),
-    ApiResource(normalizationContext: ['groups' => ['answer:read']],
-        denormalizationContext: ['groups' => ['answer:write']]),
+    ApiResource(
+        normalizationContext: ['groups' => ['answer:read']],
+        denormalizationContext: ['groups' => ['answer:write']]
+    ),
     GetCollection(),
     Post(
         security: "is_granted('ROLE_ADMIN')",

@@ -6,7 +6,6 @@ namespace App\Events\Subscriber;
 
 use ApiPlatform\Symfony\EventListener\EventPriorities;
 use App\Entity\Category;
-use App\Entity\Question;
 use App\Repository\CategoryRepository;
 use App\Repository\QuestionRepository;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -41,7 +40,5 @@ class CreateCategoryEventSubscriber implements EventSubscriberInterface
         if (!$entity instanceof Category || Request::METHOD_POST !== $method) {
             return;
         }
-
-
     }
 }

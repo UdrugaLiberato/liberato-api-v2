@@ -6,8 +6,6 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
-use App\DTO\Question\QuestionInput;
-use App\DTO\Question\QuestionOutput;
 use App\Repository\QuestionRepository;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\Collection;
@@ -53,7 +51,7 @@ class Question
     ]
     private string $question;
 
-#[
+    #[
         ORM\OneToMany(mappedBy: 'answer', targetEntity: Answer::class, cascade: ['remove']),
         ORM\JoinColumn(name: 'answer_id', referencedColumnName: 'id', onDelete: 'CASCADE'),
     ]

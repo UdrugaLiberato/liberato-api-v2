@@ -13,7 +13,6 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Put;
 use App\Controller\UpdateUserController;
 use App\DTO\User\UserInput;
-use App\DTO\User\UserOutput;
 use App\Repository\UserRepository;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -26,7 +25,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[
     ORM\Entity(repositoryClass: UserRepository::class),
-    ApiResource(output: UserOutput::class),
+    ApiResource(),
     GetCollection(
         security: 'is_granted("ROLE_ADMIN")',
         securityMessage: 'Only admins can list users',
@@ -56,28 +55,25 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
         ORM\Column(type: 'string', unique: true),
         ORM\GeneratedValue(strategy: 'CUSTOM'),
         ORM\CustomIdGenerator(class: 'doctrine.uuid_generator'),
-        Groups(["post:read"])
+        Groups(['post:read'])
     ]
     private string $id;
 
     #[
         ORM\Column(type: 'string', length: 180, unique: true),
         Assert\Email,
-        Groups(["post:read"])
     ]
     private string $email;
 
     #[
         ORM\Column(type: 'string', length: 180, nullable: true),
-        Groups(["post:read"])
     ]
     private ?string $phone = '';
 
     /**
      * @var array<string>
      */
-    #[ORM\Column(type: 'json'), Groups(["post:read"])
-    ]
+    #[ORM\Column(type: 'json')]
     private array $roles;
 
     #[
@@ -87,23 +83,22 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     private string $password;
 
     #[
-        ApiFilter(SearchFilter::class, strategy: 'ipartial'),
-        Groups(["post:read"]),
+        Groups(['post:read']),
         ORM\Column(type: 'string', length: 255),
         Assert\Length(min: 4, minMessage: 'Username must be at least {{ limit }} characters long!')
     ]
     private string $username;
 
-    #[ORM\Column(type: 'array'), Groups(["post:read"])]
+    #[ORM\Column(type: 'array'), Groups(['post:read'])]
     private ArrayCollection $avatar;
 
-    #[ORM\Column(type: 'datetime_immutable'), Groups(["post:read"])]
+    #[ORM\Column(type: 'datetime_immutable')]
     private DateTimeImmutable $createdAt;
 
-    #[ORM\Column(type: 'datetime_immutable', nullable: true), Groups(["post:read"])]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true), Groups(['post:read'])]
     private ?DateTimeImmutable $updatedAt;
 
-    #[ORM\Column(type: 'datetime_immutable', nullable: true), Groups(["post:read"])]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true), Groups(['post:read'])]
     private ?DateTimeImmutable $deletedAt;
 
     #[ORM\OneToMany(mappedBy: 'author', targetEntity: Post::class, orphanRemoval: true)]
@@ -153,7 +148,7 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
 
     public function getUserIdentifier(): string
     {
-        return (string)$this->email;
+        return (string) $this->email;
     }
 
     public function getRoles(): array

@@ -6,37 +6,35 @@ namespace App\Events\Subscriber;
 
 use ApiPlatform\Symfony\EventListener\EventPriorities;
 use App\Entity\Post;
-use App\Entity\User;
+use App\Message\PostCloudinaryMessage;
+use App\Utils\LiberatoHelperInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Messenger\MessageBusInterface;
 
-final class CreatePostEventSubscriber implements EventSubscriberInterface
+final class OptimizePostImagesEventSubscriber implements EventSubscriberInterface
 {
-    public function __construct(private TokenStorageInterface $token)
+    public function __construct(private MessageBusInterface $bus, private LiberatoHelperInterface $liberatoHelper)
     {
     }
 
     public static function getSubscribedEvents()
     {
         return [
-            KernelEvents::VIEW => ['addUserToEntity', EventPriorities::PRE_VALIDATE],
+            KernelEvents::VIEW => ['optimize', EventPriorities::POST_WRITE],
         ];
     }
 
-    public function addUserToEntity(ViewEvent $event): void
+    public function optimize(ViewEvent $event): void
     {
         $entity = $event->getControllerResult();
         $method = $event->getRequest()->getMethod();
-
         if (!$entity instanceof Post || Request::METHOD_POST !== $method) {
             return;
         }
 
-        /** @var null|User $user */
-        $user = $this->token->getToken()?->getUser();
-        $entity->setAuthor($user ?? null);
+        $this->bus->dispatch(new PostCloudinaryMessage($entity->getId(), $entity->getImages()));
     }
 }

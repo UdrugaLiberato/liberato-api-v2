@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
@@ -19,7 +20,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[ApiResource(normalizationContext: ['groups' => ['post:read']],),
+#[ApiResource(normalizationContext: ['groups' => ['post:read']], ),
     GetCollection(),
     \ApiPlatform\Metadata\Post(
         inputFormats: ['multipart' => ['multipart/form-data']],
@@ -44,6 +45,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Post
 {
     #[
+        ApiProperty(identifier: true),
         ORM\Id,
         ORM\Column(type: 'string', unique: true),
         ORM\GeneratedValue(strategy: 'CUSTOM'),

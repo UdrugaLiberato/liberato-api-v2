@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\State;
 
 use ApiPlatform\Metadata\Operation;
@@ -14,15 +16,14 @@ class PostProcessor implements ProcessorInterface
 {
     public function __construct(
         private LiberatoHelperInterface $liberatoHelper,
-        private PostRepository          $postRepository,
-        private MessageBusInterface     $bus,
-        private TokenStorageInterface  $token
-    )
-    {
+        private PostRepository $postRepository,
+        private MessageBusInterface $bus,
+        private TokenStorageInterface $token
+    ) {
     }
+
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = [])
     {
-
         $post = new Post();
         $post->setTitle($data->title);
         $post->setBody($data->body);
@@ -31,6 +32,7 @@ class PostProcessor implements ProcessorInterface
         $post->setImages($fileNames);
         $post->setAuthor($this->token->getToken()->getUser());
         $this->postRepository->add($post);
+
         return $post;
     }
 }
