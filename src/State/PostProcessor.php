@@ -29,6 +29,7 @@ class PostProcessor implements ProcessorInterface
         $post->setTags(explode(',', $data->tags));
         $fileNames = $this->liberatoHelper->transformImages($data->images, 'posts');
         $post->setImages($fileNames);
+        $post->setSlug($this->liberatoHelper->slugify($data->title));
         $post->setAuthor($this->token->getToken()->getUser());
         $this->postRepository->add($post);
 

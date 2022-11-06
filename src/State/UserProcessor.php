@@ -8,6 +8,7 @@ use App\Entity\User;
 use App\Repository\UserRepository;
 use App\Utils\LiberatoHelperInterface;
 use Doctrine\Common\Collections\ArrayCollection;
+use JetBrains\PhpStorm\Pure;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserProcessor implements ProcessorInterface
@@ -45,7 +46,7 @@ class UserProcessor implements ProcessorInterface
         return $user;
     }
 
-    private function createAnonymousAvatar(): ArrayCollection
+    #[Pure] private function createAnonymousAvatar(): ArrayCollection
     {
         return new ArrayCollection([
             'src' => 'https://dev.udruga-liberato.hr/anonymous-user.png',

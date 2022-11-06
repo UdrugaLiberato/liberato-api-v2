@@ -14,6 +14,8 @@ use App\Controller\UpdatePostController;
 use App\DTO\Post\PostInput;
 use App\Repository\PostRepository;
 use App\State\PostProcessor;
+use App\State\PostProvider;
+use App\Utils\LiberatoHelper;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -29,7 +31,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         input: PostInput::class,
         processor: PostProcessor::class
     ),
-    Get(),
+    Get(provider: PostProvider::class),
     Put(
         inputFormats: ['multipart' => ['multipart/form-data']],
         controller: UpdatePostController::class,
@@ -68,6 +70,13 @@ class Post
         Groups(['post:read'])
     ]
     private string $title;
+
+    #[
+        ORM\Column(type: 'string', length: 255, unique: true),
+        Assert\Length(min: 10, minMessage: 'Title must be at least {{ limit }} characters long!'),
+        Groups(['post:read'])
+    ]
+    private string $slug;
 
     #[
         ORM\Column(type: 'text'),
@@ -200,4 +209,21 @@ class Post
     {
         $this->images = $images;
     }
+
+    /**
+     * @return string
+     */
+    public function getSlug(): string
+    {
+        return $this->slug;
+    }
+
+    /**
+     * @param string $slug
+     */
+    public function setSlug(string $slug): void
+    {
+        $this->slug = $slug;
+    }
+
 }
