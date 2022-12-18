@@ -15,7 +15,7 @@ use Symfony\Component\Messenger\MessageBusInterface;
 
 final class OptimizePostImagesEventSubscriber implements EventSubscriberInterface
 {
-    public function __construct(private MessageBusInterface $busx)
+    public function __construct(private MessageBusInterface $bus)
     {
     }
 

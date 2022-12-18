@@ -107,9 +107,6 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     #[ORM\Column(type: 'datetime_immutable', nullable: true), Groups(['user:read'])]
     private ?DateTimeImmutable $deletedAt;
 
-    #[ORM\OneToMany(mappedBy: 'author', targetEntity: Post::class, orphanRemoval: true)]
-    private Collection $posts;
-
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Location::class)]
     private Collection $locations;
 
@@ -117,7 +114,6 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     {
         $this->phone = '';
         $this->avatar = new ArrayCollection();
-        $this->posts = new ArrayCollection();
         $this->createdAt = new DateTimeImmutable('now');
         $this->updatedAt = null;
         $this->deletedAt = null;
@@ -235,34 +231,8 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     }
 
     /**
-     * @return Collection<int, Post>
+     * @return Collection<int>
      */
-    public function getPosts(): Collection
-    {
-        return $this->posts;
-    }
-
-    public function addPost(Post $post): self
-    {
-        if (!$this->posts->contains($post)) {
-            $this->posts[] = $post;
-            $post->setAuthor($this);
-        }
-
-        return $this;
-    }
-
-    public function removePost(Post $post): self
-    {
-        if ($this->posts->removeElement($post)) {
-            // set the owning side to null (unless already changed)
-            if ($post->getAuthor() === $this) {
-                $post->setAuthor(null);
-            }
-        }
-
-        return $this;
-    }
 
     public function getAvatar(): ArrayCollection
     {
