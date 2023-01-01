@@ -11,8 +11,6 @@ framework:
 
     routing:
       # Route your messages to the transports
-      'App\Message\PostCloudinaryMessage': async
-      'App\Message\NewsArticleCloudinaryMessage': async
 
 # when@test:
 #    framework:
