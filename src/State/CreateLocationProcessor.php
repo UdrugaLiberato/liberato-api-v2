@@ -10,6 +10,7 @@ use App\Repository\CategoryRepository;
 use App\Repository\CityRepository;
 use App\Repository\LocationRepository;
 use App\Repository\QuestionRepository;
+use App\Repository\UserRepository;
 use App\Utils\GoogleMapsInterface;
 use App\Utils\LiberatoHelperInterface;
 
@@ -21,6 +22,7 @@ class CreateLocationProcessor implements ProcessorInterface
         private CategoryRepository      $categoryRepository,
         private QuestionRepository      $questionRepository,
         private CityRepository          $cityRepository,
+        private UserRepository          $userRepository,
         private LiberatoHelperInterface $liberatoHelper
     )
     {
@@ -34,6 +36,7 @@ class CreateLocationProcessor implements ProcessorInterface
                 $data->city);
         $category = $this->categoryRepository->findOneBy(['name' => $data->category]);
         $city = $this->cityRepository->findOneBy(['name' => $data->city]);
+        $user = $this->userRepository->findOneBy(['username' => $data->user]);
 
         $location = new Location();
         $location->setName($data->name);
@@ -42,18 +45,20 @@ class CreateLocationProcessor implements ProcessorInterface
         $location->setLongitude($lng);
         $location->setCategory($category);
         $location->setCity($city);
-        $location->setImages($image);
-        $items = explode(",", $data->qa);
-        foreach ($items as $item) {
-            [$q, $a] = explode(":", $item);
-            $qEntity = $this->questionRepository->findOneBy(["category" => $category, "question" => $q]);
-            $answer = new Answer();
-            $answer->setQuestion($qEntity);
-            $answer->setAnswer($a);
-            $answer->setLocation($location);
-            $location->addAnswer($answer);
-        }
-
+        $location->setUser($user);
+        $location->setPublished(true);
+//        $location->setImages($image);
+//        $items = explode(",", $data->qa);
+//        foreach ($items as $item) {
+//            [$q, $a] = explode(":", $item);
+//            $qEntity = $this->questionRepository->findOneBy(["category" => $category, "question" => $q]);
+//            $answer = new Answer();
+//            $answer->setQuestion($qEntity);
+//            $answer->setAnswer($a);
+//            $answer->setLocation($location);
+//            $location->addAnswer($answer);
+//        }
+//
         $this->locationRepository->add($location);
 
 //        dd($location->getAnswers());
