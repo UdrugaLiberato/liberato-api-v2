@@ -12,7 +12,6 @@ class LocationOutput
 {
     public function __construct(
         public string          $id,
-        public ArrayCollection $answers,
         public string          $name,
         public string          $street,
         public ?string         $phone,
