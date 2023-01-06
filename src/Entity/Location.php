@@ -34,6 +34,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         inputFormats: ['multipart' => ['multipart/form-data']],
         security: "is_granted('ROLE_ADMIN')",
         securityMessage: 'Only admins can create locations',
+        input: LocationInput::class,
         processor: CreateLocationProcessor::class,
     ),
     Get(),
@@ -45,7 +46,7 @@ class Location
         ORM\Id,
         ORM\Column(type: 'string', unique: true),
         ORM\GeneratedValue(strategy: 'CUSTOM'),
-        ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')
+        ORM\CustomIdGenerator(class: 'doctrine.uuid_generator'),
     ]
     private string $id;
 

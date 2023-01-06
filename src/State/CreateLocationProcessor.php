@@ -28,7 +28,6 @@ class CreateLocationProcessor implements ProcessorInterface
 
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): Location
     {
-        dd($data);
         $image = $this->liberatoHelper->transformFiles($data->images, 'location/');
         ['lat' => $lat, 'lng' => $lng, 'formatted_address' => $formatted_address] =
             $this->googleMaps->getCoordinateForStreet($data->street,
