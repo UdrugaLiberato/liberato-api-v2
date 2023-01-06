@@ -84,18 +84,17 @@ class CreateLocationProcessor implements ProcessorInterface
                 $location->addImage($image);
             }
         }
-//        $location->setImages($image);
-//        $items = explode(",", $data->qa);
-//        foreach ($items as $item) {
-//            [$q, $a] = explode(":", $item);
-//            $qEntity = $this->questionRepository->findOneBy(["category" => $category, "question" => $q]);
-//            $answer = new Answer();
-//            $answer->setQuestion($qEntity);
-//            $answer->setAnswer($a);
-//            $answer->setLocation($location);
-//            $location->addAnswer($answer);
-//        }
-//
+        $items = explode(",", $data->qa);
+        foreach ($items as $item) {
+            [$q, $a] = explode(":", $item);
+            $qEntity = $this->questionRepository->findOneBy(["category" => $category, "question" => $q]);
+            $answer = new Answer();
+            $answer->setQuestion($qEntity);
+            $answer->setAnswer($a);
+            $answer->setLocation($location);
+            $location->addAnswer($answer);
+        }
+
         $this->locationRepository->add($location);
 
 //        dd($location->getAnswers());
