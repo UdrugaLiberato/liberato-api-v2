@@ -24,7 +24,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CityRepository::class),
     ApiResource(
-        normalizationContext: ['groups' => ['city:read']],
+        normalizationContext: ['groups' => ['city:read', 'location:read']],
         denormalizationContext: ['groups' => ['city:write']],
         provider: CityProvider::class
     ),
@@ -59,7 +59,7 @@ class City
             min: 3,
             minMessage: 'Name field must be at {{ limit }} characters long!'
         ),
-        Groups(['city:read', 'city:write'])
+        Groups(['city:read', 'city:write', 'location:read'])
     ]
     private string $name;
 
@@ -70,7 +70,7 @@ class City
             min: -90,
             max: 90,
         ),
-        Groups(['city:read'])
+        Groups(['city:read', 'location:read'])
     ]
     private float $latitude;
 
@@ -81,7 +81,7 @@ class City
             min: -180,
             max: 180,
         ),
-        Groups(['city:read'])
+        Groups(['city:read', 'location:read'])
     ]
     private float $longitude;
 

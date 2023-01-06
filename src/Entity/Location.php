@@ -27,7 +27,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[
     ORM\Entity(repositoryClass: LocationRepository::class),
     ApiResource(
-        normalizationContext: ['groups' => ['read']],
+        normalizationContext: ['groups' => ['location:read']],
     ),
     GetCollection(provider: LocationProvider::class),
     Post(
@@ -54,7 +54,7 @@ class Location
         ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'locations'),
         ORM\JoinColumn(nullable: false),
         Assert\NotNull,
-        Groups(['read'])
+        Groups(['location:read'])
     ]
     private Category $category;
 
@@ -74,18 +74,12 @@ class Location
         ORM\ManyToOne(targetEntity: City::class, inversedBy: 'locations'),
         ORM\JoinColumn(nullable: false),
         Assert\NotNull,
-        Groups(['read'])
+        Groups(['location:read'])
     ]
     private City $city;
 
     #[
-        Groups(['read']),
-        ORM\Column(type: 'array')
-    ]
-    private ArrayCollection $images;
-
-    #[
-        Groups(['read']),
+        Groups(['location:read']),
         ApiFilter(SearchFilter::class, strategy: 'ipartial'),
         ORM\Column(type: 'string', length: 255),
         Assert\Length(
@@ -98,42 +92,42 @@ class Location
     private string $name;
 
     #[
-        Groups(['read']),
+        Groups(['location:read']),
         ORM\Column(type: 'string', length: 255),
         Assert\NotBlank(message: 'Street address must be provided!')
     ]
     private string $street;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true),
-        Groups(['read']),
+        Groups(['location:read']),
     ]
     private ?string $phone;
 
     #[
-        Groups(['read']),
+        Groups(['location:read']),
         ORM\Column(type: 'string', length: 255, nullable: true),
     ]
     private ?string $email;
 
     #[ORM\Column(type: 'boolean'),
-        Groups(['read']),
+        Groups(['location:read']),
     ]
     private bool $published = false;
 
     #[ORM\Column(type: 'boolean'),
-        Groups(['read']),
+        Groups(['location:read']),
     ]
     private bool $featured = false;
 
     #[
-        Groups(['read']),
+        Groups(['location:read']),
         ORM\Column(type: 'text', nullable: true),
         Assert\Length(max: 255, maxMessage: 'About field must be at most {{ limit }} characters long!')
     ]
     private ?string $about;
 
     #[
-        Groups(['read']),
+        Groups(['location:read']),
         ORM\Column(type: 'float', nullable: false),
         Assert\Range(
             notInRangeMessage: 'Your latitude must be between {{ min }} and {{ max }} deg.',
@@ -144,7 +138,7 @@ class Location
     private float $latitude;
 
     #[
-        Groups(['read']),
+        Groups(['location:read']),
         ORM\Column(type: 'float', nullable: false),
         Assert\Range(
             notInRangeMessage: 'Your longitude must be between {{ min }} and {{ max }} deg.',
@@ -154,22 +148,26 @@ class Location
     ]
     private float $longitude;
 
-    #[Groups(['read']), ORM\Column(type: 'datetime_immutable')]
+    #[Groups(['location:read']), ORM\Column(type: 'datetime_immutable')]
     private DateTimeImmutable $createdAt;
 
-    #[Groups(['read']), ORM\Column(type: 'datetime_immutable', nullable: true)]
+    #[Groups(['location:read']), ORM\Column(type: 'datetime_immutable', nullable: true)]
     private ?DateTimeImmutable $updatedAt;
 
-    #[Groups(['read']), ORM\Column(type: 'datetime_immutable', nullable: true)]
+    #[Groups(['location:read']), ORM\Column(type: 'datetime_immutable', nullable: true)]
     private ?DateTimeImmutable $deletedAt;
+
+    #[ORM\ManyToMany(targetEntity: Image::class, mappedBy: 'location', cascade: ['persist']), Groups
+    (['location:read'])]
+    private Collection $images;
 
     public function __construct()
     {
         $this->answers = new ArrayCollection();
-        $this->images = new ArrayCollection();
         $this->createdAt = new DateTimeImmutable('now');
         $this->updatedAt = null;
         $this->deletedAt = null;
+        $this->images = new ArrayCollection();
     }
 
     public function getId(): string
@@ -202,7 +200,7 @@ class Location
     }
 
     #[
-        Groups(['read'])
+        Groups(['location:read'])
     ]
 public function getQuestionsAndAnswers(): array
     {
@@ -236,20 +234,6 @@ public function getQuestionsAndAnswers(): array
                 $answer->setLocation(null);
             }
         }
-
-        return $this;
-    }
-
-    public
-    function getImages(): ArrayCollection
-    {
-        return $this->images;
-    }
-
-    public
-    function setImages(ArrayCollection $images): self
-    {
-        $this->images = $images;
 
         return $this;
     }
@@ -428,6 +412,33 @@ public function getQuestionsAndAnswers(): array
     function setDeletedAt(?DateTimeImmutable $deletedAt): self
     {
         $this->deletedAt = $deletedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Image>
+     */
+    public function getImages(): Collection
+    {
+        return $this->images;
+    }
+
+    public function addImage(Image $image): self
+    {
+        if (!$this->images->contains($image)) {
+            $this->images->add($image);
+            $image->addLocation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeImage(Image $image): self
+    {
+        if ($this->images->removeElement($image)) {
+            $image->removeLocation($this);
+        }
 
         return $this;
     }

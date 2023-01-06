@@ -60,13 +60,13 @@ class Category
     #[
         ORM\Column(type: 'string', length: 255, unique: true),
         Assert\Length(min: 3, minMessage: 'Name must be at least {{ limit }} characters long!'),
-        Groups(['category:read', 'category:write'])
+        Groups(['category:read', 'category:write', 'location:read'])
     ]
     private string $name;
 
     #[
         ORM\Column(type: 'object', nullable: true),
-        Groups(['category:read', 'category:write'])
+        Groups(['category:read', 'category:write', 'location:read'])
     ]
     private ArrayCollection $icon;
 
