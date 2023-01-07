@@ -40,18 +40,20 @@ class CreateLocationProcessor implements ProcessorInterface
 
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): Location
     {
-        ['lat' => $lat, 'lng' => $lng, 'formatted_address' => $formatted_address] =
-            $this->googleMaps->getCoordinateForStreet($data->street,
-                $data->city);
+//        ['lat' => $lat, 'lng' => $lng, 'formatted_address' => $formatted_address] =
+//            $this->googleMaps->getCoordinateForStreet($data->street,
+//                $data->city);
         $category = $this->categoryRepository->findOneBy(['name' => $data->category]);
         $city = $this->cityRepository->findOneBy(['name' => $data->city]);
         $user = $this->userRepository->findOneBy(['username' => $data->user]);
 
         $location = new Location();
         $location->setName($data->name);
-        $location->setStreet($formatted_address);
-        $location->setLatitude($lat);
-        $location->setLongitude($lng);
+        $location->setStreet($data->street);
+        $location->setLatitude($data->latitude);
+        $location->setLongitude($data->longitude);
+        $location->setEmail($data->email);
+        $location->setAbout($data->about);
         $location->setCategory($category);
         $location->setCity($city);
         $location->setUser($user);

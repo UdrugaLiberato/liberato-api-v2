@@ -29,7 +29,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     ApiResource(
         normalizationContext: ['groups' => ['location:read']],
     ),
-    GetCollection(provider: LocationProvider::class),
+    GetCollection,
     Post(
         inputFormats: ['multipart' => ['multipart/form-data']],
         security: "is_granted('ROLE_ADMIN')",
