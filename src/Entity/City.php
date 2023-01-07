@@ -26,7 +26,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     ApiResource(
         normalizationContext: ['groups' => ['city:read', 'location:read']],
         denormalizationContext: ['groups' => ['city:write']],
-        provider: CityProvider::class
+        provider: CityProvider::class,
     ),
     GetCollection(),
     Get(),
@@ -70,7 +70,7 @@ class City
             min: -90,
             max: 90,
         ),
-        Groups(['city:read', 'location:read'])
+        Groups(['city:read'])
     ]
     private float $latitude;
 
@@ -81,7 +81,7 @@ class City
             min: -180,
             max: 180,
         ),
-        Groups(['city:read', 'location:read'])
+        Groups(['city:read'])
     ]
     private float $longitude;
 

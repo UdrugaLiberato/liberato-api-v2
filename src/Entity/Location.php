@@ -10,13 +10,12 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Link;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\DTO\Location\LocationInput;
 use App\Repository\LocationRepository;
 use App\State\CreateLocationProcessor;
-use App\State\LocationProvider;
-use Cloudinary\Transformation\X;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -27,9 +26,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[
     ORM\Entity(repositoryClass: LocationRepository::class),
     ApiResource(
-        normalizationContext: ['groups' => ['location:read']],
+                normalizationContext: ['groups' => ['location:read']],
+        paginationItemsPerPage: 1000,
     ),
-    GetCollection,
+    GetCollection(),
     Post(
         inputFormats: ['multipart' => ['multipart/form-data']],
         security: "is_granted('ROLE_ADMIN')",
@@ -202,7 +202,7 @@ class Location
     #[
         Groups(['location:read'])
     ]
-public function getQuestionsAndAnswers(): array
+    public function getQuestionsAndAnswers(): array
     {
         $arr = [];
         foreach ($this->answers as $answer) {
@@ -211,8 +211,8 @@ public function getQuestionsAndAnswers(): array
                 'answer' => $answer->getAnswer(),
             ];
         }
-        return  $arr;
-}
+        return $arr;
+    }
 
     public
     function addAnswer(Answer $answer): self

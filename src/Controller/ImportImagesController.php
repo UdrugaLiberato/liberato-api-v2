@@ -48,7 +48,9 @@ class ImportImagesController
                 $this->uploadDir . "locations/",
                 $newFilename
             );
-            $location = $this->locationRepository->findAll()[0];
+        $latv = $request->request->get('lat');
+
+        $location = $this->locationRepository->findOneBy(['latitude' => $latv]);
             $image = new Image();
             $image->setSrc(self::BACKEND_URL_IMAGES . "locations/" . $newFilename);
             $image->setName($safeFilename);
