@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use ApiPlatform\Doctrine\Orm\Filter\BooleanFilter;
+use ApiPlatform\Doctrine\Orm\Filter\ExistsFilter;
+use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
@@ -16,6 +18,7 @@ use ApiPlatform\Metadata\Put;
 use App\DTO\Location\LocationInput;
 use App\Repository\LocationRepository;
 use App\State\CreateLocationProcessor;
+use App\State\DeleteLocationProcessor;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -24,22 +27,23 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[
+    ApiFilter(OrderFilter::class, properties: ['name', 'createdAt']),
     ORM\Entity(repositoryClass: LocationRepository::class),
     ApiResource(
-                normalizationContext: ['groups' => ['location:read']],
+        normalizationContext: ['groups' => ['location:read']],
         paginationItemsPerPage: 1000,
+
     ),
     GetCollection(),
     Post(
         inputFormats: ['multipart' => ['multipart/form-data']],
-        security: "is_granted('ROLE_ADMIN')",
-        securityMessage: 'Only admins can create locations',
+        security: "is_granted('IS_AUTHENTICATED_FULLY')",
         input: LocationInput::class,
         processor: CreateLocationProcessor::class,
     ),
     Get(),
     Put(security: "is_granted('ROLE_ADMIN')", securityMessage: 'Only admins can edit locations'),
-    Delete(security: "is_granted('ROLE_ADMIN')", securityMessage: 'Only admins can delete locations'),
+    Delete(security: "is_granted('ROLE_ADMIN')", securityMessage: 'Only admins can delete locations', processor: DeleteLocationProcessor::class),
 ]
 class Location
 {
@@ -48,6 +52,7 @@ class Location
         ORM\Column(type: 'string', unique: true),
         ORM\GeneratedValue(strategy: 'CUSTOM'),
         ORM\CustomIdGenerator(class: 'doctrine.uuid_generator'),
+        Groups(['location:read'])
     ]
     private string $id;
 
@@ -159,7 +164,10 @@ class Location
     #[Groups(['location:read']), ORM\Column(type: 'datetime_immutable', nullable: true)]
     private ?DateTimeImmutable $updatedAt;
 
-    #[Groups(['location:read']), ORM\Column(type: 'datetime_immutable', nullable: true)]
+    #[Groups(
+        ['location:read']), ORM\Column(type: 'datetime_immutable', nullable: true),
+        ApiFilter(ExistsFilter::class)
+    ]
     private ?DateTimeImmutable $deletedAt;
 
     #[ORM\ManyToMany(targetEntity: Image::class, mappedBy: 'location', cascade: ['persist']), Groups
