@@ -9,12 +9,14 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Controller\UpdateCategoryController;
 use App\DTO\Category\CategoryInput;
 use App\Repository\CategoryRepository;
 use App\State\CreateCategoryProcessor;
+use App\State\DeleteCategoryProcessor;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -35,7 +37,10 @@ use Symfony\Component\Validator\Constraints as Assert;
         processor: CreateCategoryProcessor::class,
         ),
     Get(),
-    Delete(security: "is_granted('ROLE_ADMIN')", securityMessage: 'Only admins can delete posts.',),
+    Delete(
+        security: "is_granted('ROLE_ADMIN')",
+        securityMessage: 'Only admins can delete posts.',
+        processor: DeleteCategoryProcessor::class),
     Put(
         inputFormats: ['multipart' => ['multipart/form-data']],
         controller: UpdateCategoryController::class,

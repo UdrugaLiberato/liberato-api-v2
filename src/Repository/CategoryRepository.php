@@ -49,6 +49,14 @@ class CategoryRepository extends ServiceEntityRepository
         }
     }
 
+    public function save(Category $entity, bool $flush = true): void
+    {
+        $this->_em->persist($entity);
+        if ($flush) {
+            $this->_em->flush();
+        }
+    }
+
     // /**
     //  * @return Category[] Returns an array of Category objects
     //  */
