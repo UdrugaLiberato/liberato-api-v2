@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiFilter;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Doctrine\Orm\Filter\BooleanFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Link;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\DTO\Location\LocationInput;
@@ -39,7 +39,8 @@ use Symfony\Component\Validator\Constraints as Assert;
     ),
     Get(),
     Put(security: "is_granted('ROLE_ADMIN')", securityMessage: 'Only admins can edit locations'),
-    Delete(security: "is_granted('ROLE_ADMIN')", securityMessage: 'Only admins can delete locations'), ]
+    Delete(security: "is_granted('ROLE_ADMIN')", securityMessage: 'Only admins can delete locations'),
+]
 class Location
 {
     #[
@@ -54,7 +55,8 @@ class Location
         ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'locations'),
         ORM\JoinColumn(nullable: false),
         Assert\NotNull,
-        Groups(['location:read'])
+        Groups(['location:read']),
+        ApiFilter(SearchFilter::class, strategy: 'ipartial', properties: ['category.name']),
     ]
     private Category $category;
 
@@ -70,17 +72,17 @@ class Location
     private $answers;
 
     #[
-        ApiFilter(SearchFilter::class, strategy: 'ipartial'),
         ORM\ManyToOne(targetEntity: City::class, inversedBy: 'locations'),
         ORM\JoinColumn(nullable: false),
         Assert\NotNull,
-        Groups(['location:read'])
+        Groups(['location:read']),
+        ApiFilter(SearchFilter::class, strategy: 'ipartial', properties: ['city.name']),
     ]
     private City $city;
 
     #[
         Groups(['location:read']),
-        ApiFilter(SearchFilter::class, strategy: 'ipartial'),
+        ApiFilter(SearchFilter::class, strategy: 'partial'),
         ORM\Column(type: 'string', length: 255),
         Assert\Length(
             min: 3,
@@ -94,7 +96,8 @@ class Location
     #[
         Groups(['location:read']),
         ORM\Column(type: 'string', length: 255),
-        Assert\NotBlank(message: 'Street address must be provided!')
+        Assert\NotBlank(message: 'Street address must be provided!'),
+        ApiFilter(SearchFilter::class, strategy: 'ipartial'),
     ]
     private string $street;
 
@@ -111,11 +114,13 @@ class Location
 
     #[ORM\Column(type: 'boolean'),
         Groups(['location:read']),
+        ApiFilter(BooleanFilter::class),
     ]
     private bool $published = false;
 
     #[ORM\Column(type: 'boolean'),
         Groups(['location:read']),
+        ApiFilter(BooleanFilter::class),
     ]
     private bool $featured = false;
 

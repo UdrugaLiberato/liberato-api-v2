@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
@@ -17,6 +19,7 @@ use App\State\CityProcessor;
 use App\State\CityProvider;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
+use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -26,7 +29,8 @@ use Symfony\Component\Validator\Constraints as Assert;
     ApiResource(
         normalizationContext: ['groups' => ['city:read', 'location:read']],
         denormalizationContext: ['groups' => ['city:write']],
-        provider: CityProvider::class,
+        paginationEnabled: false,
+        provider: CityProvider::class
     ),
     GetCollection(),
     Get(),
@@ -40,7 +44,8 @@ use Symfony\Component\Validator\Constraints as Assert;
         controller: UpdateCityController::class,
         security: "is_granted('ROLE_ADMIN')",
         securityMessage: 'Only admins can update cities'
-    )]
+    ),
+]
 class City
 {
     #[
