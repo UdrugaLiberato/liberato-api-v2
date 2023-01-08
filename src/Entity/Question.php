@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\GetCollection;
 use App\Repository\QuestionRepository;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\Collection;
@@ -13,14 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\Entity(repositoryClass: QuestionRepository::class),
-    ApiResource(),
-    GetCollection(),
-    \ApiPlatform\Metadata\Post(
-        security: 'is_granted("ROLE_ADMIN")',
-        securityMessage: 'Only admins can create questions',
-    ),
-]
+#[ORM\Entity(repositoryClass: QuestionRepository::class)]
 class Question
 {
     #[

@@ -4,31 +4,12 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Delete;
-use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Post;
 use App\Repository\AnswerRepository;
-use App\State\CityProcessor;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-#[ORM\Entity(repositoryClass: AnswerRepository::class),
-    ApiResource(
-        normalizationContext: ['groups' => ['answer:read']],
-        denormalizationContext: ['groups' => ['answer:write']]
-    ),
-    GetCollection(),
-    Get(),
-    Post(
-        security: "is_granted('ROLE_ADMIN')",
-        securityMessage: 'Only admins can create answer',
-        processor: CityProcessor::class,
-    ),
-    Delete(security: "is_granted('ROLE_ADMIN')", securityMessage: 'Only admins can delete answer')
-]
+#[ORM\Entity(repositoryClass: AnswerRepository::class)]
 class Answer
 {
     #[
