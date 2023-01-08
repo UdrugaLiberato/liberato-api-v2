@@ -50,7 +50,7 @@ class ImportImagesController
             );
         $latv = $request->request->get('lat');
 
-        $location = $this->locationRepository->findOneBy(['latitude' => $latv]);
+        $location = $this->locationRepository->findOneBy(['latitudes' => $latv]);
             $image = new Image();
             $image->setSrc(self::BACKEND_URL_IMAGES . "locations/" . $newFilename);
             $image->setName($safeFilename);

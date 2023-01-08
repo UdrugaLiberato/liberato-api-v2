@@ -102,4 +102,4 @@ class CreateLocationProcessor implements ProcessorInterface
 
         return $location;
     }
-}
+    }

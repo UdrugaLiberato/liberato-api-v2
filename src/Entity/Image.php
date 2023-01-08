@@ -30,12 +30,16 @@ class Image
     #[ORM\Column(length: 255, nullable: true), Groups(['location:read'])]
     private ?string $mime = null;
 
-    #[ORM\ManyToMany(targetEntity: Location::class, inversedBy: 'images', cascade: ['persist'])]
+    #[ORM\ManyToMany(targetEntity: Location::class, inversedBy: 'images', cascade: ['persist', 'remove'])]
     private Collection $location;
+
+    #[ORM\ManyToMany(targetEntity: Category::class, mappedBy: 'image', cascade: ['persist', 'remove'])]
+    private Collection $categories;
 
     public function __construct()
     {
         $this->location = new ArrayCollection();
+        $this->categories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -99,6 +103,33 @@ class Image
     public function removeLocation(Location $location): self
     {
         $this->location->removeElement($location);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Category>
+     */
+    public function getCategories(): Collection
+    {
+        return $this->categories;
+    }
+
+    public function addCategory(Category $category): self
+    {
+        if (!$this->categories->contains($category)) {
+            $this->categories->add($category);
+            $category->addImage($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCategory(Category $category): self
+    {
+        if ($this->categories->removeElement($category)) {
+            $category->removeImage($this);
+        }
 
         return $this;
     }

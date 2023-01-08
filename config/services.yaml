@@ -23,29 +23,6 @@ services:
 
   # add more service definitions when explicit configuration is needed
   # please note that last definitions always *replace* previous ones
-  'App\DataTransformer\Post\PostOutputDataTransformer': ~
-  'App\DataTransformer\Post\PostInputDataTransformer': ~
-  'App\DataTransformer\User\UserInputDataTransformer': ~
-  'App\DataTransformer\User\UserOutputDataTransformer': ~
-  'App\DataTransformer\City\CityInputDataTransformer': ~
-  'App\DataTransformer\City\CityOutputDataTransformer': ~
-  'App\DataTransformer\Category\CategoryInputDataTransformer': ~
-  'App\DataTransformer\Category\CategoryOutputDataTransformer': ~
-  'App\DataTransformer\Question\QuestionInputDataTransformer': ~
-  'App\DataTransformer\Question\QuestionOutputDataTransformer': ~
-  'App\DataTransformer\Location\LocationOutputDataTransformer': ~
-  'App\DataTransformer\Location\LocationInputDataTransformer': ~
-  'App\DataTransformer\Event\EventInputDataTransformer': ~
-  'App\DataTransformer\Event\EventOutputDataTransformer': ~
-  'App\DataTransformer\DonationGiver\DonationGiverInputDataTransformer': ~
-  'App\DataTransformer\DonationGiver\DonationGiverOutputDataTransformer': ~
-  'App\DataTransformer\Project\ProjectOutputDataTransformer': ~
-  'App\DataTransformer\Invoice\InvoiceOutputDataTransformer': ~
-  'App\DataTransformer\Invoice\InvoiceInputDataTranaformer': ~
-  'App\DataTransformer\BankAccount\BankAccountInputDataTransformer': ~
-  'App\DataTransformer\BankAccount\BankAccountOutputDataTransformer': ~
-  'App\DataTransformer\NewsArticle\NewsArticleInputDataTransformer': ~
-  'App\DataTransformer\NewsArticle\NewsArticleOutputDataTransformer': ~
 
   acme_api.event.authentication_success_listener:
     class: App\Events\Listener\AuthenticationSuccessListener

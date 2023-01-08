@@ -9,10 +9,12 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
-use App\Controller\CreateCategoryController;
 use App\Controller\UpdateCategoryController;
+use App\DTO\Category\CategoryInput;
 use App\Repository\CategoryRepository;
+use App\State\CreateCategoryProcessor;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -23,19 +25,15 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: CategoryRepository::class),
     ApiResource(
         normalizationContext: ['groups' => ['category:read', 'location:read']],
-        denormalizationContext: ['groups' => ['category:write']]
     ),
     GetCollection(),
-    \ApiPlatform\Metadata\Post(
-        uriTemplate: '/categories',
+    Post(
         inputFormats: ['multipart' => ['multipart/form-data']],
-        controller: CreateCategoryController::class,
-        security: 'is_granted
-("ROLE_ADMIN")',
-        securityMessage: 'Only admins can access this resource',
-        deserialize: false,
-        name: 'category',
-    ),
+        security: "is_granted('ROLE_ADMIN')",
+        securityMessage: 'Only admins can create categories.',
+        input: CategoryInput::class,
+        processor: CreateCategoryProcessor::class,
+        ),
     Get(),
     Delete(security: "is_granted('ROLE_ADMIN')", securityMessage: 'Only admins can delete posts.',),
     Put(
@@ -65,12 +63,6 @@ class Category
     private string $name;
 
     #[
-        ORM\Column(type: 'object', nullable: true),
-        Groups(['category:read', 'category:write', 'location:read'])
-    ]
-    private ArrayCollection $icon;
-
-    #[
         ORM\Column(type: 'text', nullable: true),
         Assert\NotNull,
         Assert\Length(min: 5, minMessage: 'Description must be at least {{ limit }} characters long!'),
@@ -96,12 +88,16 @@ class Category
         Groups(['category:read'])]
     private Collection $locations;
 
+    #[ORM\ManyToMany(targetEntity: Image::class, inversedBy: 'categories'), Groups(['category:read'])]
+    private Collection $image;
+
     public function __construct()
     {
         $this->createdAt = new DateTimeImmutable('now');
         $this->questions = new ArrayCollection();
         $this->locations = new ArrayCollection();
         $this->icon = new ArrayCollection();
+        $this->image = new ArrayCollection();
     }
 
     public function getId(): string
@@ -117,18 +113,6 @@ class Category
     public function setName(string $name): self
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    public function getIcon(): ?ArrayCollection
-    {
-        return $this->icon;
-    }
-
-    public function setIcon(ArrayCollection $icon): self
-    {
-        $this->icon = $icon;
 
         return $this;
     }
@@ -223,6 +207,30 @@ class Category
                 $location->setCategory(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Image>
+     */
+    public function getImage(): Collection
+    {
+        return $this->image;
+    }
+
+    public function addImage(Image $image): self
+    {
+        if (!$this->image->contains($image)) {
+            $this->image->add($image);
+        }
+
+        return $this;
+    }
+
+    public function removeImage(Image $image): self
+    {
+        $this->image->removeElement($image);
 
         return $this;
     }
