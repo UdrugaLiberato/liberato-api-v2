@@ -21,6 +21,8 @@ class AuthenticationSuccessListener
         $additionalData = [
             'role' => $user->getRoles()[0],
             'username' => $user->getUsername(),
+            'email' => $user->getEmail(),
+            'avatar' => $user->getAvatar(),
             'timestamp' => time() + 3600,
         ];
 
