@@ -17,6 +17,7 @@ class SendContactEmail extends AbstractController
     #[Route('/contact', methods: ['POST'])]
     public function sendEmail(MailerInterface $mailer, Request $request): JsonResponse
     {
+
         $name = $request->request->get('name');
         $email = $request->request->get('email');
         $message = $request->request->get('message');

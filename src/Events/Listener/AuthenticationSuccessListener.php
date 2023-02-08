@@ -19,6 +19,7 @@ class AuthenticationSuccessListener
         }
 
         $additionalData = [
+            'id' => $user->getId(),
             'role' => $user->getRoles()[0],
             'username' => $user->getUsername(),
             'email' => $user->getEmail(),
