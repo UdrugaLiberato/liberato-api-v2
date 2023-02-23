@@ -15,6 +15,7 @@ class LocationInput
     public $qa;
     public $latitude;
     public $longitude;
+
     /** @var array<UploadedFile> */
     public array $images;
     public string $name;

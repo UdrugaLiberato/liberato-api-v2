@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\State;
 
 use ApiPlatform\Metadata\Operation;
@@ -10,8 +12,7 @@ class DeleteCategoryProcessor implements ProcessorInterface
 {
     public function __construct(
         private CategoryRepository $categoryRepository,
-    )
-    {
+    ) {
     }
 
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): void

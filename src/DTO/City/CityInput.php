@@ -10,4 +10,5 @@ final class CityInput
 {
     #[Assert\NotBlank]
     public string $name;
+    public int $radiusInKm;
 }

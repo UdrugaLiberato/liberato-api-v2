@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Entity\Image;
@@ -22,15 +24,14 @@ class ImportImagesController
         public KernelInterface $kernel,
         private LocationRepository $locationRepository,
         private ImageRepository $imageRepository,
-    )
-    {
+    ) {
         $this->uploadDir = $this->kernel->getProjectDir() . '/public/images/';
     }
 
     #[Route('/import', methods: ['POST'])]
     public function importImage(Request $request): JsonResponse
     {
-        foreach ($request->files->get("image") as $file) {
+        foreach ($request->files->get('image') as $file) {
             $ext = $file->guessExtension();
             $mime = $file->getMimeType();
             if ('text/html' === $mime) {
@@ -45,14 +46,14 @@ class ImportImagesController
             $newFilename = date('Y-m-d') . '_' . $safeFilename . '.'
                 . $ext;
             $file->move(
-                $this->uploadDir . "locations/",
+                $this->uploadDir . 'locations/',
                 $newFilename
             );
-        $latv = $request->request->get('lat');
+            $latv = $request->request->get('lat');
 
-        $location = $this->locationRepository->findOneBy(['latitudes' => $latv]);
+            $location = $this->locationRepository->findOneBy(['latitudes' => $latv]);
             $image = new Image();
-            $image->setSrc(self::BACKEND_URL_IMAGES . "locations/" . $newFilename);
+            $image->setSrc(self::BACKEND_URL_IMAGES . 'locations/' . $newFilename);
             $image->setName($safeFilename);
             $image->setMime($mime);
             $image->addLocation($location);

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\State;
 
 use ApiPlatform\Metadata\Operation;
@@ -14,15 +16,13 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class UserProcessor implements ProcessorInterface
 {
     public function __construct(
-        private UserRepository          $userRepository,
+        private UserRepository $userRepository,
         private UserPasswordHasherInterface $userPasswordEncoder,
         private LiberatoHelperInterface $liberatoHelper,
-    )
-    {
+    ) {
     }
 
-    public function process(mixed $data, Operation $operation, array $uriVariables = [], array
-    $context = []): User
+    public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): User
     {
         $user = new User();
         if ($data->password) {
@@ -46,13 +46,14 @@ class UserProcessor implements ProcessorInterface
         return $user;
     }
 
-    #[Pure] private function createAnonymousAvatar(): ArrayCollection
-    {
-        return new ArrayCollection([
-            'src' => 'https://dev.udruga-liberato.hr/anonymous-user.png',
-            'title' => 'anonymous-user',
-            'path' => 'anonymous-user.png',
-            'mime' => 'image/png',
-        ]);
-    }
+    #[Pure]
+ private function createAnonymousAvatar(): ArrayCollection
+ {
+     return new ArrayCollection([
+         'src' => 'https://dev.udruga-liberato.hr/anonymous-user.png',
+         'title' => 'anonymous-user',
+         'path' => 'anonymous-user.png',
+         'mime' => 'image/png',
+     ]);
+ }
 }

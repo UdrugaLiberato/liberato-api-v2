@@ -9,15 +9,14 @@ use Doctrine\Common\Collections\ArrayCollection;
 class CategoryOutput
 {
     public function __construct(
-        public string          $id,
-        public string          $name,
+        public string $id,
+        public string $name,
         public ArrayCollection $questions,
-        public ?string         $description,
-        public string          $createdAt,
-        public ?string         $deletedAt,
+        public ?string $description,
+        public string $createdAt,
+        public ?string $deletedAt,
         public ArrayCollection $icon,
-        public int             $numberOfLocationsInCategory
-    )
-    {
+        public int $numberOfLocationsInCategory
+    ) {
     }
 }

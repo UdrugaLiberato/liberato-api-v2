@@ -13,7 +13,6 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use function count;
 
 class LiberatoHelper implements LiberatoHelperInterface
 {
@@ -23,12 +22,11 @@ class LiberatoHelper implements LiberatoHelperInterface
     public string $uploadDir;
 
     public function __construct(
-        public KernelInterface       $kernel,
-        public ValidatorInterface    $validator,
+        public KernelInterface $kernel,
+        public ValidatorInterface $validator,
         public TokenStorageInterface $token,
-        private string               $cloudinaryApiKey
-    )
-    {
+        private string $cloudinaryApiKey
+    ) {
         $this->uploadDir = $this->kernel->getProjectDir() . '/public/images/';
         self::$cloudinary = new Cloudinary($this->cloudinaryApiKey);
     }
@@ -74,8 +72,8 @@ class LiberatoHelper implements LiberatoHelperInterface
         // this is needed to safely include the file name as part of the URL
         $safeFilename = self::slugify($originalFilename);
         $newFilename = date('Y-m-d') . '_' . $safeFilename . md5(
-                microtime()
-            ) . '.'
+            microtime()
+        ) . '.'
             . $file->guessExtension();
         $file->move(
             $this->uploadDir . $entityName . '/',
@@ -93,7 +91,7 @@ class LiberatoHelper implements LiberatoHelperInterface
     {
         $string = preg_replace('~[^\pL\d]+~u', '-', $string);
         $string = iconv('utf-8', 'us-ascii//TRANSLIT', $string);
-        $string = preg_replace('~[^-\w]+~', '', (string)$string);
+        $string = preg_replace('~[^-\w]+~', '', (string) $string);
         $string = trim($string, '-');
         $string = preg_replace('~-+~', '-', $string);
 
@@ -200,7 +198,7 @@ class LiberatoHelper implements LiberatoHelperInterface
         $fileNames = new ArrayCollection();
         foreach ($files as $file) {
             $errors = $this->validator->validate($file, new File());
-            if (count($errors) > 0) {
+            if (\count($errors) > 0) {
                 throw new ValidationException('Only files can be uploaded!');
             }
             $mime = $file->getMimeType();
@@ -211,8 +209,8 @@ class LiberatoHelper implements LiberatoHelperInterface
             // this is needed to safely include the file name as part of the URL
             $safeFilename = self::slugify($originalFilename);
             $newFilename = date('Y-m-d') . '_' . $safeFilename . md5(
-                    microtime()
-                ) . '.'
+                microtime()
+            ) . '.'
                 . $file->guessExtension();
             $file->move(
                 $this->uploadDir . $entityName,

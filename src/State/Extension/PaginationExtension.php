@@ -15,7 +15,7 @@ class PaginationExtension implements PaginationExtensionInterface
     }
 
     public function getResult(array $collection, string $resourceClass, ?Operation $operation =
-    null, array                     $context = []): ArrayPaginator
+    null, array $context = []): ArrayPaginator
     {
         [, $offset, $itemPerPage] = $this->pagination->getPagination($operation, $context);
 

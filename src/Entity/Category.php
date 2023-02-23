@@ -11,7 +11,6 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Controller\UpdateCategoryController;
@@ -19,7 +18,6 @@ use App\DTO\Category\CategoryInput;
 use App\Repository\CategoryRepository;
 use App\State\CreateCategoryProcessor;
 use App\State\DeleteCategoryProcessor;
-use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -38,12 +36,13 @@ use Symfony\Component\Validator\Constraints as Assert;
         securityMessage: 'Only admins can create categories.',
         input: CategoryInput::class,
         processor: CreateCategoryProcessor::class,
-        ),
+    ),
     Get(),
     Delete(
         security: "is_granted('ROLE_ADMIN')",
         securityMessage: 'Only admins can delete posts.',
-        processor: DeleteCategoryProcessor::class),
+        processor: DeleteCategoryProcessor::class
+    ),
     Put(
         inputFormats: ['multipart' => ['multipart/form-data']],
         controller: UpdateCategoryController::class,
@@ -79,13 +78,13 @@ class Category
     private ?string $description;
 
     #[ORM\Column(type: 'datetime_immutable'), Groups(['category:read'])]
-    private DateTimeImmutable $createdAt;
+    private \DateTimeImmutable $createdAt;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true), Groups(['category:read'])]
-    private ?DateTimeImmutable $updatedAt = null;
+    private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true), Groups(['category:read'])]
-    private ?DateTimeImmutable $deletedAt = null;
+    private ?\DateTimeImmutable $deletedAt = null;
 
     #[
         ORM\OneToMany(mappedBy: 'category', targetEntity: Question::class, cascade: ['remove']),
@@ -101,7 +100,7 @@ class Category
 
     public function __construct()
     {
-        $this->createdAt = new DateTimeImmutable('now');
+        $this->createdAt = new \DateTimeImmutable('now');
         $this->questions = new ArrayCollection();
         $this->locations = new ArrayCollection();
         $this->icon = new ArrayCollection();
@@ -137,27 +136,27 @@ class Category
         return $this;
     }
 
-    public function getCreatedAt(): DateTimeImmutable
+    public function getCreatedAt(): \DateTimeImmutable
     {
         return $this->createdAt;
     }
 
-    public function getUpdatedAt(): ?DateTimeImmutable
+    public function getUpdatedAt(): ?\DateTimeImmutable
     {
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(?DateTimeImmutable $updatedAt): void
+    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): void
     {
         $this->updatedAt = $updatedAt;
     }
 
-    public function getDeletedAt(): ?DateTimeImmutable
+    public function getDeletedAt(): ?\DateTimeImmutable
     {
         return $this->deletedAt;
     }
 
-    public function setDeletedAt(?DateTimeImmutable $deletedAt): void
+    public function setDeletedAt(?\DateTimeImmutable $deletedAt): void
     {
         $this->deletedAt = $deletedAt;
     }

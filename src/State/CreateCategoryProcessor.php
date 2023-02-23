@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\State;
 
 use ApiPlatform\Metadata\Operation;
@@ -18,14 +20,12 @@ class CreateCategoryProcessor implements ProcessorInterface
     public string $uploadDir;
 
     public function __construct(
-        public KernelInterface     $kernel,
+        public KernelInterface $kernel,
         private QuestionRepository $questionRepository,
-        private ImageRepository    $imageRepository,
-    )
-    {
+        private ImageRepository $imageRepository,
+    ) {
         $this->uploadDir = $this->kernel->getProjectDir() . '/public/images/';
     }
-
 
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): Category
     {
@@ -46,11 +46,11 @@ class CreateCategoryProcessor implements ProcessorInterface
         $newFilename = date('Y-m-d') . '_' . $safeFilename . '.'
             . $ext;
         $file->move(
-            $this->uploadDir . "category/",
+            $this->uploadDir . 'category/',
             $newFilename
         );
         $image = new Image();
-        $image->setSrc(self::BACKEND_URL_IMAGES . "category/" . $newFilename);
+        $image->setSrc(self::BACKEND_URL_IMAGES . 'category/' . $newFilename);
         $image->setName($safeFilename);
         $image->setMime($mime);
         $image->addCategory($category);

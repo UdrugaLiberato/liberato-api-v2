@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace App\Exception;
 
-use Exception;
-
-class RequiredBodyKeyNotProvided extends Exception
+class RequiredBodyKeyNotProvided extends \Exception
 {
     public function __construct(string $key)
     {

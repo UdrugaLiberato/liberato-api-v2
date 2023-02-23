@@ -24,6 +24,7 @@ class CityProcessor implements ProcessorInterface
         $city->setName($data->getName());
         $city->setLatitude($lat);
         $city->setLongitude($lng);
+        $city->setRadiusInKm($data->getRadiusInKm());
 
         $this->repository->add($city);
 

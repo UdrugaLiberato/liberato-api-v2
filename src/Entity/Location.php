@@ -19,7 +19,6 @@ use App\DTO\Location\LocationInput;
 use App\Repository\LocationRepository;
 use App\State\CreateLocationProcessor;
 use App\State\DeleteLocationProcessor;
-use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -32,7 +31,6 @@ use Symfony\Component\Validator\Constraints as Assert;
     ApiResource(
         normalizationContext: ['groups' => ['location:read']],
         paginationItemsPerPage: 1000,
-
     ),
     GetCollection(),
     Post(
@@ -159,25 +157,25 @@ class Location
     private float $longitude;
 
     #[Groups(['location:read']), ORM\Column(type: 'datetime_immutable')]
-    private DateTimeImmutable $createdAt;
+    private \DateTimeImmutable $createdAt;
 
     #[Groups(['location:read']), ORM\Column(type: 'datetime_immutable', nullable: true)]
-    private ?DateTimeImmutable $updatedAt;
+    private ?\DateTimeImmutable $updatedAt;
 
     #[Groups(
-        ['location:read']), ORM\Column(type: 'datetime_immutable', nullable: true),
+        ['location:read']
+    ), ORM\Column(type: 'datetime_immutable', nullable: true),
         ApiFilter(ExistsFilter::class)
     ]
-    private ?DateTimeImmutable $deletedAt;
+    private ?\DateTimeImmutable $deletedAt;
 
-    #[ORM\ManyToMany(targetEntity: Image::class, mappedBy: 'location', cascade: ['persist']), Groups
-    (['location:read'])]
+    #[ORM\ManyToMany(targetEntity: Image::class, mappedBy: 'location', cascade: ['persist']), Groups(['location:read'])]
     private Collection $images;
 
     public function __construct()
     {
         $this->answers = new ArrayCollection();
-        $this->createdAt = new DateTimeImmutable('now');
+        $this->createdAt = new \DateTimeImmutable('now');
         $this->updatedAt = null;
         $this->deletedAt = null;
         $this->images = new ArrayCollection();
@@ -224,11 +222,11 @@ class Location
                 'answer' => $answer->getAnswer(),
             ];
         }
+
         return $arr;
     }
 
-    public
-    function addAnswer(Answer $answer): self
+    public function addAnswer(Answer $answer): self
     {
         if (!$this->answers->contains($answer)) {
             $this->answers[] = $answer;
@@ -238,8 +236,7 @@ class Location
         return $this;
     }
 
-    public
-    function removeAnswer(Answer $answer): self
+    public function removeAnswer(Answer $answer): self
     {
         if ($this->answers->removeElement($answer)) {
             // set the owning side to null (unless already changed)
@@ -251,178 +248,152 @@ class Location
         return $this;
     }
 
-    public
-    function getName(): ?string
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    public
-    function setName(string $name): self
+    public function setName(string $name): self
     {
         $this->name = $name;
 
         return $this;
     }
 
-    public
-    function getLatitude(): float
+    public function getLatitude(): float
     {
         return $this->latitude;
     }
 
-    public
-    function setLatitude(float $latitude): void
+    public function setLatitude(float $latitude): void
     {
         $this->latitude = $latitude;
     }
 
-    public
-    function getLongitude(): float
+    public function getLongitude(): float
     {
         return $this->longitude;
     }
 
-    public
-    function setLongitude(float $longitude): void
+    public function setLongitude(float $longitude): void
     {
         $this->longitude = $longitude;
     }
 
-    public
-    function getStreet(): ?string
+    public function getStreet(): ?string
     {
         return $this->street;
     }
 
-    public
-    function setStreet(string $street): self
+    public function setStreet(string $street): self
     {
         $this->street = $street;
 
         return $this;
     }
 
-    public
-    function getCity(): ?City
+    public function getCity(): ?City
     {
         return $this->city;
     }
 
-    public
-    function setCity(?City $city): self
+    public function setCity(?City $city): self
     {
         $this->city = $city;
 
         return $this;
     }
 
-    public
-    function getPhone(): ?string
+    public function getPhone(): ?string
     {
         return $this->phone;
     }
 
-    public
-    function setPhone(?string $phone): self
+    public function setPhone(?string $phone): self
     {
         $this->phone = $phone;
 
         return $this;
     }
 
-    public
-    function getEmail(): ?string
+    public function getEmail(): ?string
     {
         return $this->email;
     }
 
-    public
-    function setEmail(?string $email): self
+    public function setEmail(?string $email): self
     {
         $this->email = $email;
 
         return $this;
     }
 
-    public
-    function getPublished(): ?bool
+    public function getPublished(): ?bool
     {
         return $this->published;
     }
 
-    public
-    function setPublished(bool $published): self
+    public function setPublished(bool $published): self
     {
         $this->published = $published;
 
         return $this;
     }
 
-    public
-    function getFeatured(): ?bool
+    public function getFeatured(): ?bool
     {
         return $this->featured;
     }
 
-    public
-    function setFeatured(bool $featured): self
+    public function setFeatured(bool $featured): self
     {
         $this->featured = $featured;
 
         return $this;
     }
 
-    public
-    function getAbout(): ?string
+    public function getAbout(): ?string
     {
         return $this->about;
     }
 
-    public
-    function setAbout(?string $about): self
+    public function setAbout(?string $about): self
     {
         $this->about = $about;
 
         return $this;
     }
 
-    public
-    function getCreatedAt(): ?DateTimeImmutable
+    public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->createdAt;
     }
 
-    public
-    function setCreatedAt(DateTimeImmutable $createdAt): self
+    public function setCreatedAt(\DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    public
-    function getUpdatedAt(): ?DateTimeImmutable
+    public function getUpdatedAt(): ?\DateTimeImmutable
     {
         return $this->updatedAt;
     }
 
-    public
-    function setUpdatedAt(?DateTimeImmutable $updatedAt): self
+    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
 
         return $this;
     }
 
-    public
-    function getDeletedAt(): ?DateTimeImmutable
+    public function getDeletedAt(): ?\DateTimeImmutable
     {
         return $this->deletedAt;
     }
 
-    public
-    function setDeletedAt(?DateTimeImmutable $deletedAt): self
+    public function setDeletedAt(?\DateTimeImmutable $deletedAt): self
     {
         $this->deletedAt = $deletedAt;
 

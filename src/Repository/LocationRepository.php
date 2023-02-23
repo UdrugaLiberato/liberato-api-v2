@@ -33,6 +33,7 @@ class LocationRepository extends ServiceEntityRepository
             $this->_em->flush();
         }
     }
+
     /**
      * @throws ORMException
      * @throws OptimisticLockException

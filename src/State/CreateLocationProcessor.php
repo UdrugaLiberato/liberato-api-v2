@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\State;
 
 use ApiPlatform\Metadata\Operation;
@@ -25,24 +27,25 @@ class CreateLocationProcessor implements ProcessorInterface
 
     public function __construct(
         public KernelInterface $kernel,
-        private LocationRepository      $locationRepository,
-        private GoogleMapsInterface     $googleMaps,
-        private CategoryRepository      $categoryRepository,
-        private QuestionRepository      $questionRepository,
-        private CityRepository          $cityRepository,
-        private ImageRepository     $imageRepository,
-        private UserRepository          $userRepository,
+        private LocationRepository $locationRepository,
+        private GoogleMapsInterface $googleMaps,
+        private CategoryRepository $categoryRepository,
+        private QuestionRepository $questionRepository,
+        private CityRepository $cityRepository,
+        private ImageRepository $imageRepository,
+        private UserRepository $userRepository,
         private LiberatoHelperInterface $liberatoHelper
-    )
-    {
+    ) {
         $this->uploadDir = $this->kernel->getProjectDir() . '/public/images/';
     }
 
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): Location
     {
         ['lat' => $lat, 'lng' => $lng, 'formatted_address' => $formatted_address] =
-            $this->googleMaps->getCoordinateForStreet($data->street,
-                $data->city);
+            $this->googleMaps->getCoordinateForStreet(
+                $data->street,
+                $data->city
+            );
         $category = $this->categoryRepository->findOneBy(['name' => $data->category]);
         $city = $this->cityRepository->findOneBy(['name' => $data->city]);
         $user = $this->userRepository->findOneBy(['username' => $data->user]);
@@ -74,11 +77,11 @@ class CreateLocationProcessor implements ProcessorInterface
                 $newFilename = date('Y-m-d') . '_' . $safeFilename . '.'
                     . $ext;
                 $file->move(
-                    $this->uploadDir . "locations/",
+                    $this->uploadDir . 'locations/',
                     $newFilename
                 );
                 $image = new Image();
-                $image->setSrc(self::BACKEND_URL_IMAGES . "locations/" . $newFilename);
+                $image->setSrc(self::BACKEND_URL_IMAGES . 'locations/' . $newFilename);
                 $image->setName($safeFilename);
                 $image->setMime($mime);
                 $image->addLocation($location);
@@ -87,10 +90,10 @@ class CreateLocationProcessor implements ProcessorInterface
             }
         }
         if ($data->qa) {
-            $items = explode(",", $data->qa);
+            $items = explode(',', $data->qa);
             foreach ($items as $item) {
-                [$q, $a] = explode(":", $item);
-                $qEntity = $this->questionRepository->findOneBy(["category" => $category, "question" => $q]);
+                [$q, $a] = explode(':', $item);
+                $qEntity = $this->questionRepository->findOneBy(['category' => $category, 'question' => $q]);
                 $answer = new Answer();
                 $answer->setQuestion($qEntity);
                 $answer->setAnswer($a);
@@ -102,4 +105,4 @@ class CreateLocationProcessor implements ProcessorInterface
 
         return $location;
     }
-    }
+}

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\State;
 
 use ApiPlatform\Exception\RuntimeException;
@@ -17,18 +19,16 @@ class LocationProvider implements ProviderInterface
 
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
     {
-
         $resourceClass = $operation->getClass();
 
         if ($operation instanceof CollectionOperationInterface) {
             try {
-                $collection = $this->locationRepository->findAll();
-                return $collection;
+                return $this->locationRepository->findAll();
             } catch (\Exception $exception) {
                 throw new RuntimeException(sprintf('Unable to retrieve cities from external source: %s', $exception->getMessage()));
             }
-
         }
+
         return $this->locationRepository->find($uriVariables['id']);
     }
 }

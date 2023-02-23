@@ -16,11 +16,10 @@ use Symfony\Component\Messenger\MessageBusInterface;
 class UpdateNewsArticleController
 {
     public function __construct(
-        private NewsArticleRepository   $newsArticleRepository,
+        private NewsArticleRepository $newsArticleRepository,
         private LiberatoHelperInterface $liberatoHelper,
-        private MessageBusInterface     $bus
-    )
-    {
+        private MessageBusInterface $bus
+    ) {
     }
 
     public function __invoke(string $id, Request $request): NewsArticle

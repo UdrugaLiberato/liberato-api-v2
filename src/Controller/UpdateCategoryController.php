@@ -10,7 +10,6 @@ use App\Repository\CategoryRepository;
 use App\Repository\ImageRepository;
 use App\Utils\LiberatoHelper;
 use App\Utils\LiberatoHelperInterface;
-use DateTimeImmutable;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -22,19 +21,18 @@ class UpdateCategoryController
     public string $uploadDir;
 
     public function __construct(
-        public KernelInterface          $kernel,
-        private ImageRepository         $imageRepository,
+        public KernelInterface $kernel,
+        private ImageRepository $imageRepository,
         private LiberatoHelperInterface $liberatoHelper,
-        private CategoryRepository      $categoryRepository,
-    )
-    {
+        private CategoryRepository $categoryRepository,
+    ) {
         $this->uploadDir = $this->kernel->getProjectDir() . '/public/images/';
     }
 
     public function __invoke(string $id, Request $request): Category
     {
         $categoryToUpdate = $this->categoryRepository->find($id);
-        if ($request->files->get("image")) {
+        if ($request->files->get('image')) {
             $categoryToUpdate->getImage()->map(function (Image $image) use ($categoryToUpdate): void {
                 $arr = explode('/', $image->getSrc());
                 $file = $this->liberatoHelper->getImagePath('category/') . end($arr);
@@ -44,7 +42,7 @@ class UpdateCategoryController
                     unlink($file);
                 }
             });
-            $file = $request->files->get("image");
+            $file = $request->files->get('image');
             $ext = $file->guessExtension();
             $mime = $file->getMimeType();
 
@@ -57,12 +55,12 @@ class UpdateCategoryController
             $newFilename = date('Y-m-d') . '_' . $safeFilename . '.'
                 . $ext;
             $file->move(
-                $this->uploadDir . "category/",
+                $this->uploadDir . 'category/',
                 $newFilename
             );
 
             $image = new Image();
-            $image->setSrc(self::BACKEND_URL_IMAGES . "category/" . $newFilename);
+            $image->setSrc(self::BACKEND_URL_IMAGES . 'category/' . $newFilename);
             $image->setName($safeFilename);
             $image->setMime($mime);
             $image->addCategory($categoryToUpdate);
@@ -76,7 +74,7 @@ class UpdateCategoryController
             $categoryToUpdate->getDescription()) {
             $categoryToUpdate->setDescription($request->get('description'));
         }
-        $categoryToUpdate->setUpdatedAt(new DateTimeImmutable('now'));
+        $categoryToUpdate->setUpdatedAt(new \DateTimeImmutable('now'));
 
         return $categoryToUpdate;
     }

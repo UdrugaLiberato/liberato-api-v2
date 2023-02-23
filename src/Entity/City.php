@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
-use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
@@ -17,9 +15,7 @@ use App\Controller\UpdateCityController;
 use App\Repository\CityRepository;
 use App\State\CityProcessor;
 use App\State\CityProvider;
-use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
-use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -89,35 +85,39 @@ class City
         Groups(['city:read'])
     ]
     private float $longitude;
+    #[
+        ORM\Column(type: 'integer', nullable: false),
+        Groups(['city:read', 'city'])
+    ]
+    private int $radiusInKm = 1;
 
     #[
         ORM\Column(type: 'datetime_immutable'),
         Groups(['city:read'])
     ]
-    private DateTimeImmutable $createdAt;
+    private \DateTimeImmutable $createdAt;
 
     #[
         ORM\Column(type: 'datetime_immutable', nullable: true),
         Groups(['city:read'])
     ]
-    private ?DateTimeImmutable $updatedAt = null;
+    private ?\DateTimeImmutable $updatedAt = null;
 
     #[
         ORM\Column(type: 'datetime_immutable', nullable: true),
         Groups(['city:read'])
     ]
-    private ?DateTimeImmutable $deletedAt = null;
+    private ?\DateTimeImmutable $deletedAt = null;
 
     #[
-        ORM\OneToMany(mappedBy: 'city', targetEntity: Location::class, orphanRemoval: true),
-        Groups(['city:read'])
+        ORM\OneToMany(mappedBy: 'city', targetEntity: Location::class, orphanRemoval: true)
     ]
     private Collection $locations;
 
     public function __construct()
     {
         $this->locations = new ArrayCollection();
-        $this->createdAt = new DateTimeImmutable('now');
+        $this->createdAt = new \DateTimeImmutable('now');
     }
 
     public function getId(): string
@@ -166,27 +166,27 @@ class City
         return $this->createdAt->format('Y-m-d H:i:s');
     }
 
-    public function setCreatedAt(DateTimeImmutable $createdAt): void
+    public function setCreatedAt(\DateTimeImmutable $createdAt): void
     {
         $this->createdAt = $createdAt;
     }
 
-    public function getUpdatedAt(): ?DateTimeImmutable
+    public function getUpdatedAt(): ?\DateTimeImmutable
     {
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(?DateTimeImmutable $updatedAt): void
+    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): void
     {
         $this->updatedAt = $updatedAt;
     }
 
-    public function getDeletedAt(): ?DateTimeImmutable
+    public function getDeletedAt(): ?\DateTimeImmutable
     {
         return $this->deletedAt;
     }
 
-    public function setDeletedAt(?DateTimeImmutable $deletedAt): void
+    public function setDeletedAt(?\DateTimeImmutable $deletedAt): void
     {
         $this->deletedAt = $deletedAt;
     }
@@ -214,6 +214,18 @@ class City
                 $location->setCity(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getRadiusInKm(): ?int
+    {
+        return $this->radiusInKm;
+    }
+
+    public function setRadiusInKm(int $radiusInKm): self
+    {
+        $this->radiusInKm = $radiusInKm;
 
         return $this;
     }

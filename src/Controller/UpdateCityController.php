@@ -14,10 +14,9 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 class UpdateCityController
 {
     public function __construct(
-        private CityRepository      $cityRepository,
+        private CityRepository $cityRepository,
         private GoogleMapsInterface $googleMaps
-    )
-    {
+    ) {
     }
 
     public function __invoke(string $id, Request $request): City

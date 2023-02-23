@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiFilter;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
@@ -16,7 +14,6 @@ use App\Controller\UpdateUserController;
 use App\DTO\User\UserInput;
 use App\Repository\UserRepository;
 use App\State\UserProcessor;
-use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -99,13 +96,13 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     private ArrayCollection $avatar;
 
     #[ORM\Column(type: 'datetime_immutable'), Groups(['user:read'])]
-    private DateTimeImmutable $createdAt;
+    private \DateTimeImmutable $createdAt;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true), Groups(['user:read'])]
-    private ?DateTimeImmutable $updatedAt;
+    private ?\DateTimeImmutable $updatedAt;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true), Groups(['user:read'])]
-    private ?DateTimeImmutable $deletedAt;
+    private ?\DateTimeImmutable $deletedAt;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Location::class)]
     private Collection $locations;
@@ -114,7 +111,7 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     {
         $this->phone = '';
         $this->avatar = new ArrayCollection();
-        $this->createdAt = new DateTimeImmutable('now');
+        $this->createdAt = new \DateTimeImmutable('now');
         $this->updatedAt = null;
         $this->deletedAt = null;
         $this->locations = new ArrayCollection();
@@ -150,7 +147,7 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
 
     public function getUserIdentifier(): string
     {
-        return (string)$this->email;
+        return (string) $this->email;
     }
 
     public function getRoles(): array
@@ -195,29 +192,29 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
         return $this->username;
     }
 
-    public function getCreatedAt(): ?DateTimeImmutable
+    public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->createdAt;
     }
 
-    public function getUpdatedAt(): ?DateTimeImmutable
+    public function getUpdatedAt(): ?\DateTimeImmutable
     {
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(?DateTimeImmutable $updatedAt): self
+    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
 
         return $this;
     }
 
-    public function getDeletedAt(): ?DateTimeImmutable
+    public function getDeletedAt(): ?\DateTimeImmutable
     {
         return $this->deletedAt;
     }
 
-    public function setDeletedAt(?DateTimeImmutable $deletedAt): self
+    public function setDeletedAt(?\DateTimeImmutable $deletedAt): self
     {
         $this->deletedAt = $deletedAt;
 
@@ -233,7 +230,6 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     /**
      * @return Collection<int>
      */
-
     public function getAvatar(): ArrayCollection
     {
         return $this->avatar;
