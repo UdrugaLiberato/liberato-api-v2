@@ -2,110 +2,139 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use App\Repository\NewsRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
-#[ORM\Entity(repositoryClass: NewsRepository::class)]
-class News
-{
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+#[
+    ORM\Entity(repositoryClass: NewsRepository::class),
+    ApiFilter(OrderFilter::class, properties: ['createdAt']),
+    ApiResource(
+        normalizationContext: ['groups' => ['news:read']],
+        denormalizationContext: ['groups' => ['news:write']],
+        paginationItemsPerPage: 100,
+    ),
+    GetCollection(),
+    Post(
+        security: "is_granted('ROLE_ADMIN')",
+        SecurityMessage: 'Only admins can create news',
+    ),
+    Get(),
+    Put(security: "is_granted('ROLE_ADMIN')", securityMessage: 'Only admins can edit news'),
+    Delete(security: "is_granted('ROLE_ADMIN')", securityMessage: 'Only admins can delete news'),
+]
+class News {
+  #[
+      ORM\Id,
+      ORM\Column(type: 'string', unique: true),
+      ORM\GeneratedValue(strategy: 'CUSTOM'),
+      ORM\CustomIdGenerator(class: 'doctrine.uuid_generator'),
+      Groups(['news:read'])
+  ]
+  private ?int $id = NULL;
 
-    #[ORM\Column(length: 255)]
-    private ?string $title = null;
+  #[
+      ORM\Column(length: 40),
+      Groups(['news:read', 'news:write'])
+  ]
+  private string $title;
 
-    #[ORM\Column(length: 300)]
-    private ?string $text = null;
+  #[
+      ORM\Column(length: 300),
+      Groups(['news:read', 'news:write'])
+  ]
+  private string $text;
 
-    #[ORM\Column]
-    private ?\DateTimeImmutable $createdAt = null;
+  #[
+      ORM\Column,
+      Groups(['news:read'])
+  ]
+  private DateTimeImmutable $createdAt;
 
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $updatedAt = null;
+  #[ORM\Column(nullable: true)]
+  private ?DateTimeImmutable $updatedAt = NULL;
 
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $deletedAt = null;
+  #[ORM\Column(nullable: true)]
+  private ?DateTimeImmutable $deletedAt = NULL;
 
-    #[ORM\ManyToOne(inversedBy: 'news')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?User $User = null;
+  #[ORM\ManyToOne(inversedBy: 'news')]
+  #[ORM\JoinColumn(nullable: false)]
+  private ?User $User = NULL;
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
+  public function __construct() {
+    $this->createdAt = new DateTimeImmutable();
+  }
 
-    public function getTitle(): ?string
-    {
-        return $this->title;
-    }
+  public function getId(): ?int {
+    return $this->id;
+  }
 
-    public function setTitle(string $title): self
-    {
-        $this->title = $title;
+  public function getTitle(): ?string {
+    return $this->title;
+  }
 
-        return $this;
-    }
+  public function setTitle(string $title): self {
+    $this->title = $title;
 
-    public function getText(): ?string
-    {
-        return $this->text;
-    }
+    return $this;
+  }
 
-    public function setText(string $text): self
-    {
-        $this->text = $text;
+  public function getText(): ?string {
+    return $this->text;
+  }
 
-        return $this;
-    }
+  public function setText(string $text): self {
+    $this->text = $text;
 
-    public function getCreatedAt(): ?\DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
+    return $this;
+  }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): self
-    {
-        $this->createdAt = $createdAt;
+  public function getCreatedAt(): ?DateTimeImmutable {
+    return $this->createdAt;
+  }
 
-        return $this;
-    }
+  public function setCreatedAt(DateTimeImmutable $createdAt): self {
+    $this->createdAt = $createdAt;
 
-    public function getUpdatedAt(): ?\DateTimeImmutable
-    {
-        return $this->updatedAt;
-    }
+    return $this;
+  }
 
-    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
-    {
-        $this->updatedAt = $updatedAt;
+  public function getUpdatedAt(): ?DateTimeImmutable {
+    return $this->updatedAt;
+  }
 
-        return $this;
-    }
+  public function setUpdatedAt(?DateTimeImmutable $updatedAt): self {
+    $this->updatedAt = $updatedAt;
 
-    public function getDeletedAt(): ?\DateTimeImmutable
-    {
-        return $this->deletedAt;
-    }
+    return $this;
+  }
 
-    public function setDeletedAt(?\DateTimeImmutable $deletedAt): self
-    {
-        $this->deletedAt = $deletedAt;
+  public function getDeletedAt(): ?DateTimeImmutable {
+    return $this->deletedAt;
+  }
 
-        return $this;
-    }
+  public function setDeletedAt(?DateTimeImmutable $deletedAt): self {
+    $this->deletedAt = $deletedAt;
 
-    public function getUser(): ?User
-    {
-        return $this->User;
-    }
+    return $this;
+  }
 
-    public function setUser(?User $User): self
-    {
-        $this->User = $User;
+  public function getUser(): ?User {
+    return $this->User;
+  }
 
-        return $this;
-    }
+  public function setUser(?User $User): self {
+    $this->User = $User;
+
+    return $this;
+  }
 }
