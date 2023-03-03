@@ -55,6 +55,12 @@ class News {
   private string $text;
 
   #[
+      ORM\Column(nullable: true),
+      Groups(['news:read', 'news:write'])
+  ]
+  private ?string $linkURL = NULL;
+
+  #[
       ORM\Column,
       Groups(['news:read'])
   ]
@@ -86,6 +92,14 @@ class News {
     $this->title = $title;
 
     return $this;
+  }
+
+  public function getLinkURL(): ?string {
+    return $this->linkURL;
+  }
+
+  public function setLinkURL(?string $linkURL): void {
+    $this->linkURL = $linkURL;
   }
 
   public function getText(): ?string {
