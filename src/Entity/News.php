@@ -26,7 +26,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
     GetCollection(),
     Post(
         security: "is_granted('ROLE_ADMIN')",
-        SecurityMessage: 'Only admins can create news',
+        securityMessage: 'Only admins can create news',
     ),
     Get(),
     Put(security: "is_granted('ROLE_ADMIN')", securityMessage: 'Only admins can edit news'),
