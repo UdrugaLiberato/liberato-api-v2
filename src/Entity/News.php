@@ -40,7 +40,7 @@ class News {
       ORM\CustomIdGenerator(class: 'doctrine.uuid_generator'),
       Groups(['news:read'])
   ]
-  private ?int $id = NULL;
+  private string $id;
 
   #[
       ORM\Column(length: 40),
@@ -72,15 +72,18 @@ class News {
   #[ORM\Column(nullable: true)]
   private ?DateTimeImmutable $deletedAt = NULL;
 
-  #[ORM\ManyToOne(inversedBy: 'news')]
-  #[ORM\JoinColumn(nullable: false)]
-  private ?User $User = NULL;
+  #[
+      ORM\ManyToOne(inversedBy: 'news'),
+      ORM\JoinColumn(nullable: false),
+      Groups(['news:read'])
+  ]
+  private ?User $user = NULL;
 
   public function __construct() {
     $this->createdAt = new DateTimeImmutable();
   }
 
-  public function getId(): ?int {
+  public function getId(): string {
     return $this->id;
   }
 
@@ -143,11 +146,11 @@ class News {
   }
 
   public function getUser(): ?User {
-    return $this->User;
+    return $this->user;
   }
 
-  public function setUser(?User $User): self {
-    $this->User = $User;
+  public function setUser(?User $user): self {
+    $this->user = $user;
 
     return $this;
   }

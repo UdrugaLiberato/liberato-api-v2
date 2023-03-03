@@ -24,7 +24,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[
     ORM\Entity(repositoryClass: UserRepository::class),
-    ApiResource(normalizationContext: ['groups' => ['user:read']]),
+    ApiResource(normalizationContext: ['groups' => ['user:read', 'news:read']]),
     GetCollection(
         security: 'is_granted("ROLE_ADMIN")',
         securityMessage: 'Only admins can list users',
@@ -56,7 +56,7 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
         ORM\Column(type: 'string', unique: true),
         ORM\GeneratedValue(strategy: 'CUSTOM'),
         ORM\CustomIdGenerator(class: 'doctrine.uuid_generator'),
-        Groups(['user:read'])
+        Groups(['user:read', 'news:read'])
     ]
     private string $id;
 
@@ -86,13 +86,13 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     private string $password;
 
     #[
-        Groups(['post:read', 'user:read']),
+        Groups(['user:read', 'news:read']),
         ORM\Column(type: 'string', length: 255),
         Assert\Length(min: 4, minMessage: 'Username must be at least {{ limit }} characters long!')
     ]
     private string $username;
 
-    #[ORM\Column(type: 'array'), Groups(['post:read', 'user:read'])]
+    #[ORM\Column(type: 'array'), Groups(['news:read', 'user:read'])]
     private ArrayCollection $avatar;
 
     #[ORM\Column(type: 'datetime_immutable'), Groups(['user:read'])]
