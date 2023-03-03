@@ -150,7 +150,7 @@ class News {
   }
 
   public function setUser(?User $user): self {
-    $this->user = $user;
+    $this->user = $uxser;
 
     return $this;
   }
