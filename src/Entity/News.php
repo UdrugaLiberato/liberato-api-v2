@@ -43,6 +43,13 @@ class News {
   private string $id;
 
   #[
+      ORM\ManyToOne(inversedBy: 'news'),
+      ORM\JoinColumn(nullable: false),
+      Groups(['news:read'])
+  ]
+  private ?User $user = NULL;
+
+  #[
       ORM\Column(length: 40),
       Groups(['news:read', 'news:write'])
   ]
@@ -61,6 +68,18 @@ class News {
   private ?string $linkURL = NULL;
 
   #[
+      ORM\Column(length: 40),
+      Groups(['news:read', 'news:write'])
+  ]
+  private ?string $titleEN = null;
+
+  #[
+      ORM\Column(length: 300),
+      Groups(['news:read', 'news:write'])
+  ]
+  private ?string $textEN = null;
+
+  #[
       ORM\Column,
       Groups(['news:read'])
   ]
@@ -72,12 +91,6 @@ class News {
   #[ORM\Column(nullable: true)]
   private ?DateTimeImmutable $deletedAt = NULL;
 
-  #[
-      ORM\ManyToOne(inversedBy: 'news'),
-      ORM\JoinColumn(nullable: false),
-      Groups(['news:read'])
-  ]
-  private ?User $user = NULL;
 
   public function __construct() {
     $this->createdAt = new DateTimeImmutable();
@@ -153,5 +166,29 @@ class News {
     $this->user = $user;
 
     return $this;
+  }
+
+  public function getTitleEN(): ?string
+  {
+      return $this->titleEN;
+  }
+
+  public function setTitleEN(string $titleEN): self
+  {
+      $this->titleEN = $titleEN;
+
+      return $this;
+  }
+
+  public function getTextEN(): ?string
+  {
+      return $this->textEN;
+  }
+
+  public function setTextEN(string $textEN): self
+  {
+      $this->textEN = $textEN;
+
+      return $this;
   }
 }
