@@ -32,7 +32,7 @@ class GoogleMaps implements GoogleMapsInterface
     {
         $encoded = urlencode($street . ' ' . $city);
         $url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' . $encoded .
-            '&fields=geometry&key=AIzaSyBq4XzQTYxcqFKahd60xifRHft215gbwCk';
+            '&fields=geometry&key=AIzaSyDGlqdh7h7Me5fC9WJojYoC_wvm-0CARco';
         $response = $this->client->request('GET', $url);
         $content = $response->toArray();
         $formatted_address = $content['results'][0]['formatted_address'];
