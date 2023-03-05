@@ -94,7 +94,7 @@ class CreateLocationProcessor implements ProcessorInterface {
         $qEntity = $this->questionRepository->find($q);
         $answer = new Answer();
         $answer->setQuestion($qEntity);
-        $answer->setAnswer(!($a === "0"));
+        $answer->setAnswer($a === 'true');
         $answer->setLocation($location);
         $location->addAnswer($answer);
       }
