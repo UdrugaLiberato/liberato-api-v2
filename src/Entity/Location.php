@@ -34,6 +34,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         normalizationContext: ['groups' => ['location:read']],
         paginationItemsPerPage: 1000,
     ),
+    Get(),
     GetCollection(),
     Post(
         inputFormats: ['multipart' => ['multipart/form-data']],
@@ -41,14 +42,17 @@ use Symfony\Component\Validator\Constraints as Assert;
         input: LocationInput::class,
         processor: CreateLocationProcessor::class,
     ),
-    Get(),
     Put(
         controller: UpdateLocationController::class,
         security: "is_granted('ROLE_ADMIN')",
         securityMessage: 'Only admins can edit locations',
         deserialize: false
     ),
-    Delete(security: "is_granted('ROLE_ADMIN')", securityMessage: 'Only admins can delete locations', processor: DeleteLocationProcessor::class),
+    Delete(
+        security: "is_granted('ROLE_ADMIN')",
+        securityMessage: 'Only admins can delete locations',
+        processor: DeleteLocationProcessor::class
+    ),
 ]
 class Location {
   #[

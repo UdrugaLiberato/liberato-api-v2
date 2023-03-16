@@ -58,7 +58,7 @@ class Category
         ORM\Column(type: 'string', unique: true),
         ORM\GeneratedValue(strategy: 'CUSTOM'),
         ORM\CustomIdGenerator(class: 'doctrine.uuid_generator'),
-        Groups(['category:read', 'category:write'])
+        Groups(['category:read', 'location:read'])
     ]
     private string $id;
 
