@@ -39,6 +39,7 @@ class CreateLocationProcessor implements ProcessorInterface {
   }
 
   public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): Location {
+
     ['lat' => $lat, 'lng' => $lng, 'formatted_address' => $formatted_address] =
         $this->googleMaps->getCoordinateForStreet(
             $data->street,

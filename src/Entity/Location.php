@@ -217,6 +217,7 @@ class Location {
     $arr = [];
     foreach ($this->answers as $answer) {
       $arr[] = [
+          'answerId' => $answer->getId(),
           'question' => $answer->getQuestion()->getQuestion(),
           'answer' => $answer->getAnswer(),
       ];

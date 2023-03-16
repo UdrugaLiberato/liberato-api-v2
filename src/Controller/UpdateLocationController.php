@@ -18,7 +18,7 @@ class UpdateLocationController {
   public function __invoke(string $id, Request $request) {
     $currentLocation = $this->locationRepository->find($id);
     $newCategory = $this->categoryRepository->find($request->toArray()["category"]);
-
+dd($request->toArray());
     $currentLocation->setCategory($newCategory);
 
     return $currentLocation;
