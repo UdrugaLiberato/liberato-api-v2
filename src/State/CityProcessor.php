@@ -10,24 +10,21 @@ use App\Entity\City;
 use App\Repository\CityRepository;
 use App\Utils\GoogleMapsInterface;
 
-class CityProcessor implements ProcessorInterface
-{
-    public function __construct(private GoogleMapsInterface $googleMaps, private CityRepository $repository)
-    {
-    }
+class CityProcessor implements ProcessorInterface {
+  public function __construct(private GoogleMapsInterface $googleMaps, private CityRepository $repository) {
+  }
 
-    public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = [])
-    {
-        ['lat' => $lat, 'lng' => $lng] = $this->googleMaps->getCoordinateForCity($data->getName());
+  public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []) {
+    ['lat' => $lat, 'lng' => $lng] = $this->googleMaps->getCoordinateForCity($data->getName());
 
-        $city = new City();
-        $city->setName($data->getName());
-        $city->setLatitude($lat);
-        $city->setLongitude($lng);
-        $city->setRadiusInKm($data->getRadiusInKm());
+    $city = new City();
+    $city->setName($data->getName());
+    $city->setLatitude($lat);
+    $city->setLongitude($lng);
+    $city->setRadiusInKm($data->getRadiusInKm());
 
-        $this->repository->add($city);
+    $this->repository->add($city);
 
-        return $city;
-    }
+    return $city;
+  }
 }

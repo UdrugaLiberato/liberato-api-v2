@@ -7,18 +7,17 @@ namespace App\State;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Repository\LocationRepository;
+use DateTimeImmutable;
 
-class DeleteLocationProcessor implements ProcessorInterface
-{
-    public function __construct(
-        private LocationRepository $locationRepository,
-    ) {
-    }
+class DeleteLocationProcessor implements ProcessorInterface {
+  public function __construct(
+      private LocationRepository $locationRepository,
+  ) {
+  }
 
-    public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): void
-    {
-        $location = $this->locationRepository->find($uriVariables['id']);
-        $location->setDeletedAt(new \DateTimeImmutable());
-        $this->locationRepository->save($location);
-    }
+  public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): void {
+    $location = $this->locationRepository->find($uriVariables['id']);
+    $location->setDeletedAt(new DateTimeImmutable());
+    $this->locationRepository->save($location);
+  }
 }
