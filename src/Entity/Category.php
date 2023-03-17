@@ -91,8 +91,7 @@ class Category
         Groups(['category:read'])]
     private ?Collection $questions;
 
-    #[ORM\OneToMany(mappedBy: 'category', targetEntity: Location::class),
-        Groups(['category:read'])]
+    #[ORM\OneToMany(mappedBy: 'category', targetEntity: Location::class)}
     private Collection $locations;
 
     #[ORM\ManyToMany(targetEntity: Image::class, inversedBy: 'categories'), Groups(['category:read'])]
