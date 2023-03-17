@@ -43,6 +43,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         processor: CreateLocationProcessor::class,
     ),
     Put(
+        inputFormats: ['multipart' => ['multipart/form-data']],
         controller: UpdateLocationController::class,
         security: "is_granted('ROLE_ADMIN')",
         securityMessage: 'Only admins can edit locations',
