@@ -8,10 +8,10 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class CategoryInput
 {
-    public string $name;
+    public $name;
     public ?UploadedFile $file;
-    public string $questions;
-    public ?string $description;
+    public $questions;
+    public $description;
 
     public function __construct()
     {
