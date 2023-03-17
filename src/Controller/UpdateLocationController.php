@@ -2,12 +2,14 @@
 
 namespace App\Controller;
 
+use App\Entity\Answer;
 use App\Entity\Image;
 use App\Entity\Location;
 use App\Repository\AnswerRepository;
 use App\Repository\CategoryRepository;
 use App\Repository\ImageRepository;
 use App\Repository\LocationRepository;
+use App\Repository\QuestionRepository;
 use App\Utils\GoogleMapsInterface;
 use App\Utils\LiberatoHelper;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,6 +24,7 @@ class UpdateLocationController {
   public function __construct(
       public KernelInterface     $kernel,
       public ImageRepository     $imageRepository,
+      public QuestionRepository  $questionRepository,
       public LocationRepository  $locationRepository,
       public CategoryRepository  $categoryRepository,
       public AnswerRepository    $answerRepository,
@@ -32,11 +35,6 @@ class UpdateLocationController {
 
   public function __invoke(string $id, Request $request) {
     $currentLocation = $this->locationRepository->find($id);
-
-    if ($request->get("category") != $currentLocation->getCategory()->getId()) {
-      $newCategory = $this->categoryRepository->find($request->get("category"));
-      $currentLocation->setCategory($newCategory);
-    }
 
     if ($request->get("name") != $currentLocation->getName()) {
       $currentLocation->setName($request->get("name"));
@@ -94,13 +92,32 @@ class UpdateLocationController {
     }
 
     if ($request->get("qa")) {
-      $items = explode(',', $request->get("qa"));
-      foreach ($items as $item) {
-        [$answerId, $answer] = explode(':', $item);
-        $answerEntity = $this->answerRepository->find($answerId);
-        $answerEntity->setAnswer($answer === 'true');
-        $answerEntity->setLocation($currentLocation);
+      if ($request->get("category") == $currentLocation->getCategory()->getId()) {
+        $items = explode(',', $request->get("qa"));
+        foreach ($items as $item) {
+          [$answerId, $answer] = explode(':', $item);
+          $answerEntity = $this->answerRepository->find($answerId);
+          $answerEntity->setAnswer($answer === 'true');
+          $answerEntity->setLocation($currentLocation);
+        }
+      } else {
+        $items = explode(',', $request->get("qa"));
+        $this->clearPreviousAnswers($currentLocation);
+        foreach ($items as $item) {
+          [$q, $a] = explode(':', $item);
+          $qEntity = $this->questionRepository->find($q);
+          $answer = new Answer();
+          $answer->setQuestion($qEntity);
+          $answer->setAnswer($a === 'true');
+          $answer->setLocation($currentLocation);
+          $currentLocation->addAnswer($answer);
+        }
       }
+    }
+
+    if ($request->get("category") != $currentLocation->getCategory()->getId()) {
+      $newCategory = $this->categoryRepository->find($request->get("category"));
+      $currentLocation->setCategory($newCategory);
     }
 
     return $currentLocation;
@@ -110,6 +127,12 @@ class UpdateLocationController {
   cleanAllImages(Location $currentLocation): void {
     foreach ($currentLocation->getImages() as $image) {
       $currentLocation->removeImage($image);
+    }
+  }
+
+  public function clearPreviousAnswers(Location $currentLocation): void {
+    foreach ($currentLocation->getAnswers() as $answer) {
+      $currentLocation->removeAnswer($answer);
     }
   }
 }
