@@ -87,7 +87,8 @@ class Category
     private ?\DateTimeImmutable $deletedAt = null;
 
     #[
-        ORM\OneToMany(mappedBy: 'category', targetEntity: Question::class, cascade: ['remove']),
+        ORM\OneToMany(mappedBy: 'category', targetEntity: Question::class,
+            cascade: ['persist', 'remove'], orphanRemoval: true),
         Groups(['category:read'])]
     private ?Collection $questions;
 
