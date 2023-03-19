@@ -14,6 +14,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Controller\UpdateCityController;
+use App\Exception\CityHasLocationsException;
 use App\Repository\CityRepository;
 use App\State\CityProcessor;
 use App\State\CityProvider;
@@ -39,6 +40,9 @@ use Symfony\Component\Validator\Constraints as Assert;
         processor: CityProcessor::class,
     ),
     Delete(
+        exceptionToStatus: [
+            CityHasLocationsException::class => 400,
+        ],
         security: "is_granted('ROLE_ADMIN')",
         securityMessage: 'Only admins can delete cities',
         processor: DeleteCityProcessor::class,

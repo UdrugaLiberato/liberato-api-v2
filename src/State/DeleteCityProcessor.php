@@ -14,6 +14,9 @@ class DeleteCityProcessor implements ProcessorInterface {
 
   public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): void {
     $city = $this->cityRepository->find($uriVariables['id']);
+    if ($city->getLocations()->count() > 0) {
+      throw new \Exception('Cannot delete city with locations');
+    }
     $city->setDeletedAt(new \DateTimeImmutable());
     $this->cityRepository->update($city);
   }
