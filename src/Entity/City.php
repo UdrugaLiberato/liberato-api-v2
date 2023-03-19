@@ -53,8 +53,11 @@ use Symfony\Component\Validator\Constraints as Assert;
     ),
     Put(
         controller: UpdateCityController::class,
+        exceptionToStatus: [
+            CoordinatesNotFound::class => 404,
+        ],
         security: "is_granted('ROLE_ADMIN')",
-        securityMessage: 'Only admins can update cities'
+        securityMessage: 'Only admins can update cities',
     ),
 ]
 class City {
