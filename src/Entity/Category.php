@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\ExistsFilter;
 use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiProperty;
@@ -39,6 +40,9 @@ use Symfony\Component\Validator\Constraints as Assert;
     ),
     Get(),
     Delete(
+        exceptionToStatus: [
+            'App\Exception\CategoryHasLocationsException' => 400,
+        ],
         security: "is_granted('ROLE_ADMIN')",
         securityMessage: 'Only admins can delete posts.',
         processor: DeleteCategoryProcessor::class
@@ -83,7 +87,10 @@ class Category
     #[ORM\Column(type: 'datetime_immutable', nullable: true), Groups(['category:read'])]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    #[ORM\Column(type: 'datetime_immutable', nullable: true), Groups(['category:read'])]
+    #[
+        ORM\Column(type: 'datetime_immutable', nullable: true), Groups(['category:read']),
+        ApiFilter(ExistsFilter::class)
+    ]
     private ?\DateTimeImmutable $deletedAt = null;
 
     #[

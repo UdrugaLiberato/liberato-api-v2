@@ -17,6 +17,7 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Controller\UpdateLocationController;
 use App\DTO\Location\LocationInput;
+use App\Exception\CoordinatesNotFound;
 use App\Repository\LocationRepository;
 use App\State\CreateLocationProcessor;
 use App\State\DeleteLocationProcessor;
@@ -39,6 +40,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     GetCollection(),
     Post(
         inputFormats: ['multipart' => ['multipart/form-data']],
+        exceptionToStatus: [CoordinatesNotFound::class => 404],
         security: "is_granted('IS_AUTHENTICATED_FULLY')",
         input: LocationInput::class,
         processor: CreateLocationProcessor::class,
@@ -192,10 +194,6 @@ class Location {
     $this->images = new ArrayCollection();
   }
 
-  public function getId(): string {
-    return $this->id;
-  }
-
   public function getCategory(): Category {
     return $this->category;
   }
@@ -230,6 +228,10 @@ class Location {
     }
 
     return $arr;
+  }
+
+  public function getId(): string {
+    return $this->id;
   }
 
   public function getAnswers(): ArrayCollection|PersistentCollection {
