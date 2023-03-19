@@ -58,6 +58,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         ],
         security: "is_granted('ROLE_ADMIN')",
         securityMessage: 'Only admins can update cities',
+        deserialize: false,
     ),
 ]
 class City {
