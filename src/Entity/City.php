@@ -15,6 +15,7 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Controller\UpdateCityController;
 use App\Exception\CityHasLocationsException;
+use App\Exception\CoordinatesNotFound;
 use App\Repository\CityRepository;
 use App\State\CityProcessor;
 use App\State\CityProvider;
@@ -35,6 +36,9 @@ use Symfony\Component\Validator\Constraints as Assert;
     GetCollection(),
     Get(),
     Post(
+        exceptionToStatus: [
+            CoordinatesNotFound::class => 404,
+        ],
         security: "is_granted('ROLE_ADMIN')",
         securityMessage: 'Only admins can create cities',
         processor: CityProcessor::class,

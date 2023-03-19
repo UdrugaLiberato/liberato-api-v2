@@ -17,7 +17,10 @@ class GoogleMaps implements GoogleMapsInterface {
   public function getCoordinateForCity(string $city): array {
     $response = $this->client->request('GET', 'https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=' . $city . '&inputtype=textquery&=&fields=geometry&key=' . $this->apiKey);
     $content = $response->toArray();
-
+    if ($response->toArray()["status"] == "ZERO_RESULTS") {
+      throw new CoordinatesNotFound(sprintf('Coordinates for "%s" could not be found.',
+          $city));
+    }
     $lat = $content['candidates'][0]['geometry']['location']['lat'];
     $lng = $content['candidates'][0]['geometry']['location']['lng'];
 
