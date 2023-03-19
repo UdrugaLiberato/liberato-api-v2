@@ -6,7 +6,7 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Repository\CityRepository;
 
-readonly class DeleteCityProcessor implements ProcessorInterface {
+class DeleteCityProcessor implements ProcessorInterface {
   public function __construct(
       public CityRepository $cityRepository,
   ) {
