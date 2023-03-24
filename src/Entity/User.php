@@ -12,7 +12,9 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Put;
 use App\Controller\UpdateUserController;
 use App\DTO\User\UserInput;
+use App\Exception\UserIsDeactivatedException;
 use App\Repository\UserRepository;
+use App\State\DeleteUserProcessor;
 use App\State\UserProcessor;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -39,8 +41,10 @@ use Symfony\Component\Validator\Constraints as Assert;
         securityMessage: 'Only admins can update other users',
     ),
     Delete(
+        exceptionToStatus: [UserIsDeactivatedException::class => 400],
         security: 'is_granted("ROLE_ADMIN") or object == user',
         securityMessage: 'Only admins can delete other users',
+        processor: DeleteUserProcessor::class
     )]
 class User implements PasswordAuthenticatedUserInterface, UserInterface
 {
