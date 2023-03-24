@@ -25,10 +25,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[
     ORM\Entity(repositoryClass: UserRepository::class),
     ApiResource(normalizationContext: ['groups' => ['user:read', 'news:read']]),
-    GetCollection(
-        security: 'is_granted("ROLE_ADMIN")',
-        securityMessage: 'Only admins can list users',
-    ),
+    GetCollection(),
     \ApiPlatform\Metadata\Post(
         inputFormats: ['multipart' => ['multipart/form-data']],
         input: UserInput::class,
