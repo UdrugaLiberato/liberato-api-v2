@@ -119,7 +119,6 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
         $this->updatedAt = null;
         $this->deletedAt = null;
         $this->locations = new ArrayCollection();
-        $this->roles[] = self::ROLE_USER;
         $this->news = new ArrayCollection();
     }
 

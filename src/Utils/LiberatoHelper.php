@@ -81,6 +81,7 @@ class LiberatoHelper implements LiberatoHelperInterface {
 
     return new ArrayCollection([
         'path' => $newFilename,
+        'src' => self::BACKEND_URL_IMAGES . $entityName . '/' . $newFilename,
         'title' => $file->getClientOriginalName(),
         'mime' => $mime,
     ]);
