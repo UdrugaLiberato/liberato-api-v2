@@ -37,3 +37,4 @@ services:
   App\Utils\LiberatoHelper:
     arguments:
       $cloudinaryApiKey: "%env(CLOUDINARY_URL)%"
+      $mailcowApiKey: "%env(MAILCOW_API_KEY)%"

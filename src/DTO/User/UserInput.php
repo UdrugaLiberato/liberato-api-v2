@@ -15,6 +15,7 @@ class UserInput
     public string $email;
     #[Assert\Length(min: 8, minMessage: 'Password must be at least 8 characters long!')]
     public string $password;
+    public string $createEmail;
     public string $role;
     public ?UploadedFile $file;
     public ?string $phone;

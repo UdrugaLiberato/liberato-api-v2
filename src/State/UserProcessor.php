@@ -7,6 +7,7 @@ namespace App\State;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\User;
+use App\Exception\EmailCouldNotBeCreated;
 use App\Repository\UserRepository;
 use App\Utils\LiberatoHelperInterface;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -29,6 +30,15 @@ class UserProcessor implements ProcessorInterface {
       );
       $user->eraseCredentials();
     }
+    if ($data->createEmail === "true") {
+      $status = $this->liberatoHelper->createEmail($data->username,
+          $data->email,
+          $data->password);
+
+      if ($status !== 200) {
+        throw new EmailCouldNotBeCreated("Email could not be created.", 500);
+      }
+    }
     $avatar = NULL === $data->file ? $this->createAnonymousAvatar() :
         $this->liberatoHelper->transformImage(
             $data->file,
@@ -38,6 +48,7 @@ class UserProcessor implements ProcessorInterface {
     $user->setEmail($data->email);
     $user->setPhone($data->phone ?? NULL);
     $user->setAvatar($avatar);
+    $user->setRoles($data->role);
 
     $this->userRepository->add($user);
 
