@@ -43,7 +43,7 @@ class News {
   private string $id;
 
   #[
-      ORM\ManyToOne(inversedBy: 'news'),
+      ORM\ManyToOne(targetEntity: User::class, inversedBy: 'news'),
       ORM\JoinColumn(nullable: false),
       Groups(['news:read'])
   ]

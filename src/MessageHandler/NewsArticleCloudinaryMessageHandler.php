@@ -8,9 +8,10 @@ use App\Message\NewsArticleCloudinaryMessage;
 use App\Repository\NewsArticleRepository;
 use App\Utils\LiberatoHelperInterface;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-class NewsArticleCloudinaryMessageHandler implements MessageHandlerInterface
+#[AsMessageHandler]
+class NewsArticleCloudinaryMessageHandler
 {
     public function __construct(
         public LiberatoHelperInterface $liberatoHelper,

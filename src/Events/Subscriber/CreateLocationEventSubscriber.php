@@ -7,6 +7,7 @@ namespace App\Events\Subscriber;
 use ApiPlatform\Symfony\EventListener\EventPriorities;
 use App\Entity\Location;
 use App\Entity\User;
+use JetBrains\PhpStorm\ArrayShape;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
@@ -19,7 +20,8 @@ final class CreateLocationEventSubscriber implements EventSubscriberInterface
     {
     }
 
-    public static function getSubscribedEvents()
+    #[ArrayShape([KernelEvents::VIEW => "array"])]
+    public static function getSubscribedEvents(): array
     {
         return [
             KernelEvents::VIEW => ['addUserToEntity', EventPriorities::PRE_VALIDATE],
