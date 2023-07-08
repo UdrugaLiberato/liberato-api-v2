@@ -13,6 +13,8 @@ use App\Repository\MemberRepository;
 use App\State\MemberProvider;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: MemberRepository::class),
     ApiResource(
@@ -32,43 +34,86 @@ class Member {
       ORM\Column(type: 'string', unique: true),
       ORM\GeneratedValue(strategy: 'CUSTOM'),
       ORM\CustomIdGenerator(class: 'doctrine.uuid_generator'),
+      Groups(['member:read'])
   ]
   private ?string $id = NULL;
 
-  #[ORM\Column(length: 255)]
+  #[
+      ORM\Column(length: 255),
+      Groups(['member:read', 'member:write'])
+  ]
   private ?string $firstname = NULL;
 
-  #[ORM\Column(length: 255, nullable: true)]
+  #[
+      ORM\Column(length: 255, nullable: true),
+      Groups(['member:read', 'member:write'])
+  ]
   private ?string $lastname = NULL;
 
-  #[ORM\Column]
+  #[
+      ORM\Column,
+      Groups(['member:read', 'member:write'])
+  ]
   private ?bool $isStudent = NULL;
 
-  #[ORM\Column(type: Types::DATE_IMMUTABLE)]
+  #[
+      ORM\Column(type: Types::DATE_IMMUTABLE),
+      Groups(['member:read', 'member:write'])
+  ]
   private ?\DateTimeImmutable $dob = NULL;
 
-  #[ORM\Column(length: 11)]
+  #[
+      ORM\Column(length: 11, unique: true),
+      Groups(['member:read', 'member:write']),
+    Assert\Length(exactly: 11, exactMessage: 'OIB must be exactly {{ limit }} characters long'),
+  ]
   private ?string $OIB = NULL;
 
-  #[ORM\Column(length: 255)]
-  private ?string $adress = NULL;
+  #[
+      ORM\Column(length: 255),
+      Groups(['member:read', 'member:write'])
+  ]
+  private ?string $address = NULL;
 
-  #[ORM\Column(length: 255)]
+  #[
+      ORM\Column(length: 255),
+      Groups(['member:read', 'member:write'])
+  ]
   private ?string $city = NULL;
 
-  #[ORM\Column(length: 255, nullable: true)]
+  #[
+      ORM\Column(length: 255, nullable: true),
+      Groups(['member:read', 'member:write'])
+  ]
   private ?string $phone = NULL;
 
-  #[ORM\Column(length: 255, nullable: true)]
+  #[
+      ORM\Column(length: 255, nullable: true),
+      Groups(['member:read', 'member:write'])
+  ]
   private ?string $email = NULL;
 
-  #[ORM\Column(length: 3)]
+  #[
+      ORM\Column(length: 3),
+      Groups(['member:read', 'member:write']),
+      Assert\Range(
+          notInRangeMessage: 'Your disabled percent must be between {{ min }} and {{ max }} %.',
+          min: 0,
+          max: 100,
+      ),
+  ]
   private ?string $disabledPercent = NULL;
 
-  #[ORM\Column(type: Types::DATE_IMMUTABLE)]
+  #[
+      ORM\Column(type: Types::DATE_IMMUTABLE),
+      Groups(['member:read', 'member:write'])
+  ]
   private ?\DateTimeImmutable $joinDate = NULL;
 
-  #[ORM\Column]
+  #[
+      ORM\Column(type: Types::BOOLEAN),
+      Groups(['member:read', 'member:write'])
+  ]
   private ?bool $isActive = NULL;
 
   public function getId(): ?string {
@@ -125,12 +170,12 @@ class Member {
     return $this;
   }
 
-  public function getAdress(): ?string {
-    return $this->adress;
+  public function getAddress(): ?string {
+    return $this->address;
   }
 
-  public function setAdress(string $adress): static {
-    $this->adress = $adress;
+  public function setAddress(string $address): static {
+    $this->address = $address;
 
     return $this;
   }

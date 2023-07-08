@@ -11,7 +11,7 @@ use Exception;
 
 class VolunteerProvider implements ProviderInterface
 {
-  public function __construct(private VolunteerRepository $volunteerRepository) {}
+  public function __construct(private readonly VolunteerRepository $volunteerRepository) {}
 
   public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
     {
