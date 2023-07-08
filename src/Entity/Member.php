@@ -22,10 +22,22 @@ use Symfony\Component\Validator\Constraints as Assert;
         denormalizationContext: ['groups' => ['member:write']],
         provider: MemberProvider::class),
     GetCollection(),
-    Get(),
-    Delete(),
-    Post(),
-    Put(),
+    Get(
+        security: "is_granted('ROLE_ADMIN')",
+        securityMessage: 'Only admins can view specific member.',
+    ),
+    Delete(
+        security: "is_granted('ROLE_ADMIN')",
+        securityMessage: 'Only admins can delete members',
+    ),
+    Post(
+        security: "is_granted('ROLE_ADMIN')",
+        securityMessage: 'Only admins can create members',
+    ),
+    Put(
+        security: "is_granted('ROLE_ADMIN')",
+        securityMessage: 'Only admins can edit members',
+    ),
 ]
 class Member {
   #[
