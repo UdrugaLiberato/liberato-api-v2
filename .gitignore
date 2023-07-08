@@ -10,6 +10,8 @@
 .idea/
 /.env
 .env
+/.env.local
+.env.local
 .env.test
 /.env.test
 ###< symfony/framework-bundle ###

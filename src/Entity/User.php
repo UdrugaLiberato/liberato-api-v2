@@ -108,7 +108,7 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Location::class)]
     private Collection $locations;
 
-    #[ORM\OneToMany(mappedBy: 'User', targetEntity: News::class)]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: News::class)]
     private Collection $news;
 
     public function __construct()

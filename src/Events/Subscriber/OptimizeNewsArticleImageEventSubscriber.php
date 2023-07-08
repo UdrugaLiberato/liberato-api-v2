@@ -7,6 +7,7 @@ namespace App\Events\Subscriber;
 use ApiPlatform\Symfony\EventListener\EventPriorities;
 use App\Entity\NewsArticle;
 use App\Message\NewsArticleCloudinaryMessage;
+use JetBrains\PhpStorm\ArrayShape;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
@@ -19,7 +20,8 @@ final class OptimizeNewsArticleImageEventSubscriber implements EventSubscriberIn
     {
     }
 
-    public static function getSubscribedEvents()
+    #[ArrayShape([KernelEvents::VIEW => "array"])]
+    public static function getSubscribedEvents(): array
     {
         return [
             KernelEvents::VIEW => ['optimize', EventPriorities::POST_WRITE],
