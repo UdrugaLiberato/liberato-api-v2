@@ -35,7 +35,7 @@ class VolunteerProcessor implements ProcessorInterface {
     $volunteer->setLastName($data->lastName);
     $volunteer->setEmail($data->email);
     $volunteer->setCity($data->city);
-    $volunteer->setMembership(false);
+    $volunteer->setMembership($data->member === 'true');
     $volunteer->setReason($data->reason);
     $this->volunteerRepository->save($volunteer, true);
 
