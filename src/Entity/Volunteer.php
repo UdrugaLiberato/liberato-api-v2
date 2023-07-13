@@ -8,54 +8,92 @@ use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use App\DTO\Volunteer\VolunteerInput;
 use App\Repository\VolunteerRepository;
+use App\State\VolunteerProcessor;
 use App\State\VolunteerProvider;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: VolunteerRepository::class),
     ApiResource(
         normalizationContext: ['groups' => ['volunteer:read']],
-        denormalizationContext: ['groups' => ['volunteer:write']],
         paginationEnabled: false,
         provider: VolunteerProvider::class
     ),
     GetCollection(),
-    Get(), ]
+    Get(),
+    Post(
+        inputFormats: ['multipart' => ['multipart/form-data']],
+        input: VolunteerInput::class,
+        processor: VolunteerProcessor::class,
+    ),
+]
 class Volunteer {
   #[
       ApiProperty(identifier: true),
       ORM\Id,
       ORM\Column(type: 'string', unique: true),
       ORM\GeneratedValue(strategy: 'CUSTOM'),
-      ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
-  private ?int $id = NULL;
+      ORM\CustomIdGenerator(class: 'doctrine.uuid_generator'),
+      Groups(['volunteer:read'])
+  ]
+  private ?string $id = NULL;
 
-  #[ORM\Column(length: 255)]
+  #[
+      ORM\Column(length: 255),
+      Assert\Length(min: 2, max: 255, minMessage: 'Your first name must be at least {{ limit }} characters long'),
+      Groups(['volunteer:read'])
+  ]
   private ?string $firstName = NULL;
 
-  #[ORM\Column(length: 255)]
+  #[
+      ORM\Column(length: 255),
+      Assert\Length(min: 2, max: 255, minMessage: 'Your last name must be at least {{ limit }} characters long'),
+      Groups(['volunteer:read'])
+  ]
   private ?string $lastName = NULL;
 
-  #[ORM\Column(length: 255)]
+  #[
+      ORM\Column(length: 255),
+      Assert\Length(min: 2, max: 255, minMessage: 'Your city must be at least {{ limit }} characters long'),
+      Groups(['volunteer:read'])
+  ]
   private ?string $city = NULL;
 
-  #[ORM\Column(length: 255)]
+  #[
+      ORM\Column(length: 255),
+      Assert\Email(message: 'The email {{ value }} is not a valid email.'),
+      Groups(['volunteer:read'])
+  ]
   private ?string $email = NULL;
 
-  #[ORM\Column]
-  private ?bool $isMember = NULL;
+  #[
+      ORM\Column,
+      Groups(['volunteer:read'])
+  ]
+  private ?bool $membership = NULL;
 
-  #[ORM\Column(type: 'text')]
+  #[
+      ORM\Column(type: 'text'),
+      Assert\Length(min: 10, max: 2000, minMessage: 'Your reason must be at least {{ limit }} characters long', maxMessage: 'Your reason must be at 
+      most {{ limit }} characters long'),
+      Groups(['volunteer:read'])
+  ]
   private ?string $reason = NULL;
 
-  #[ORM\Column(type: 'array'), Groups(['volunteer:read'])]
+  #[
+      ORM\Column(type: 'array'),
+      Groups(['volunteer:read'])
+  ]
   private ArrayCollection $resume;
 
   #[
       ORM\Column(type: 'datetime_immutable'),
-      Groups(['volunteer:read'])
+      Groups(['volunteer:read']),
   ]
   private \DateTimeImmutable $createdAt;
 
@@ -76,7 +114,7 @@ class Volunteer {
     $this->createdAt = new \DateTimeImmutable('now');
   }
 
-  public function getId(): ?int {
+  public function getId(): ?string {
     return $this->id;
   }
 
@@ -120,12 +158,12 @@ class Volunteer {
     return $this;
   }
 
-  public function isIsMember(): ?bool {
-    return $this->isMember;
+  public function isMembership(): ?bool {
+    return $this->membership;
   }
 
-  public function setIsMember(bool $isMember): static {
-    $this->isMember = $isMember;
+  public function setMembership(bool $isMember): static {
+    $this->membership = $isMember;
 
     return $this;
   }

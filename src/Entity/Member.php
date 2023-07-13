@@ -20,7 +20,8 @@ use Symfony\Component\Validator\Constraints as Assert;
     ApiResource(
         normalizationContext: ['groups' => ['member:read']],
         denormalizationContext: ['groups' => ['member:write']],
-        provider: MemberProvider::class),
+        provider: MemberProvider::class
+    ),
     GetCollection(),
     Get(
         security: "is_granted('ROLE_ADMIN')",
