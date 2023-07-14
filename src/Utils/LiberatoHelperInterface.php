@@ -7,7 +7,7 @@ namespace App\Utils;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-interface LiberatoHelperInterface {
+interface  LiberatoHelperInterface {
   public static function slugify(string $string): string;
 
   public static function convertImageArrayToOutput(ArrayCollection $image, string $entityName): ArrayCollection;
