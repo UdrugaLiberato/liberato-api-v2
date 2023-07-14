@@ -17,7 +17,7 @@ class UserInput
     public string $password;
     public string $createEmail;
     public string $role;
-    public ?UploadedFile $file;
+    public $file;
     public ?string $phone;
 
     public function __construct()
