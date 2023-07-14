@@ -9,7 +9,7 @@ class VolunteerInput {
   public string $lastName;
   public string $city;
   public string $email;
-  public bool $isMember;
+  public string $member;
   public string $reason;
   public $resume;
   public \DateTimeImmutable $createdAt;
