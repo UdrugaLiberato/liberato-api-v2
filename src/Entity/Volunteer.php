@@ -89,7 +89,7 @@ class Volunteer {
       ORM\Column(type: 'array'),
       Groups(['volunteer:read'])
   ]
-  private ArrayCollection $resume;
+  private array $resume;
 
   #[
       ORM\Column(type: 'datetime_immutable'),
@@ -182,17 +182,10 @@ class Volunteer {
     $this->reason = $reason;
   }
 
-  /**
-   * @return ArrayCollection
-   */
-  public function getResume(): ArrayCollection {
+  public function getResume(): array {
     return $this->resume;
   }
-
-  /**
-   * @param ArrayCollection $resume
-   */
-  public function setResume(ArrayCollection $resume): void {
+  public function setResume(array $resume): void {
     $this->resume = $resume;
   }
 

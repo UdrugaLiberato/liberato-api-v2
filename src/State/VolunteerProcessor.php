@@ -42,8 +42,7 @@ class VolunteerProcessor implements ProcessorInterface {
     return $volunteer;
   }
 
-  private function uploadFile(UploadedFile $resume): ArrayCollection {
-    $file = new ArrayCollection();
+  private function uploadFile(UploadedFile $resume): array {
 
     $ext = $resume->getClientOriginalExtension();
     $mime = $resume->getMimeType();
@@ -63,11 +62,14 @@ class VolunteerProcessor implements ProcessorInterface {
 
 //    dd($resume);
 
-    $file->add($newFilename);
-    $file->add($ext);
-    $file->add($size);
-    $file->add($mime);
-    $file->add(self::BACKEND_URL_RESUMES . $newFilename);
+    $file = [
+        'name' => $newFilename,
+        'ext' => $ext,
+        'size' => $size,
+        'mime' => $mime,
+        'url' => self::BACKEND_URL_RESUMES . $newFilename
+    ];
+
     return $file;
   }
 }
