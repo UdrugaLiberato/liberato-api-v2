@@ -3,13 +3,17 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
 use App\Repository\EmailsRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[
     ORM\Entity(repositoryClass: EmailsRepository::class),
-    ApiResource()
+    ApiResource(),
+    GetCollection(
+        security: "is_granted('ROLE_ADMIN')",
+    ),
 ]
 class Emails {
   #[
@@ -39,7 +43,7 @@ class Emails {
   private array $attachments = [];
 
   #[ORM\Column(length: 255)]
-  private ?string $fromName = null;
+  private ?string $fromName = NULL;
 
   public function __construct() {
     $this->attachments = [];
@@ -109,15 +113,13 @@ class Emails {
     return $this;
   }
 
-  public function getFromName(): ?string
-  {
-      return $this->fromName;
+  public function getFromName(): ?string {
+    return $this->fromName;
   }
 
-  public function setFromName(string $fromName): static
-  {
-      $this->fromName = $fromName;
+  public function setFromName(string $fromName): static {
+    $this->fromName = $fromName;
 
-      return $this;
+    return $this;
   }
 }
