@@ -1,0 +1,6 @@
+imap:
+    connections:
+        liberato_imap:
+            mailbox: "{mail.udruga-liberato.hr:993/imap/ssl}Inbox"
+            username: "documents@udruga-liberato.hr"
+            password: "Docs0192!"
