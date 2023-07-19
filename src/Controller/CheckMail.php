@@ -9,7 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
-class TestImap extends AbstractController {
+class CheckMail extends AbstractController {
   public const BACKEND_URL_FILES = 'https://dev.udruga-liberato.hr/uploads/emails_attachments/';
 
   private string $uploadDir;
@@ -19,7 +19,7 @@ class TestImap extends AbstractController {
     $this->uploadDir = $this->kernel->getProjectDir() . '/public/uploads/email_attachments/';
   }
 
-  #[Route('/check', name: 'check')]
+  #[Route('/check-mail', name: 'check')]
   public function index(Imap $imap) {
     $connection = $imap->get('liberato_imap');
 
