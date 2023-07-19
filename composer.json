@@ -15,8 +15,10 @@
     "doctrine/orm": "^2.12",
     "lexik/jwt-authentication-bundle": "^2.15",
     "nelmio/cors-bundle": "^2.2",
+    "php-imap/php-imap": "^5.0",
     "phpdocumentor/reflection-docblock": "^5.3",
     "phpstan/phpdoc-parser": "^1.4",
+    "secit-pl/imap-bundle": "^1.5",
     "stella-maris/clock": "^0.1.4",
     "symfony/asset": "^6.3",
     "symfony/console": "^6.3",
@@ -95,7 +97,7 @@
   },
   "extra": {
     "symfony": {
-      "allow-contrib": false,
+      "allow-contrib": "true",
       "require": "^6.3",
       "docker": false
     }
