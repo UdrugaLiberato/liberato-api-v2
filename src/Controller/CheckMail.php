@@ -16,7 +16,7 @@ class CheckMail extends AbstractController {
 
   public function __construct(private readonly KernelInterface  $kernel,
                               private readonly EmailsRepository $emailsRepository) {
-    $this->uploadDir = $this->kernel->getProjectDir() . '/public/uploads/email_attachments/';
+    $this->uploadDir = $this->kernel->getProjectDir() . '/public/uploads/emails_attachments/';
   }
 
   #[Route('/check-mail', name: 'check')]
