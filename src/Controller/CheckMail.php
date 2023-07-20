@@ -35,12 +35,10 @@ class CheckMail extends AbstractController {
       $emailEntity->setSubject($mail->subject);
       $emailEntity->setFromAddress($mail->fromAddress);
       $emailEntity->setFromName($mail->fromName);
-      $emailEntity->setBody($mail->textHtml);
+      $emailEntity->setBody($this->removeSignatureContent($mail->textHtml));
       $emailEntity->setDate($mail->date);
       $attachmentsArray = [];
       foreach ($attachments as $attachment) {
-        echo '--> Saving ' . (string)$attachment->name . '...';
-
         $filename = time() . '_' . $attachment->name;;
         $filePath = $this->uploadDir . $filename;
         $attachment->setFilePath($filePath);
@@ -71,5 +69,22 @@ class CheckMail extends AbstractController {
 
     // Format the number with the desired precision
     return round($bytes, 2) . ' ' . $units[$pow];
+  }
+
+
+  function removeSignatureContent($message) {
+    $startTag = '<signature id="initial">';
+    $endTag = '</signature>';
+
+    $startIndex = strpos($message, $startTag);
+    $endIndex = strpos($message, $endTag);
+
+    if ($startIndex !== false && $endIndex !== false) {
+      $startIndex += strlen($startTag);
+      $contentToRemove = substr($message, $startIndex, $endIndex - $startIndex);
+      $message = str_replace($startTag . $contentToRemove . $endTag, '', $message);
+    }
+
+    return $message;
   }
 }
