@@ -71,7 +71,7 @@ class CheckMail extends AbstractController {
     return round($bytes, 2) . ' ' . $units[$pow];
   }
   function removeSignatureContent($message) {
-    $startTag = '<div><signature id="initial">';
+    $startTag = '<signature id="initial">';
 
     $startIndex = strpos($message, $startTag);
 
