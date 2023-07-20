@@ -28,7 +28,7 @@ class CheckMail extends AbstractController {
       if ($this->emailsRepository->findOneBy(['messageId' => $i])) {
         break;
       }
-      $mail = $connection->getMail($i, true);
+      $mail = $connection->getMail($i);
       $attachments = $mail->getAttachments();
       $emailEntity = new Emails();
       $emailEntity->setMessageId($i);
@@ -42,14 +42,8 @@ class CheckMail extends AbstractController {
         echo '--> Saving ' . (string)$attachment->name . '...';
 
         $filename = time() . '_' . $attachment->name;;
-        $filePath = $this->uploadDir .  $filename;
+        $filePath = $this->uploadDir . $filename;
         $attachment->setFilePath($filePath);
-
-        if ($attachment->saveToDisk()) {
-          echo "OK, saved!\n";
-        } else {
-          echo "ERROR, could not save!\n";
-        }
 
         $attachmentsArray[] = [
             "name" => $attachment->name,
@@ -60,11 +54,11 @@ class CheckMail extends AbstractController {
       }
       $emailEntity->setAttachments($attachmentsArray);
       $this->emailsRepository->save($emailEntity, true);
+
+      return $this->json(['message' => 'Mails saved']);
     }
     $connection->disconnect();
-
-    $allEmails = $this->emailsRepository->findAll();
-    return $this->json($allEmails);
+    return $this->json(['message' => 'No new mails saved']);
   }
 
   private function formatBytes(?int $bytes): string {
