@@ -12,9 +12,10 @@ use Doctrine\ORM\Mapping as ORM;
     ORM\Entity(repositoryClass: EmailsRepository::class),
     ApiResource(),
     GetCollection(
+        paginationEnabled: true,
+        paginationItemsPerPage: 30,
         security: "is_granted('ROLE_ADMIN')",
-    ),
-]
+    ), ]
 class Emails {
   #[
       ORM\Id,

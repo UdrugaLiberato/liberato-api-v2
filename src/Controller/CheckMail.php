@@ -54,11 +54,9 @@ class CheckMail extends AbstractController {
       }
       $emailEntity->setAttachments($attachmentsArray);
       $this->emailsRepository->save($emailEntity, true);
-
-      return $this->json(['message' => 'Mails saved']);
     }
     $connection->disconnect();
-    return $this->json(['message' => 'No new mails saved']);
+    return $this->json(['message' => 'Messages checked!']);
   }
 
   private function formatBytes(?int $bytes): string {
