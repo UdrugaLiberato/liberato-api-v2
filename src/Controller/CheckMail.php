@@ -70,13 +70,15 @@ class CheckMail extends AbstractController {
     // Format the number with the desired precision
     return round($bytes, 2) . ' ' . $units[$pow];
   }
-  function removeSignatureContent($message) {
-    $startTag = '<div></div><signature id="initial">';
+
+
+  function removeDivSignatureAndAfter($message) {
+    $startTag = '<div><signature';
 
     $startIndex = strpos($message, $startTag);
 
     if ($startIndex !== false) {
-      $message = substr($message, 0, $startIndex + strlen($startTag));
+      $message = substr($message, 0, $startIndex);
     }
 
     return $message;
