@@ -72,7 +72,7 @@ class CheckMail extends AbstractController {
   }
 
 
-  function removeDivSignatureAndAfter($message) {
+  function removeSignatureContent($message) {
     $startTag = '<div><signature';
 
     $startIndex = strpos($message, $startTag);
