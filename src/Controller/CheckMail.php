@@ -42,7 +42,7 @@ class CheckMail extends AbstractController {
         $filename = time() . '_' . $attachment->name;;
         $filePath = $this->uploadDir . $filename;
         $attachment->setFilePath($filePath);
-
+        $attachment->saveToDisk();
         $attachmentsArray[] = [
             "name" => $attachment->name,
             "filePath" => self::BACKEND_URL_FILES . $filename,
