@@ -70,19 +70,13 @@ class CheckMail extends AbstractController {
     // Format the number with the desired precision
     return round($bytes, 2) . ' ' . $units[$pow];
   }
-
-
   function removeSignatureContent($message) {
-    $startTag = '<signature id="initial">';
-    $endTag = '</signature>';
+    $startTag = '<div><signature id="initial">';
 
     $startIndex = strpos($message, $startTag);
-    $endIndex = strpos($message, $endTag);
 
-    if ($startIndex !== false && $endIndex !== false) {
-      $startIndex += strlen($startTag);
-      $contentToRemove = substr($message, $startIndex, $endIndex - $startIndex);
-      $message = str_replace($startTag . $contentToRemove . $endTag, '', $message);
+    if ($startIndex !== false) {
+      $message = substr($message, 0, $startIndex + strlen($startTag));
     }
 
     return $message;
