@@ -32,10 +32,10 @@ class CheckMail extends AbstractController {
       $attachments = $mail->getAttachments();
       $emailEntity = new Emails();
       $emailEntity->setMessageId($i);
-      $emailEntity->setSubject($mail->subject);
+      $emailEntity->setSubject($mail->subject ?? 'No subject');
       $emailEntity->setFromAddress($mail->fromAddress);
       $emailEntity->setFromName($mail->fromName);
-      $emailEntity->setBody($this->removeSignatureContent($mail->textHtml));
+      $emailEntity->setBody($this->removeSignatureContent($mail->textHtml) ?? 'No content');
       $emailEntity->setDate($mail->date);
       $attachmentsArray = [];
       foreach ($attachments as $attachment) {
