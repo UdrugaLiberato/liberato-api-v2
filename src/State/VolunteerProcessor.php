@@ -65,11 +65,24 @@ class VolunteerProcessor implements ProcessorInterface {
     $file = [
         'name' => $newFilename,
         'ext' => $ext,
-        'size' => $size,
+        'size' => $this->formatBytes($size),
         'mime' => $mime,
         'url' => self::BACKEND_URL_RESUMES . $newFilename
     ];
 
     return $file;
+  }
+  private function formatBytes(?int $bytes): string {
+    $units = array('B', 'KB', 'MB', 'GB', 'TB');
+
+    $bytes = max($bytes, 0);
+    $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
+    $pow = min($pow, count($units) - 1);
+
+    // Calculate the size and append the unit
+    $bytes /= pow(1024, $pow);
+
+    // Format the number with the desired precision
+    return round($bytes, 2) . ' ' . $units[$pow];
   }
 }
