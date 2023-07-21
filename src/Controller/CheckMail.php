@@ -23,10 +23,10 @@ class CheckMail extends AbstractController {
   public function index(Imap $imap) {
     $connection = $imap->get('liberato_imap');
 
-    $mail_ids = $connection->searchMailbox('UNSEEN');
+    $mail_ids = $connection->searchMailbox('ALL');
     foreach ($mail_ids as $i) {
       if ($this->emailsRepository->findOneBy(['messageId' => $i])) {
-        break;
+        continue;
       }
       $mail = $connection->getMail($i);
       $attachments = $mail->getAttachments();
@@ -73,7 +73,7 @@ class CheckMail extends AbstractController {
 
 
   function removeSignatureContent($message) {
-    $startTag = '<div><signature';
+    $startTag = '<signature';
 
     $startIndex = strpos($message, $startTag);
 

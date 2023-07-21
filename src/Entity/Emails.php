@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
 use App\Repository\EmailsRepository;
@@ -15,7 +17,9 @@ use Doctrine\ORM\Mapping as ORM;
         paginationEnabled: true,
         paginationItemsPerPage: 30,
         security: "is_granted('ROLE_ADMIN')",
-    ), ]
+    ),
+  ApiFilter(OrderFilter::class , properties: ['messageId' => 'DESC'])
+]
 class Emails {
   #[
       ORM\Id,
