@@ -14,6 +14,7 @@ use App\Repository\VolunteerRepository;
 use App\State\VolunteerProcessor;
 use App\State\VolunteerProvider;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -109,6 +110,9 @@ class Volunteer {
       ApiFilter(ExistsFilter::class)
   ]
   private ?\DateTimeImmutable $deletedAt = NULL;
+
+  #[ORM\Column(type: Types::TEXT, nullable: true)]
+  private ?string $notes = null;
 
   public function __construct() {
     $this->createdAt = new \DateTimeImmutable('now');
@@ -229,6 +233,18 @@ class Volunteer {
    */
   public function setDeletedAt(?\DateTimeImmutable $deletedAt): void {
     $this->deletedAt = $deletedAt;
+  }
+
+  public function getNotes(): ?string
+  {
+      return $this->notes;
+  }
+
+  public function setNotes(?string $notes): static
+  {
+      $this->notes = $notes;
+
+      return $this;
   }
 
 }
