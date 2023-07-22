@@ -22,7 +22,11 @@ use Symfony\Component\Validator\Constraints as Assert;
         denormalizationContext: ['groups' => ['member:write']],
         provider: MemberProvider::class
     ),
-    GetCollection(),
+    GetCollection(
+        paginationEnabled: true,
+        paginationItemsPerPage: 30,
+        security: "is_granted('ROLE_ADMIN')",
+    ),
     Get(
         security: "is_granted('ROLE_ADMIN')",
         securityMessage: 'Only admins can view specific member.',
