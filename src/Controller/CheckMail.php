@@ -23,7 +23,7 @@ class CheckMail extends AbstractController {
   public function index(Imap $imap) {
     $connection = $imap->get('liberato_imap');
 
-    $mail_ids = $connection->searchMailbox('ALL');
+    $mail_ids = $connection->searchMailbox('UNSEEN');
     foreach ($mail_ids as $i) {
       if ($this->emailsRepository->findOneBy(['messageId' => $i])) {
         continue;
