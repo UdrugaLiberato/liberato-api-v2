@@ -9,10 +9,13 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use App\DTO\Volunteer\VolunteerInput;
+use App\DTO\Volunteer\VolunteerPutInput;
 use App\Repository\VolunteerRepository;
 use App\State\VolunteerProcessor;
 use App\State\VolunteerProvider;
+use App\State\VolunteerPutProcessor;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -32,6 +35,11 @@ use Symfony\Component\Validator\Constraints as Assert;
         input: VolunteerInput::class,
         processor: VolunteerProcessor::class,
     ),
+  Put (
+      inputFormats: ['multipart' => ['multipart/form-data']],
+      input: VolunteerPutInput::class,
+      processor: VolunteerPutProcessor::class,
+  ),
 ]
 class Volunteer {
   #[

@@ -7,39 +7,48 @@ use ApiPlatform\State\ProcessorInterface;
 use App\Entity\Volunteer;
 use App\Repository\VolunteerRepository;
 use App\Utils\LiberatoHelper;
-use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpKernel\KernelInterface;
 
-class VolunteerProcessor implements ProcessorInterface {
+class VolunteerPutProcessor implements ProcessorInterface {
+
   public const BACKEND_URL_RESUMES = 'https://dev.udruga-liberato.hr/resumes/';
   public string $uploadDir;
+  public string $destinationDir;
 
   public function __construct(
       private readonly VolunteerRepository $volunteerRepository,
-      private readonly KernelInterface     $kernel
+      private readonly KernelInterface     $kernel,
   ) {
     $this->uploadDir = $this->kernel->getProjectDir() . '/public/resumes/';
+    $this->destinationDir = $this->kernel->getProjectDir() . '/public/old_resumes/';
   }
 
-  public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): Volunteer {
-    // get resume if exists and save it to variable
-    $resume = $data->resume;
-    $volunteer = new Volunteer();
-    if (empty($resume) === false) {
-      $file = $this->uploadFile($resume);
-      $volunteer->setResume($file);
+  public function process(mixed $data, Operation $operation, array
+  $uriVariables = [], array $context = []): Volunteer {
+    $volunteer = $this->volunteerRepository->find($uriVariables['id']);
+    if ($data->newResume) {
+      if ($volunteer->getResume()['name']) {
+        $path = $this->kernel->getProjectDir() . '/public/' . substr
+            ($volunteer->getResume()['url'], strpos
+            ($volunteer->getResume()['url'], 'resumes'));
+        if (file_exists($path)) {
+          if (!file_exists($this->destinationDir)) {
+            mkdir($this->destinationDir, 0777, true);
+          }
+          $filesystem = new Filesystem();
+          $filesystem->rename($path, $this->destinationDir .
+              $volunteer->getResume()['name'] . time());
+        }
+      }
+      $volunteer->setResume($this->uploadFile($data->newResume));
+      $volunteer->setNotes($data->notes);
     }
 
-    $volunteer->setFirstName($data->firstName);
-    $volunteer->setLastName($data->lastName);
-    $volunteer->setEmail($data->email);
-    $volunteer->setCity($data->city);
-    $volunteer->setMembership($data->member === 'true');
-    $volunteer->setReason($data->reason);
     $this->volunteerRepository->save($volunteer, true);
 
-    return $volunteer;
+    return $this->volunteerRepository->find($uriVariables['id']);
   }
 
   private function uploadFile(UploadedFile $resume): array {
