@@ -43,8 +43,8 @@ class VolunteerPutProcessor implements ProcessorInterface {
         }
       }
       $volunteer->setResume($this->uploadFile($data->newResume));
-      $volunteer->setNotes($data->notes);
     }
+      $volunteer->setNotes($data->notes);
 
     $this->volunteerRepository->save($volunteer, true);
 

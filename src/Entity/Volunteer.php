@@ -101,6 +101,12 @@ class Volunteer {
   private array $resume;
 
   #[
+      ORM\Column(type: Types::TEXT, nullable: true),
+      Groups(['volunteer:read']),
+  ]
+  private ?string $notes = null;
+
+  #[
       ORM\Column(type: 'datetime_immutable'),
       Groups(['volunteer:read']),
   ]
@@ -119,8 +125,6 @@ class Volunteer {
   ]
   private ?\DateTimeImmutable $deletedAt = NULL;
 
-  #[ORM\Column(type: Types::TEXT, nullable: true)]
-  private ?string $notes = null;
 
   public function __construct() {
     $this->createdAt = new \DateTimeImmutable('now');
