@@ -108,9 +108,6 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Location::class)]
     private Collection $locations;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: News::class)]
-    private Collection $news;
-
     public function __construct()
     {
         $this->phone = '';
@@ -265,36 +262,6 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
             // set the owning side to null (unless already changed)
             if ($location->getUser() === $this) {
                 $location->setUser(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, News>
-     */
-    public function getNews(): Collection
-    {
-        return $this->news;
-    }
-
-    public function addNews(News $news): self
-    {
-        if (!$this->news->contains($news)) {
-            $this->news->add($news);
-            $news->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeNews(News $news): self
-    {
-        if ($this->news->removeElement($news)) {
-            // set the owning side to null (unless already changed)
-            if ($news->getUser() === $this) {
-                $news->setUser(null);
             }
         }
 
