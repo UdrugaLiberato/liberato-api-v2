@@ -18,8 +18,6 @@ class LocationProvider implements ProviderInterface {
   }
 
   public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null {
-    $resourceClass = $operation->getClass();
-
     if ($operation instanceof CollectionOperationInterface) {
       try {
         return $this->locationRepository->findAll();
