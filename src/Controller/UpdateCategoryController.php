@@ -80,7 +80,7 @@ class UpdateCategoryController {
       $questions = explode(',', $request->get('questions'));
       foreach ($questions as $question) {
         $alreadyExists = $this->questionRepository->findOneBy(['question' => $question]);
-        if (!$categoryToUpdate->getQuestions()->map(fn(Question $question) => $question->getQuestion())->contains($question) && !$alreadyExists instanceof Question && !empty($question)) {
+        if ($categoryToUpdate->getQuestions()->map(fn(Question $question) => $question->getQuestion())->contains($question) && !$alreadyExists instanceof Question && !empty($question)) {
           $newQuestion = new Question();
           $newQuestion->setCategory($categoryToUpdate);
           $newQuestion->setQuestion($question);
