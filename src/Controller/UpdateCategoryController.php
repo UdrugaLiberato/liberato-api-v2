@@ -79,6 +79,7 @@ class UpdateCategoryController {
     if ($request->get('questions')) {
       $requestQuestions = explode(',', $request->get('questions'));
       $questions = $categoryToUpdate->getQuestions()->map(fn(Question $question) => $question->getQuestion());
+      dd($questions, $requestQuestions);
       $questions = array_diff($requestQuestions, $questions->toArray());
 
       if (count($questions) > 0) {
