@@ -79,8 +79,7 @@ class UpdateCategoryController {
     if ($request->get('questions')) {
       $requestQuestions = explode(',', $request->get('questions'));
       $questions = $categoryToUpdate->getQuestions()->map(fn(Question $question) => $question->getQuestion());
-      $mergedQuestions = array_merge($requestQuestions, $questions->toArray());
-      $questions = array_unique($mergedQuestions);
+      $questions = array_diff($requestQuestions, $questions->toArray());
 
       if (count($questions) > 0) {
         foreach ($questions as $question) {
