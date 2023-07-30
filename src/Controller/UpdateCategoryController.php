@@ -78,17 +78,13 @@ class UpdateCategoryController {
     $categoryToUpdate->setUpdatedAt(new \DateTimeImmutable('now'));
     if ($request->get('questions')) {
       $requestQuestions = explode(',', $request->get('questions'));
-      $questions = $categoryToUpdate->getQuestions()->map(fn(Question $question) => $question->getQuestion());
-      dd($questions, $requestQuestions);
-      $questions = array_diff($requestQuestions, $questions->toArray());
-
-      if (count($questions) > 0) {
-        foreach ($questions as $question) {
-          $newQuestion = new Question();
-          $newQuestion->setCategory($categoryToUpdate);
-          $newQuestion->setQuestion($question);
-          $this->questionRepository->add($newQuestion, true);
-          $categoryToUpdate->addQuestion($newQuestion);
+      foreach ($requestQuestions   as $requestQuestion) {
+        $question = $this->questionRepository->findOneBy(['question' => $requestQuestion]);
+        if (!$question) {
+          $question = new Question();
+          $question->setQuestion($requestQuestion);
+          $this->questionRepository->add($question, true);
+          $categoryToUpdate->addQuestion($question);
         }
       }
     }
