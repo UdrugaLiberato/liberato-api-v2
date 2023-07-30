@@ -105,7 +105,7 @@ class UpdateLocationController {
         $this->clearPreviousAnswers($currentLocation);
         foreach ($items as $item) {
           [$q, $a] = explode(':', $item);
-          $qEntity = $this->questionRepository->find($q);
+          $qEntity = $this->questionRepository->findOneBy(['question' => $q, 'category' => $request->get("category")]);
           $answer = new Answer();
           $answer->setQuestion($qEntity);
           $answer->setAnswer($a === 'true');
