@@ -33,7 +33,7 @@ class UpdateCategoryController {
 
   public function __invoke(string $id, Request $request): Category {
     $categoryToUpdate = $this->categoryRepository->find($id);
-    if ($request->files->get('image')) {
+    if ($request->files->get('file')) {
       $categoryToUpdate->getImage()->map(function (Image $image) use ($categoryToUpdate): void {
         $arr = explode('/', $image->getSrc());
         $file = $this->liberatoHelper->getImagePath('category/') . end($arr);
@@ -43,7 +43,7 @@ class UpdateCategoryController {
           unlink($file);
         }
       });
-      $file = $request->files->get('image');
+      $file = $request->files->get('file ');
       $ext = $file->guessExtension();
       $mime = $file->getMimeType();
 
