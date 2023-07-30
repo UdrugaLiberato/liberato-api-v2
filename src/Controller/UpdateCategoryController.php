@@ -77,12 +77,12 @@ class UpdateCategoryController {
     }
     $categoryToUpdate->setUpdatedAt(new \DateTimeImmutable('now'));
     if ($request->get('questions')) {
-      foreach ($categoryToUpdate->getQuestions() as $question) {
-        $categoryToUpdate->removeQuestion($question);
-      }
-
       $questions = explode(',', $request->get('questions'));
       foreach ($questions as $question) {
+        if ($this->questionRepository->findOneBy(['question' => $question])
+            && $this->questionRepository->findOneBy(['category.id' => $id])) {
+          continue;
+        }
         $newQuestion = new Question();
         $newQuestion->setCategory($categoryToUpdate);
         $newQuestion->setQuestion($question);
