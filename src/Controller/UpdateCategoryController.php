@@ -79,15 +79,14 @@ class UpdateCategoryController {
     if ($request->get('questions')) {
       $questions = explode(',', $request->get('questions'));
       foreach ($questions as $question) {
-$alreadyExists = $this->questionRepository->findOneBy(['question' => $question]);
-if($categoryToUpdate->getQuestions()->contains($alreadyExists)) {
-          continue;
+        $alreadyExists = $this->questionRepository->findOneBy(['question' => $question]);
+        if (!$categoryToUpdate->getQuestions()->contains($alreadyExists)) {
+          $newQuestion = new Question();
+          $newQuestion->setCategory($categoryToUpdate);
+          $newQuestion->setQuestion($question);
+          $this->questionRepository->add($newQuestion, true);
+          $categoryToUpdate->addQuestion($newQuestion);
         }
-        $newQuestion = new Question();
-        $newQuestion->setCategory($categoryToUpdate);
-        $newQuestion->setQuestion($question);
-        $this->questionRepository->add($newQuestion, true);
-        $categoryToUpdate->addQuestion($newQuestion);
       }
     }
     return $categoryToUpdate;
