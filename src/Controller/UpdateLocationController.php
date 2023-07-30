@@ -95,7 +95,6 @@ class UpdateLocationController {
       if ($request->get("category") == $currentLocation->getCategory()->getId()) {
         $items = explode(',', $request->get("qa"));
         foreach ($items as $item) {
-          dd(1, $item);
           [$answerId, $answer] = explode(':', $item);
           $answerEntity = $this->answerRepository->find($answerId);
           $answerEntity->setAnswer($answer === 'true');
@@ -107,7 +106,6 @@ class UpdateLocationController {
         foreach ($items as $item) {
           [$q, $a] = explode(':', $item);
           $qEntity = $this->questionRepository->findOneBy(['question' => $q, 'category' => $request->get("category")]);
-          dd($currentLocation, $qEntity, $a);
           $answer = new Answer();
           $answer->setQuestion($qEntity);
           $answer->setAnswer($a === 'true');
@@ -133,6 +131,7 @@ class UpdateLocationController {
   }
 
   public function clearPreviousAnswers(Location $currentLocation): void {
+    dd(1);
     foreach ($currentLocation->getAnswers() as $answer) {
       $currentLocation->removeAnswer($answer);
     }
