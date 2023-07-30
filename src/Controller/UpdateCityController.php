@@ -20,18 +20,20 @@ class UpdateCityController {
 
   public function __invoke(string $id, Request $request): City {
     $name = $request->toArray()['name'] ?? NULL;
+    $radiusInKm = $request->toArray()['radiusInKm'] ?? NULL;
     $cityToUpdate = $this->cityRepository->find($id);
 
-    if ($name === $cityToUpdate->getName()) {
-      throw new \Exception('Invalid city name or id');
+    if ($name !== $cityToUpdate->getName() && $name !== NULL) {
+      ['lat' => $lat, 'lng' => $lng] = $this->googleMaps->getCoordinateForCity($name);
+      $cityToUpdate->setLatitude($lat);
+      $cityToUpdate->setLongitude($lng);
+      $cityToUpdate->setName($name);
     }
-    ['lat' => $lat, 'lng' => $lng] = $this->googleMaps->getCoordinateForCity($name);
 
-    $cityToUpdate->setName($name);
-    $cityToUpdate->setLatitude($lat);
-    $cityToUpdate->setLongitude($lng);
-
-    $this->cityRepository->update($cityToUpdate);
+    if ($radiusInKm !== $cityToUpdate->getRadiusInKm() && $radiusInKm !== NULL) {
+      $cityToUpdate->setRadiusInKm($radiusInKm);
+    }
+     $this->cityRepository->update($cityToUpdate);
 
     return $cityToUpdate;
   }
