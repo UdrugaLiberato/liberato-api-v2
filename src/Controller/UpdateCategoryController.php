@@ -43,7 +43,7 @@ class UpdateCategoryController {
           unlink($file);
         }
       });
-      $file = $request->files->get('file ');
+      $file = $request->files->get('file');
       $ext = $file->guessExtension();
       $mime = $file->getMimeType();
 

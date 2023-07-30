@@ -50,8 +50,6 @@ use Symfony\Component\Validator\Constraints as Assert;
     Put(
         inputFormats: ['multipart' => ['multipart/form-data']],
         controller: UpdateCategoryController::class,
-        security: "is_granted('ROLE_ADMIN')",
-        securityMessage: 'Only admins can update posts.',
         deserialize: false
     )]
 class Category
