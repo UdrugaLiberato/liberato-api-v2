@@ -131,9 +131,11 @@ class UpdateLocationController {
   }
 
   public function clearPreviousAnswers(Location $currentLocation): void {
-    dd(1);
-    foreach ($currentLocation->getAnswers() as $answer) {
-      $currentLocation->removeAnswer($answer);
+    if ($currentLocation->getAnswers()->count() > 0) {
+      foreach ($currentLocation->getAnswers() as $answer) {
+        $currentLocation->removeAnswer($answer);
+      }
+      $currentLocation->getAnswers()->clear();
     }
   }
 }
