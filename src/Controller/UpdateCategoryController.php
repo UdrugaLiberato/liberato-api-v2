@@ -80,7 +80,7 @@ class UpdateCategoryController {
       $questions = explode(',', $request->get('questions'));
       foreach ($questions as $question) {
         if ($this->questionRepository->findOneBy(['question' => $question])
-            && $this->questionRepository->findOneBy(['category.id' => $id])) {
+            && $this->questionRepository->findOneBy(['category' => $categoryToUpdate])) {
           continue;
         }
         $newQuestion = new Question();
