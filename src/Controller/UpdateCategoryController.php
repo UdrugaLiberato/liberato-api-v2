@@ -80,7 +80,9 @@ class UpdateCategoryController {
       $requestQuestions = explode(',', $request->get('questions'));
       foreach ($requestQuestions   as $requestQuestion) {
         $question = $this->questionRepository->findOneBy(['question' => $requestQuestion]);
-        if (!$question) {
+        if ($question) {
+          continue;
+        } else {
           $question = new Question();
           $question->setQuestion($requestQuestion);
           $this->questionRepository->add($question, true);
