@@ -77,23 +77,18 @@ class UpdateCategoryController {
     }
     $categoryToUpdate->setUpdatedAt(new \DateTimeImmutable('now'));
     if ($request->get('questions')) {
-      $questions = explode(',', $request->get('questions'));
-      foreach ($questions as $question) {
-        $notExisting = $categoryToUpdate->getQuestions()->filter(
-            function (Question $q) use ($question) {
-              if ($q->getQuestion() !== $question) {
-                return $question;
-              }
-            }
-        );
-        if ($notExisting->count() > 0) {
-          foreach ($notExisting as $nequestion) {
-            $newQuestion = new Question();
-            $newQuestion->setCategory($categoryToUpdate);
-            $newQuestion->setQuestion($nequestion);
-            $this->questionRepository->add($newQuestion, true);
-            $categoryToUpdate->addQuestion($newQuestion);
-          }
+      $requestQuestions = explode(',', $request->get('questions'));
+      $questions = $categoryToUpdate->getQuestions()->map(fn(Question $question) => $question->getQuestion());
+      $mergedQuestions = array_merge($requestQuestions, $questions->toArray());
+      $questions = array_unique($mergedQuestions);
+
+      if (count($questions) > 0) {
+        foreach ($questions as $question) {
+          $newQuestion = new Question();
+          $newQuestion->setCategory($categoryToUpdate);
+          $newQuestion->setQuestion($question);
+          $this->questionRepository->add($newQuestion, true);
+          $categoryToUpdate->addQuestion($newQuestion);
         }
       }
     }
