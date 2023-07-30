@@ -81,7 +81,9 @@ class UpdateCategoryController {
       foreach ($questions as $question) {
         $notExisting = $categoryToUpdate->getQuestions()->filter(
             function (Question $q) use ($question) {
-              return $q->getQuestion() !== $question;
+              if ($q->getQuestion() !== $question) {
+                return $question;
+              }
             }
         );
         if ($notExisting->count() > 0) {
