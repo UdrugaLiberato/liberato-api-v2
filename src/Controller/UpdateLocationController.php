@@ -95,6 +95,7 @@ class UpdateLocationController {
       if ($request->get("category") == $currentLocation->getCategory()->getId()) {
         $items = explode(',', $request->get("qa"));
         foreach ($items as $item) {
+          dd(1, $item);
           [$answerId, $answer] = explode(':', $item);
           $answerEntity = $this->answerRepository->find($answerId);
           $answerEntity->setAnswer($answer === 'true');
