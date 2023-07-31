@@ -103,7 +103,7 @@ class Location {
       ORM\Column(type: 'string', length: 255),
       Assert\Length(
           min: 3,
-          max: 32,
+          max: 100,
           minMessage: 'Name must be at least {{ limit }} characters long!',
           maxMessage: 'Name must be at most {{ limit }} characters long!',
       )
