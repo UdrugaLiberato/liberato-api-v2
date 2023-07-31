@@ -102,7 +102,10 @@ class UpdateLocationController {
         }
       } else {
         $items = explode(',', $request->get("qa"));
-          $currentLocation->getAnswers()->clear();
+        $currentLocation->getAnswers()->map(function (Answer $answer) use ($currentLocation): void {
+          $this->answerRepository->remove($answer);
+        });
+        $currentLocation->getAnswers()->clear();
         foreach ($items as $item) {
           [$q, $a] = explode(':', $item);
           $qEntity = $this->questionRepository->findOneBy(['id' => $q, 'category' => $request->get("category")]);
