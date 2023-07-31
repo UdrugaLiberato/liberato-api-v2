@@ -26,7 +26,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[
     ORM\Entity(repositoryClass: UserRepository::class),
-    ApiResource(normalizationContext: ['groups' => ['user:read', 'news:read']]),
+    ApiResource(normalizationContext: ['groups' => ['user:read', 'task:read']]),
     GetCollection(),
     \ApiPlatform\Metadata\Post(
         inputFormats: ['multipart' => ['multipart/form-data']],
@@ -57,7 +57,7 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
         ORM\Column(type: 'string', unique: true),
         ORM\GeneratedValue(strategy: 'CUSTOM'),
         ORM\CustomIdGenerator(class: 'doctrine.uuid_generator'),
-        Groups(['user:read', 'news:read'])
+        Groups(['user:read', 'task:read'])
     ]
     private string $id;
 
@@ -87,13 +87,13 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     private string $password;
 
     #[
-        Groups(['user:read', 'news:read']),
+        Groups(['user:read', 'task:read']),
         ORM\Column(type: 'string', length: 255),
         Assert\Length(min: 4, minMessage: 'Username must be at least {{ limit }} characters long!')
     ]
     private string $username;
 
-    #[ORM\Column(type: 'array'), Groups(['news:read', 'user:read'])]
+    #[ORM\Column(type: 'array'), Groups(['task:read', 'user:read'])]
     private ArrayCollection $avatar;
 
     #[ORM\Column(type: 'datetime_immutable'), Groups(['user:read'])]
@@ -108,6 +108,9 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Location::class)]
     private Collection $locations;
 
+    #[ORM\OneToMany(mappedBy: 'assignedTo', targetEntity: Task::class)]
+    private Collection $tasks;
+
     public function __construct()
     {
         $this->phone = '';
@@ -117,6 +120,7 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
         $this->deletedAt = null;
         $this->locations = new ArrayCollection();
         $this->news = new ArrayCollection();
+        $this->tasks = new ArrayCollection();
     }
 
     public function getId(): string
@@ -262,6 +266,36 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
             // set the owning side to null (unless already changed)
             if ($location->getUser() === $this) {
                 $location->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Task>
+     */
+    public function getTasks(): Collection
+    {
+        return $this->tasks;
+    }
+
+    public function addTask(Task $task): static
+    {
+        if (!$this->tasks->contains($task)) {
+            $this->tasks->add($task);
+            $task->setAssignedTo($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTask(Task $task): static
+    {
+        if ($this->tasks->removeElement($task)) {
+            // set the owning side to null (unless already changed)
+            if ($task->getAssignedTo() === $this) {
+                $task->setAssignedTo(null);
             }
         }
 
