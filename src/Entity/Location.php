@@ -34,6 +34,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     ORM\Entity(repositoryClass: LocationRepository::class),
     ApiResource(
         normalizationContext: ['groups' => ['location:read']],
+        paginationItemsPerPage: 5000,
     ),
     Get(),
     GetCollection(),
