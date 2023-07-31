@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\BooleanFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
@@ -61,7 +63,8 @@ class Task {
 
   #[
       ORM\Column,
-      Groups(['task:read'])
+      Groups(['task:read']),
+      ApiFilter(BooleanFilter::class)
   ]
   private ?bool $isFinished = NULL;
 

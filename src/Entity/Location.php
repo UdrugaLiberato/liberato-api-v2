@@ -176,9 +176,9 @@ class Location {
   #[Groups(['location:read']), ORM\Column(type: 'datetime_immutable', nullable: true)]
   private ?DateTimeImmutable $updatedAt;
 
-  #[Groups(
-      ['location:read']
-  ), ORM\Column(type: 'datetime_immutable', nullable: true),
+  #[
+      Groups(['location:read']),
+      ORM\Column(type: 'datetime_immutable', nullable: true),
       ApiFilter(ExistsFilter::class)
   ]
   private ?DateTimeImmutable $deletedAt;
