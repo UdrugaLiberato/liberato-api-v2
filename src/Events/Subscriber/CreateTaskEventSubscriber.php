@@ -39,6 +39,8 @@ final class CreateTaskEventSubscriber implements EventSubscriberInterface
 
     /** @var null|User $user */
     $user = $this->token->getToken()?->getUser();
+    print $user;
+    die();
     $entity->setCreatedBy($user ?? null);
   }
 }
