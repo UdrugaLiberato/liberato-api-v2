@@ -111,6 +111,9 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     #[ORM\OneToMany(mappedBy: 'assignedTo', targetEntity: Task::class)]
     private Collection $tasks;
 
+  #[ORM\OneToMany(mappedBy: 'createdBy', targetEntity: Task::class)]
+  private Collection $tasksCreated;
+
     public function __construct()
     {
         $this->phone = '';
@@ -119,7 +122,7 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
         $this->updatedAt = null;
         $this->deletedAt = null;
         $this->locations = new ArrayCollection();
-        $this->news = new ArrayCollection();
+        $this->tasksCreated = new ArrayCollection();
         $this->tasks = new ArrayCollection();
     }
 
@@ -301,4 +304,29 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
 
         return $this;
     }
+
+  public function getTasksCreated(): Collection {
+    return $this->tasksCreated;
+  }
+  public function addTaskCreated(Task $task): static
+  {
+    if (!$this->tasksCreated->contains($task)) {
+      $this->tasksCreated->add($task);
+      $task->setCreatedBy($this);
+    }
+
+    return $this;
+  }
+
+  public function removeTaskCreatd(Task $task): static
+  {
+    if ($this->tasksCreated->removeElement($task)) {
+      // set the owning side to null (unless already changed)
+      if ($task->getCreatedBy() === $this) {
+        $task->setCreatedBy(null);
+      }
+    }
+
+    return $this;
+  }
 }

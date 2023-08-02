@@ -59,7 +59,7 @@ class Task {
   private $id;
 
   #[
-      ORM\OneToOne(cascade: ['persist', 'remove']),
+      ORM\ManyToOne(targetEntity: User::class, inversedBy: 'tasksCreated'),
       Groups(['task:read'])
   ]
   private ?User $createdBy = NULL;
