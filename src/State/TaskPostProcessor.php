@@ -11,17 +11,23 @@ use App\Repository\UserRepository;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class TaskPostProcessor implements ProcessorInterface {
   public function __construct(
       private TaskRepository          $taskRepository,
       private readonly UserRepository $userRepository,
-      private MailerInterface         $mailer
+      private MailerInterface         $mailer,
+      private TokenStorageInterface   $token
   ) {
   }
 
   public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): Task {
     $deadline = $data->deadline;
+    $user = $this->token->getToken()->getUser();
+    if (!$user instanceof User) {
+      throw new \InvalidArgumentException('User must be logged in.');
+    }
     $currentDate = new \DateTimeImmutable();
     $assignee = $this->userRepository->find($data->assignedTo);
     if (!$assignee) {
@@ -38,6 +44,7 @@ class TaskPostProcessor implements ProcessorInterface {
     }
 
     $task = new Task();
+    $task->setCreatedBy($user);
     $task->setName($data->name);
     $task->setPriority($data->priority);
     $task->setNote($data->note);
