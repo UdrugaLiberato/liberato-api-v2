@@ -31,17 +31,17 @@ use Symfony\Component\Serializer\Annotation\Groups;
         securityMessage: "Only admins can see all tasks."
     ),
   Get(
-      security: "is_granted('ROLE_ADMIN') or object.getAssignedTo() == user",
+      security: "is_granted('ROLE_ADMIN')",
       securityMessage: "You can only see tasks assigned to you."
   ),
   Post(
-      security: "is_granted('ROLE_ADMIN') or object.getAssignedTo() == user",
+      security: "is_granted('ROLE_ADMIN')",
       securityMessage: "You can only create tasks assigned to you.",
       input: TaskInput::class,
       processor: TaskPostProcessor::class
   ),
   Put(
-      security: "is_granted('ROLE_ADMIN') or object.getAssignedTo() == user",
+      security: "is_granted('ROLE_ADMIN')",
       securityMessage: "You can only update tasks assigned to you.",
       input: TaskUpdateInput::class,
       processor: TaskUpdateProcessor::class
