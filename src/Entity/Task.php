@@ -9,9 +9,12 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use App\DTO\Task\TaskInput;
+use App\DTO\Task\TaskUpdateInput;
 use App\Repository\TaskRepository;
 use App\State\TaskPostProcessor;
+use App\State\TaskUpdateProcessor;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -36,6 +39,12 @@ use Symfony\Component\Serializer\Annotation\Groups;
       securityMessage: "You can only create tasks assigned to you.",
       input: TaskInput::class,
       processor: TaskPostProcessor::class
+  ),
+  Put(
+      security: "is_granted('ROLE_ADMIN') or object.getAssignedTo() == user",
+      securityMessage: "You can only update tasks assigned to you.",
+      input: TaskUpdateInput::class,
+      processor: TaskUpdateProcessor::class
   )
 ]
 class Task {
