@@ -22,7 +22,7 @@ class TaskUpdateProcessor implements ProcessorInterface {
 
     $taskToUpdate->setName($data->name);
     $taskToUpdate->setNote($data->note);
-    $taskToUpdate->setIsFinished($data->isFinished);
+    $taskToUpdate->setIsFinished($data->isFinished === 'true');
     $taskToUpdate->setPriority($data->priority);
     $taskToUpdate->setDeadline(new \DateTimeImmutable($data->deadline));
     if ($data->isFinished) {
