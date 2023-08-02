@@ -30,22 +30,22 @@ use Symfony\Component\Serializer\Annotation\Groups;
         security: "is_granted('ROLE_ADMIN')",
         securityMessage: "Only admins can see all tasks."
     ),
-  Get(
-      security: "is_granted('ROLE_ADMIN')",
-      securityMessage: "You can only see tasks assigned to you."
-  ),
-  Post(
-      security: "is_granted('ROLE_ADMIN')",
-      securityMessage: "You can only create tasks assigned to you.",
-      input: TaskInput::class,
-      processor: TaskPostProcessor::class
-  ),
-  Put(
-      security: "is_granted('ROLE_ADMIN')",
-      securityMessage: "You can only update tasks assigned to you.",
-      input: TaskUpdateInput::class,
-      processor: TaskUpdateProcessor::class
-  )
+    Get(
+        security: "is_granted('ROLE_ADMIN')",
+        securityMessage: "You can only see tasks assigned to you."
+    ),
+    Post(
+        security: "is_granted('ROLE_ADMIN')",
+        securityMessage: "You can only create tasks assigned to you.",
+        input: TaskInput::class,
+        processor: TaskPostProcessor::class
+    ),
+    Put(
+        security: "is_granted('ROLE_ADMIN')",
+        securityMessage: "You can only update tasks assigned to you.",
+        input: TaskUpdateInput::class,
+        processor: TaskUpdateProcessor::class
+    )
 ]
 class Task {
   #[
@@ -59,13 +59,19 @@ class Task {
   private $id;
 
   #[
+      ORM\OneToOne(cascade: ['persist', 'remove']),
+      Groups(['task:read'])
+  ]
+  private ?User $createdBy = NULL;
+
+  #[
       ORM\Column(length: 255),
       Groups(['task:read'])
   ]
   private ?string $name = NULL;
 
   #[
-       ORM\Column(length: 255),
+      ORM\Column(length: 255),
       Groups(['task:read'])
   ]
   private ?string $priority = NULL;
@@ -207,6 +213,16 @@ class Task {
 
   public function setNote(?string $note): static {
     $this->note = $note;
+
+    return $this;
+  }
+
+  public function getCreatedBy(): ?User {
+    return $this->createdBy;
+  }
+
+  public function setCreatedBy(?User $createdBy): static {
+    $this->createdBy = $createdBy;
 
     return $this;
   }
