@@ -13,15 +13,18 @@ class TaskUpdateProcessor implements ProcessorInterface {
   ) {
   }
 
+  /**
+   * @throws \Exception
+   */
   public function process(mixed $data, Operation $operation, array
-  $uriVariables = [], array $context = []): Task {
+                                $uriVariables = [], array $context = []): Task {
     $taskToUpdate = $this->taskRepository->find($uriVariables['id']);
 
     $taskToUpdate->setName($data->name);
     $taskToUpdate->setNote($data->note);
     $taskToUpdate->setIsFinished($data->isFinished);
     $taskToUpdate->setPriority($data->priority);
-    $taskToUpdate->setDeadline($data->deadline);
+    $taskToUpdate->setDeadline(new \DateTimeImmutable($data->deadline));
     if ($data->isFinished) {
       $taskToUpdate->setFinishedAt(new \DateTimeImmutable());
     }
