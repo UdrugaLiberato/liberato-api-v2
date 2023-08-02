@@ -64,7 +64,7 @@ class TaskPostProcessor implements ProcessorInterface {
         ->html('<p>Zadatak: ' . $data->getName() . '</p><p>Prioritet: ' .
             $data->getPriority() . '</p><p>Note: ' . $data->getNote() . '</p><p>Rok: 
             ' . $data->getDeadline()->format('Y-m-d H:i:s') . '</p> <br /> <p>Ovaj zadatak je kreiran ' . $data->getCreatedAt()->format(' Y-m-d H:i:s') . '
-            Želite li vidjeti putem preglednika, kliknite <a href="http://localhost:3000/admin/tasks/' . $data->getId() . '">ovdje</a>.
+            Želite li vidjeti putem preglednika, kliknite <a href="http://udruga-liberato.hr/admin/tasks/' . $data->getId() . '">ovdje</a>.
             </p> <br /> <br /> <p>
             Ovaj email je automatski generiran. Molimo ne odgovarajte na njega.</p>');
 
