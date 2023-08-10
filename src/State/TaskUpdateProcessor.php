@@ -41,7 +41,7 @@ class TaskUpdateProcessor implements ProcessorInterface {
 
   private function notifyCreatorOfTaskFinish(Task $task): void {
     $sendEmail = (new Email())
-        ->from(new Address('stipo@udruga-liberato.hr', 'Liberato'))
+        ->from(new Address('no-reply@udruga-liberato.hr', 'Liberato'))
       ->to($task->getCreatedBy()->getEmail())
         ->priority(Email::PRIORITY_HIGH)
         ->subject('Zadatak napravljen!')

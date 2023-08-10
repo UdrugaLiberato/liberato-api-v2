@@ -57,7 +57,7 @@ class TaskPostProcessor implements ProcessorInterface {
 
   private function sendEmail(User $assignee, Task $data): void {
     $sendEmail = (new Email())
-        ->from(new Address('stipo@udruga-liberato.hr', 'Liberato'))
+        ->from(new Address('no-reply@udruga-liberato.hr', 'Liberato'))
         ->to($assignee->getEmail())
         ->priority(Email::PRIORITY_HIGH)
         ->subject('Imate novi zadatak!')
